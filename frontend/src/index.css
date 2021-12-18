@@ -16,11 +16,6 @@ code {
   box-sizing: border-box;
 }
 
-.wrap {
-  max-width: 1080px;
-  margin: 0 auto;
-}
-
 a,
 button {
   cursor: pointer;
@@ -28,4 +23,15 @@ button {
 
 li {
   list-style: none;
+}
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.title {
+  margin-bottom: 45px;
+  font-size: 28px;
+  color: #333;
 }

@@ -20,25 +20,25 @@ export default function Footer(props: IFooterProps) {
         <div className="snsContainer">
           <div className="name">Info.이성범</div>
           <div className="snsIconContainer">
-            <a href="" target="_blank">
+            <a href="https://github.com/SeongBeom27" target="_blank" rel="noreferrer">
               <img src={github} alt="github icon" />
             </a>
-            <a href="" target="_blank">
+            <a href="https://blog.naver.com/lgh121546" target="_blank" rel="noreferrer">
               <img src={blog} alt="blog icon" />
             </a>
-            <a href="" target="_blank">
+            <a href="https://www.instagram.com/seong_bm/" target="_blank" rel="noreferrer">
               <img src={insta} alt="instagram icon" />
             </a>
           </div>
           <div className="name jihyun">Info.김지현</div>
           <div className="snsIconContainer">
-            <a href="https://github.com/jkim68888" target="_blank">
+            <a href="https://github.com/jkim68888" target="_blank" rel="noreferrer">
               <img src={github} alt="github icon" />
             </a>
-            <a href="https://jkim68888.github.io/" target="_blank">
+            <a href="https://jkim68888.github.io/" target="_blank" rel="noreferrer">
               <img src={blog} alt="blog icon" />
             </a>
-            <a href="https://www.instagram.com/hyunn383/" target="_blank">
+            <a href="https://www.instagram.com/hyunn383/" target="_blank" rel="noreferrer">
               <img src={insta} alt="instagram icon" />
             </a>
           </div>

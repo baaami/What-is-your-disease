@@ -27,3 +27,38 @@ export const HeaderContainer = styled.div`
     }
   }
 `
+export const FooterContainer = styled.div`
+  margin-top: 140px;
+  padding: 80px 0;
+  border-top: 1px solid #555;
+
+  .imgContainer {
+    margin-bottom: 35px;
+  }
+  .descript {
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: #555;
+  }
+  .snsContainer {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    margin-top: 84px;
+
+    .name {
+      font-size: 24px;
+    }
+    .jihyun {
+      margin-left: 20px;
+    }
+
+    .snsIconContainer {
+      margin-left: 25px;
+
+      img {
+        margin-right: 15px;
+      }
+    }
+  }
+`

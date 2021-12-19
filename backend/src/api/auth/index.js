@@ -22,6 +22,18 @@ auth.get(
   },
 );
 
+auth.get('/naver', passport.authenticate('naver'));
+
+auth.get(
+  '/naver/callback',
+  passport.authenticate('naver', {
+    failureRedirect: '/',
+  }),
+  (ctx) => {
+    ctx.response.redirect('/api/auth');
+  },
+);
+
 auth.get('/logout', authCtrl.logout);
 
 export default auth;

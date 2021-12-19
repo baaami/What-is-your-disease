@@ -12,7 +12,6 @@ module.exports = () => {
       async (accessToken, refreshToken, profile, done) => {
         // console.log('profile : ', profile);
         try {
-          console.log('User : ', User);
           const exUser = await User.findOne({
             snsId: profile.id,
             provider: 'kakao',

@@ -1,5 +1,6 @@
 const kakao = require('./kakaoStrategy');
 const naver = require('./NaverStrategy');
+const google = require('./GoogleStrategy');
 import User from '../models/user';
 
 module.exports = (passport) => {
@@ -18,4 +19,5 @@ module.exports = (passport) => {
 
   kakao();
   naver();
+  google();
 };

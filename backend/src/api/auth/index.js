@@ -34,6 +34,18 @@ auth.get(
   },
 );
 
+auth.get('/google', passport.authenticate('google'));
+
+auth.get(
+  '/google/callback',
+  passport.authenticate('google', {
+    failureRedirect: '/',
+  }),
+  (ctx) => {
+    ctx.response.redirect('/api/auth');
+  },
+);
+
 auth.get('/logout', authCtrl.logout);
 
 export default auth;

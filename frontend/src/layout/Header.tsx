@@ -28,7 +28,7 @@ export default function Header(props: IHeaderProps) {
         </div>
       </HeaderContainer>
       <Switch>
-        <Route path="/" component={Home} />
+        <Route path="/" exact component={Home} />
         <Route path="/signup" component={Signup} />
         <Route path="/category" component={Category} />
         <Route path="/mypage" component={Mypage} />

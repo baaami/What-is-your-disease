@@ -11,6 +11,7 @@ import InfoForm from '../pages/Members/InfoForm'
 import PostsEdit from '../pages/Posts/Edit'
 import PostsDetail from '../pages/Posts/Detail'
 import Search from '../pages/Search'
+import Auth from '../pages/Auth'
 
 interface IHeaderProps {}
 
@@ -37,6 +38,7 @@ export default function Header(props: IHeaderProps) {
         <Route path="/posts/edit" component={PostsEdit} />
         <Route path="/posts/detail" component={PostsDetail} />
         <Route path="/search" component={Search} />
+        <Route path="/api/auth/callback/kakao" component={Auth} />
       </Switch>
     </>
   )

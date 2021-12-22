@@ -12,8 +12,11 @@ export const SignupWrapper = styled.div`
   div {
     margin-bottom: 200px;
   }
-  img {
+  button {
     margin: 0 15px;
-    border-radius: 100%;
+
+    img {
+      border-radius: 100%;
+    }
   }
 `

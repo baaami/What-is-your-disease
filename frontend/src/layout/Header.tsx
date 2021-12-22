@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import { HeaderContainer } from '../styles/Layout.styles'
+import { Link, Route, Switch } from 'react-router-dom'
 import logo from '../assets/img/hlogo.svg'
 import Home from '../pages/Home'
 import Signup from '../pages/Signup'
@@ -16,7 +16,7 @@ interface IHeaderProps {}
 
 export default function Header(props: IHeaderProps) {
   return (
-    <BrowserRouter>
+    <>
       <HeaderContainer>
         <div className="wrap">
           <Link to="/">
@@ -27,17 +27,17 @@ export default function Header(props: IHeaderProps) {
           </Link>
         </div>
       </HeaderContainer>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/category" element={<Category />} />
-        <Route path="/mypage" element={<Mypage />} />
-        <Route path="/infoForm" element={<InfoForm />} />
-        <Route path="/posts/lists" element={<PostsLists />} />
-        <Route path="/posts/edit" element={<PostsEdit />} />
-        <Route path="/posts/detail" element={<PostsDetail />} />
-        <Route path="/search" element={<Search />} />
-      </Routes>
-    </BrowserRouter>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/signup" component={Signup} />
+        <Route path="/category" component={Category} />
+        <Route path="/mypage" component={Mypage} />
+        <Route path="/infoForm" component={InfoForm} />
+        <Route path="/posts/lists" component={PostsLists} />
+        <Route path="/posts/edit" component={PostsEdit} />
+        <Route path="/posts/detail" component={PostsDetail} />
+        <Route path="/search" component={Search} />
+      </Switch>
+    </>
   )
 }

@@ -1,16 +1,17 @@
 import * as React from 'react'
-import Footer from './layout/Footer'
 import Header from './layout/Header'
-import Home from './pages/Home'
+import Footer from './layout/Footer'
 
-function App() {
-  return (
-    <>
-      <Header />
-      <Home />
-      <Footer />
-    </>
-  )
+export default class App extends React.Component {
+  children: any
+
+  public render() {
+    return (
+      <>
+        <Header />
+        {this.children}
+        <Footer />
+      </>
+    )
+  }
 }
-
-export default App

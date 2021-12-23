@@ -23,7 +23,7 @@ export default function Auth(props: AuthProps) {
 
       // 예시로 로컬에 저장
       localStorage.setItem('token', access_token) //예시로 로컬에 저장함
-
+      window.alert('로그인에 성공하였습니다.')
       history.replace('/') // 토큰 받았았고 로그인됐으니 화면 전환시켜줌(메인으로)
     })
     .catch(err => {

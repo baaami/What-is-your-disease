@@ -4,6 +4,8 @@ import * as authCtrl from './auth.ctrl';
 
 const auth = new Router();
 
+auth.post('/callback/kakao', authCtrl.kakao);
+
 auth.get(
   '/kakao',
   passport.authenticate('kakao', {

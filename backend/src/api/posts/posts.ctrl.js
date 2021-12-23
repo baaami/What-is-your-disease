@@ -12,9 +12,12 @@ const removeHtmlAndShorten = (body) => {
   return filtered.length < 200 ? filtered : `${filtered.slice(0, 200)}...`;
 };
 
-/*
-  GET /api/posts?nick=&category=
-*/
+/**
+ * GET /api/posts?nick=&category=
+ *
+ * @brief     존재하는 query에 한해서 원하는 포스트 리스트를 전달
+ * @param {*} ctx
+ */
 export const list = async (ctx) => {
   const { category, nick } = ctx.query;
   // tag, nick 값이 유효하면 객체 안에 넣고, 그렇지 않으면 넣지 않음

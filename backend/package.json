@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/SeongBeom27/What-is-your-disease#readme",
   "dependencies": {
+    "axios": "^0.24.0",
     "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
     "eslint-config-prettier": "^8.3.0",

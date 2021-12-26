@@ -37,6 +37,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-kakao": "^1.0.1",
     "passport-naver": "^1.0.6",
+    "rand-token": "^1.0.1",
     "sanitize-html": "^2.6.1"
   }
 }

@@ -17,12 +17,9 @@ export default function Auth(props: AuthProps) {
   client
     .post('/api/auth/callback/kakao', { code })
     .then(res => {
-      console.log(res) // 넘어오는 토큰
-
-      const access_token = res.data.accessToken
-
+      console.log('jwt token : ', res.data) //예시로
       // 예시로 로컬에 저장
-      localStorage.setItem('token', access_token) //예시로 로컬에 저장함
+      localStorage.setItem('jwt token : ', res.data) //예시로 로컬에 저장함
       window.alert('로그인에 성공하였습니다.')
       history.replace('/') // 토큰 받았았고 로그인됐으니 화면 전환시켜줌(메인으로)
     })
@@ -32,13 +29,5 @@ export default function Auth(props: AuthProps) {
       history.replace('/login') // 로그인 실패하면 로그인화면으로 돌려보냄
     })
 
-  return (
-    <div>
-      <PopularPostBanner className="wrap">
-        <div className="title">인기 게시글</div>
-      </PopularPostBanner>
-      <h1>{code}</h1>
-      <h1>check</h1>
-    </div>
-  )
+  return <div></div>
 }

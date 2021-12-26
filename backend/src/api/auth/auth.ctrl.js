@@ -1,14 +1,16 @@
-import User from '../../models/user';
 import mongoose from 'mongoose';
 import axios from 'axios';
 import qs from 'querystring';
+
+const jwt = require('../../lib/jwt');
 
 export const kakao = async (ctx) => {
   // 인가 코드 획득
   const { code } = ctx.request.body;
   // qs.stringify 를 통하여 보내여서 해결
+  let rep_token, rep_user;
   try {
-    const Tokens = await axios({
+    rep_token = await axios({
       method: 'POST',
       url: 'https://kauth.kakao.com/oauth/token',
       headers: {
@@ -21,16 +23,30 @@ export const kakao = async (ctx) => {
         code: code,
       }),
     });
-
-    ctx.body = {
-      accessToken: 'tokenvalue',
-      code: code,
-    };
-
-    console.log(Tokens);
   } catch (err) {
-    console.log(err);
+    console.log(err.response.data);
   }
+
+  const { access_token } = rep_token.data;
+
+  try {
+    rep_user = await axios({
+      method: 'get',
+      url: 'https://kapi.kakao.com/v2/user/me',
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    console.log('user Data : ', rep_user.data);
+  } catch (err) {
+    console.log(err.response.data);
+  }
+
+  const jwtToken = await jwt.sign(rep_user.data);
+
+  // access token을 JWT를 사용하여 서버만의 토큰으로 발급 후 front에 전달
+  ctx.body = jwtToken;
 };
 
 export const logout = async (ctx) => {

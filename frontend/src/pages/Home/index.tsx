@@ -38,7 +38,10 @@ export default function Home(props: IHomeProps) {
           })}
         </div>
       </CategoryBanner>
-      <BlueBanner></BlueBanner>
+      <BlueBanner>
+        <h3>너의 건강상태도 알려줘~!</h3>
+        <button>로그인 하고 글 쓰러가기</button>
+      </BlueBanner>
       <PopularPostBanner className="wrap">
         <div className="title">인기 게시글</div>
       </PopularPostBanner>

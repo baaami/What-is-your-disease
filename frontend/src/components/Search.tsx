@@ -25,6 +25,7 @@ const SearchContainer = styled.div`
     border: 1px solid #ccc;
     border-radius: 55px;
     background: #f9f9f9;
+    box-shadow: 1px 10px 7px -11px rgba(0, 0, 0, 0.2);
 
     &::placeholder {
       color: #999;

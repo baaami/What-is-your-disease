@@ -2,7 +2,6 @@ import * as React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useEffect } from 'react'
 import client from '../../lib/client'
-import { PopularPostBanner } from '../../styles/Home.styles'
 
 interface AuthProps {}
 

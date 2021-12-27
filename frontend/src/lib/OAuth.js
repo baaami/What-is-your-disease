@@ -1,6 +1,6 @@
 import * as config from '../config'
 
 const CLIENT_ID = config.CLIENT_ID
-const REDIRECT_URI = 'http://localhost:3000/api/auth/callback/kakao'
+const REDIRECT_URI = 'http://localhost:3001/api/auth/callback/kakao'
 
 export const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`

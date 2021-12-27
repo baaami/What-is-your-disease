@@ -17,7 +17,7 @@ export default function Signup(props: ISignupProps) {
       <h2>SNS로 시작하기</h2>
       <div>
         <button>
-          <img src={naver} alt="네이버 로그인 아이콘" />c
+          <img src={naver} alt="네이버 로그인 아이콘" />
         </button>
         <button onClick={getKakaoCode}>
           <img src={kakao} alt="카카오 로그인 아이콘" />

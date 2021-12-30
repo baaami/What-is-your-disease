@@ -44,6 +44,52 @@ export const read = async (ctx) => {
 };
 
 /**
+ * 포스트 작성
+ * POST /api/posts/write
+ * {
+ *    title: '제목',
+ *    body:  '내용',
+ *    tags: ['태그1', '태그2']
+ * }
+ */
+export const write = async (ctx) => {
+  const schema = Joi.object().keys({
+    // 객체가 다음 필드를 가지고 있음을 검증
+    title: Joi.string().required(), // required가 있으면 필수항목
+    body: Joi.string().required(),
+    category: Joi.string().required(),
+  });
+  const result = schema.validate(ctx.request.body);
+  if (result.error) {
+    ctx.status = 400; // Bad Request
+    ctx.body = result.error;
+    return;
+  }
+  // REST API의 Reuqest Body는 ctx.request.body에서 조회 가능
+  const { title, body, category } = ctx.request.body;
+  const post = new Post({
+    title,
+    body,
+    category,
+    views: 0,
+    // user: {
+    //   _id: ctx.req.user._id,
+    //   nick: ctx.req.user.nick,
+    // },
+  });
+  try {
+    // async/await 문법으로 데이터베이스 저장 요청을 완료할 때 까지 대기
+    // await를 사용하는 방법 다시 정리
+    // 1. await를 사용하려는 함수 앞에 async키워드를 넣어야함
+    // 2. await 는 try~catch 문을 사용해야함
+    await post.save();
+    ctx.body = post;
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};
+
+/**
  * 포스트 수정 (특정 필드 변경)
  * PATCH /api/posts/:id
  * {

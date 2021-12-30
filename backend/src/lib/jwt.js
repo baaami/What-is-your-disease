@@ -1,4 +1,4 @@
-const randToken = require('rand-token');
+// const randToken = require('rand-token');
 const jwt = require('jsonwebtoken');
 const secretKey = require('./secretkey').secretKey;
 const options = require('./secretkey').options;
@@ -10,13 +10,12 @@ module.exports = {
   sign: async (user) => {
     const payload = {
       id: user.id,
-      provider: user.provider,
     };
 
     const incoded = {
       // access token 발급
       token: jwt.sign(payload, secretKey, options),
-      refreshToken: randToken.uid(256),
+      // refreshToken: randToken.uid(256),
     };
 
     return incoded;

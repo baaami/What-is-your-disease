@@ -17,7 +17,7 @@ export default function Auth(props: AuthProps) {
       .then(res => {
         console.log('Response Data : ', res.data) //예시로
         // 예시로 로컬에 저장
-        localStorage.setItem('jwt token : ', res.data.token) //예시로 로컬에 저장함
+        localStorage.setItem('jwttoken', res.data.token) //예시로 로컬에 저장함
         window.alert('로그인에 성공하였습니다.')
         history.replace('/') // 토큰 받았았고 로그인됐으니 화면 전환시켜줌(메인으로)
       })

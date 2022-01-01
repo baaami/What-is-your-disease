@@ -15,11 +15,11 @@ const checkLoggedIn = async (ctx, next) => {
     let decoded_id;
     try {
       // verify를 통해 값 decode
-      const decoded_id = await jwt.verify(token, secretKey);
-      console.log('[TEST] id : ', decoded_id.id);
+      const { id } = await jwt.verify(token, secretKey);
+      console.log('[TEST] id : ', id);
 
       // decoded_id를 DB에서 조회하여 사용자 find
-      const ExistUser = await User.findById(decoded_id.id);
+      const ExistUser = await User.findById(id);
       console.log('[TEST] Exist User : ', ExistUser);
       if (ExistUser) {
         ctx.request.user = ExistUser;

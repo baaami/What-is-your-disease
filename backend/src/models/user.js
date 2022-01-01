@@ -3,8 +3,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const UserSchema = new Schema({
-  id: String,
-  nickname: String,
+  _id: mongoose.Types.ObjectId,
+  providerId: String,
   provider: String,
   info: {
     name: String,
@@ -12,12 +12,13 @@ const UserSchema = new Schema({
     gender: String,
     bloodtype: String,
     allergy: Array,
+    medicines: Array,
   },
 });
 
 // 스태틱 메서드
-UserSchema.statics.findById = function (id) {
-  return this.findOne({ id });
+UserSchema.statics.findByproviderId = function (providerId) {
+  return this.findOne({ providerId });
 };
 
 const User = mongoose.model('User', UserSchema);

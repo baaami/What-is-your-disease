@@ -1,32 +1,28 @@
 import Post from '../../models/post';
 import mongoose from 'mongoose';
-import sanitizeHtml from 'sanitize-html';
-import Joi from 'joi';
 
 const { ObjectId } = mongoose.Types;
 
-const sanitizeOption = {
-  allowedTags: [
-    'h1',
-    'h2',
-    'b',
-    'i',
-    'u',
-    's',
-    'p',
-    'ul',
-    'ol',
-    'li',
-    'blockquote',
-    'a',
-    'img',
-  ],
-  allowedAttributes: {
-    a: ['href', 'name', 'target'],
-    img: ['src'],
-    li: ['class'],
-  },
-  allowedSchemes: ['data', 'http'],
+// ObjectId 검증
+export const getPostById = async (ctx, next) => {
+  const { id } = ctx.params;
+  if (!ObjectId.isValid(id)) {
+    ctx.status = 400;
+    return;
+  }
+
+  try {
+    const post = await Post.findById(id);
+
+    // 포스트가 존재하지 않을 때
+    if (!post) {
+      ctx.status = 404;
+    }
+    ctx.state.post = post;
+    return next();
+  } catch (e) {
+    ctx.throw(500, e);
+  }
 };
 
 /**
@@ -34,18 +30,12 @@ const sanitizeOption = {
  * GET /api/post/:id
  */
 export const read = async (ctx) => {
-  const { id } = ctx.params;
-  try {
-    const PostOne = await Post.findById(id).exec();
-    ctx.body = PostOne;
-  } catch (e) {
-    ctx.throw(500, e);
-  }
+  ctx.body = ctx.state.post;
 };
 
 /**
  * 포스트 작성
- * POST /api/posts/write
+ * POST /api/post/write
  * {
  *    title: '제목',
  *    body:  '내용',
@@ -53,29 +43,16 @@ export const read = async (ctx) => {
  * }
  */
 export const write = async (ctx) => {
-  const schema = Joi.object().keys({
-    // 객체가 다음 필드를 가지고 있음을 검증
-    title: Joi.string().required(), // required가 있으면 필수항목
-    body: Joi.string().required(),
-    category: Joi.string().required(),
-  });
-  const result = schema.validate(ctx.request.body);
-  if (result.error) {
-    ctx.status = 400; // Bad Request
-    ctx.body = result.error;
-    return;
-  }
   // REST API의 Reuqest Body는 ctx.request.body에서 조회 가능
-  const { title, body, category } = ctx.request.body;
+  const { title, body, category, user } = ctx.request.body;
+
   const post = new Post({
     title,
     body,
     category,
     views: 0,
-    // user: {
-    //   _id: ctx.req.user._id,
-    //   nick: ctx.req.user.nick,
-    // },
+    comments: [],
+    user,
   });
   try {
     // async/await 문법으로 데이터베이스 저장 요청을 완료할 때 까지 대기

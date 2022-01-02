@@ -4,9 +4,10 @@ import checkLoggedIn from '../../lib/checkLoggedIn';
 
 const post = new Router();
 
-post.patch('/:id', checkLoggedIn, postCtrl.update);
-post.delete('/:id', checkLoggedIn, postCtrl.remove);
-post.get('/:id', postCtrl.read);
+post.get('/:id', postCtrl.getPostById, postCtrl.read);
+// TODO : CheckOwnPost 미들웨어 추가 필요
+post.patch('/:id', postCtrl.getPostById, checkLoggedIn, postCtrl.update);
+post.delete('/:id', postCtrl.getPostById, checkLoggedIn, postCtrl.remove);
 post.post('/write', checkLoggedIn, postCtrl.write);
 
 export default post;

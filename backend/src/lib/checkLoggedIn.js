@@ -21,7 +21,7 @@ const checkLoggedIn = async (ctx, next) => {
       const ExistUser = await User.findById(_id);
       console.log('[TEST] Exist User : ', ExistUser);
       if (ExistUser) {
-        ctx.request.user = ExistUser;
+        ctx.state.user = ExistUser;
         return next();
       } else {
         ctx.status = 401;

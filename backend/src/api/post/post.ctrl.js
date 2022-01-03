@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 const { ObjectId } = mongoose.Types;
 
-// ObjectId 검증
+// post id 검증
 export const getPostById = async (ctx, next) => {
   const { id } = ctx.params;
   if (!ObjectId.isValid(id)) {
@@ -23,6 +23,16 @@ export const getPostById = async (ctx, next) => {
   } catch (e) {
     ctx.throw(500, e);
   }
+};
+
+// User가 Post의 Owner인지 확인
+export const checkOwnPost = (ctx, next) => {
+  const { user, post } = ctx.state;
+  if (post.user._id.toString() !== user._id.toString()) {
+    ctx.status = 403;
+    return;
+  }
+  return next();
 };
 
 /**

@@ -40,6 +40,21 @@ export const checkOwnPost = (ctx, next) => {
  * GET /api/post/:id
  */
 export const read = async (ctx) => {
+  const post = ctx.state.post;
+
+  try {
+    const result = await Post.findOneAndUpdate(
+      { _id: post._id },
+      { $inc: { views: 1 } },
+      { new: true },
+    );
+
+    if (!result) {
+      console.log('findOneAndUpdate Error');
+    }
+  } catch (e) {
+    ctx.throw(500, e);
+  }
   ctx.body = ctx.state.post;
 };
 

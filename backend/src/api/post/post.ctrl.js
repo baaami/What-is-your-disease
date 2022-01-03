@@ -87,27 +87,8 @@ export const write = async (ctx) => {
  */
 export const update = async (ctx) => {
   const { id } = ctx.params;
-  // write 에서 사용한 schema 와 비슷한데, required() 가 없습니다.
-  const schema = Joi.object().keys({
-    title: Joi.string(),
-    body: Joi.string(),
-    category: Joi.string(),
-  });
-
-  // 검증 후, 검증 실패시 에러처리
-  const result = schema.validate(ctx.request.body);
-  if (result.error) {
-    ctx.status = 400; // Bad Request
-    ctx.body = result.error;
-    return;
-  }
 
   const nextData = { ...ctx.request.body }; // 객체를 복사하고
-  // body 값이 주어졌으면 HTML 필터링
-  if (nextData.body) {
-    nextData.body = sanitizeHtml(nextData.body, sanitizeOption);
-  }
-
   try {
     const post = await Post.findByIdAndUpdate(id, nextData, {
       new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.

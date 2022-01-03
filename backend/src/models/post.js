@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import User from './user';
 
 const { Schema } = mongoose;
 
@@ -8,13 +9,23 @@ const PostSchema = new Schema({
   body: String,
   category: String,
   views: Number,
+  comments: Array,
   publishedDate: {
     type: Date,
     default: Date.now, // 현재 날짜를 기본값으로 지정
   },
   user: {
     _id: mongoose.Types.ObjectId,
-    nick: String,
+    providerId: String,
+    provider: String,
+    info: {
+      name: String,
+      age: Number,
+      gender: String,
+      bloodtype: String,
+      allergy: Array,
+      medicines: Array,
+    },
   },
 });
 

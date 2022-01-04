@@ -2,7 +2,6 @@ import Post from '../../models/post';
 import mongoose from 'mongoose';
 import sanitizeHtml from 'sanitize-html';
 import User from '../../models/user';
-import Joi from 'joi';
 
 const { ObjectId } = mongoose.Types;
 
@@ -21,8 +20,8 @@ const removeHtmlAndShorten = (body) => {
  */
 export const latest = async (ctx) => {
   try {
-    const posts = await Post.find(query)
-      .sort({ _id: -1 })
+    const posts = await Post.find({})
+      .sort({ publishedDate: -1 })
       .limit(10)
       .lean()
       .exec();
@@ -36,22 +35,15 @@ export const latest = async (ctx) => {
 };
 
 /**
- * GET /api/posts/latest
+ * GET /api/posts/hot
  *
  * @brief     인기 포스트 리스트를 전달
  * @param {*} ctx
  */
 export const hot = async (ctx) => {
-  // tag, nick 값이 유효하면 객체 안에 넣고, 그렇지 않으면 넣지 않음
-  const query = {
-    ...(nick ? { 'user.nick': nick } : {}),
-    ...(category ? { category: category } : {}),
-  };
-
   try {
-    // TODO : views가 큰 순서대로 sort <- 시간 or 하루 동안의 인기게시물
-    const posts = await Post.find(query)
-      .sort({ _id: -1 })
+    const posts = await Post.find({})
+      .sort({ views: -1 })
       .limit(10)
       .lean()
       .exec();
@@ -65,34 +57,23 @@ export const hot = async (ctx) => {
 };
 
 /**
- * GET /api/posts/latest
+ * GET /api/posts/user
  *
  * @brief     로그인 회원 포스트 리스트를 전달
  * @param {*} ctx
  */
 export const user = async (ctx) => {
-  // tag, nick 값이 유효하면 객체 안에 넣고, 그렇지 않으면 넣지 않음
-  const { token } = ctx.request.body;
-  let decoded_id, ExistUser;
+  const { id } = ctx.params;
 
+  let user;
   try {
-    // verify를 통해 값 decode
-    decoded_id = await jwt.verify(token, secretKey);
-
-    try {
-      // decoded_id를 DB에서 조회하여 사용자 find
-      ExistUser = await User.findById(decoded_id.id);
-    } catch (err) {
-      console.log('Get User Error');
-      console.log(err);
-    }
-  } catch (err) {
-    console.log('jwt verify error');
-    console.log(err);
+    user = await User.findById(id);
+  } catch (e) {
+    ctx.throw(500, e);
   }
 
   const query = {
-    ...(ExistUser.id ? { 'user.id': ExistUser.id } : {}),
+    ...(user._id ? { 'user._id': user._id } : {}),
   };
 
   try {
@@ -101,25 +82,28 @@ export const user = async (ctx) => {
       .limit(10)
       .lean()
       .exec();
-    ctx.body = posts.map((post) => ({
-      ...post,
-      body: removeHtmlAndShorten(post.body),
-    }));
+
+    ctx.body = posts;
   } catch (e) {
     ctx.throw(500, e);
   }
 };
 
 /**
- * GET /api/posts/latest
+ * GET /api/posts?category=value1
  *
  * @brief     로그인 회원 포스트 리스트를 전달
  * @param {*} ctx
  */
-export const filter = async (ctx) => {
-  // tag, nick 값이 유효하면 객체 안에 넣고, 그렇지 않으면 넣지 않음
+export const category = async (ctx) => {
+  const { category } = ctx.query;
+
+  if (!category) {
+    ctx.status = 400;
+    return;
+  }
+
   const query = {
-    ...(nick ? { 'user.nick': nick } : {}),
     ...(category ? { category: category } : {}),
   };
 
@@ -129,11 +113,17 @@ export const filter = async (ctx) => {
       .limit(10)
       .lean()
       .exec();
-    ctx.body = posts.map((post) => ({
-      ...post,
-      body: removeHtmlAndShorten(post.body),
-    }));
+
+    ctx.body = posts;
   } catch (e) {
     ctx.throw(500, e);
   }
 };
+
+/**
+ * GET /api/posts/filter/:id
+ *
+ * @brief     로그인 회원 포스트 리스트를 전달
+ * @param {*} ctx
+ */
+export const filter = async (ctx) => {};

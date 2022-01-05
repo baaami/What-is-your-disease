@@ -4,6 +4,7 @@ import sanitizeHtml from 'sanitize-html';
 import User from '../../models/user';
 
 const { ObjectId } = mongoose.Types;
+const PageNum = 10;
 
 const removeHtmlAndShorten = (body) => {
   const filtered = sanitizeHtml(body, {
@@ -13,7 +14,7 @@ const removeHtmlAndShorten = (body) => {
 };
 
 /**
- * GET /api/posts/latest
+ * GET /api/posts/latest?page=
  *
  * @brief     최신 포스트 리스트를 전달
  * @param {*} ctx
@@ -23,8 +24,14 @@ export const latest = async (ctx) => {
     const posts = await Post.find({})
       .sort({ publishedDate: -1 })
       .limit(10)
+      .skip((ctx.page - 1) * PageNum)
       .lean()
       .exec();
+
+    // query를 따로 js 파일에 정리하고 다음 코드를 getPageNum 미들웨어에 추가하도록 하기
+    const postCount = await Post.find(query).countDocuments().exec();
+    ctx.set('Last-Page', Math.ceil(postCount / 10));
+
     ctx.body = posts.map((post) => ({
       ...post,
       body: removeHtmlAndShorten(post.body),
@@ -35,7 +42,7 @@ export const latest = async (ctx) => {
 };
 
 /**
- * GET /api/posts/hot
+ * GET /api/posts/hot?page=
  *
  * @brief     인기 포스트 리스트를 전달
  * @param {*} ctx
@@ -44,9 +51,15 @@ export const hot = async (ctx) => {
   try {
     const posts = await Post.find({})
       .sort({ views: -1 })
-      .limit(10)
+      .limit(PageNum)
+      .skip((ctx.page - 1) * PageNum)
       .lean()
       .exec();
+
+    // query를 따로 js 파일에 정리하고 다음 코드를 getPageNum 미들웨어에 추가하도록 하기
+    const postCount = await Post.find(query).countDocuments().exec();
+    ctx.set('Last-Page', Math.ceil(postCount / 10));
+
     ctx.body = posts.map((post) => ({
       ...post,
       body: removeHtmlAndShorten(post.body),
@@ -57,7 +70,7 @@ export const hot = async (ctx) => {
 };
 
 /**
- * GET /api/posts/user
+ * GET /api/posts/user?page=
  *
  * @brief     로그인 회원 포스트 리스트를 전달
  * @param {*} ctx
@@ -79,9 +92,14 @@ export const user = async (ctx) => {
   try {
     const posts = await Post.find(query)
       .sort({ _id: -1 })
-      .limit(10)
+      .limit(PageNum)
+      .skip((ctx.page - 1) * PageNum)
       .lean()
       .exec();
+
+    // query를 따로 js 파일에 정리하고 다음 코드를 getPageNum 미들웨어에 추가하도록 하기
+    const postCount = await Post.find(query).countDocuments().exec();
+    ctx.set('Last-Page', Math.ceil(postCount / 10));
 
     ctx.body = posts;
   } catch (e) {
@@ -90,7 +108,7 @@ export const user = async (ctx) => {
 };
 
 /**
- * GET /api/posts?category=value1
+ * GET /api/posts?page=&category=
  *
  * @brief     로그인 회원 포스트 리스트를 전달
  * @param {*} ctx
@@ -110,9 +128,14 @@ export const category = async (ctx) => {
   try {
     const posts = await Post.find(query)
       .sort({ _id: -1 })
-      .limit(10)
+      .limit(PageNum)
+      .skip((ctx.page - 1) * PageNum)
       .lean()
       .exec();
+
+    // query를 따로 js 파일에 정리하고 다음 코드를 getPageNum 미들웨어에 추가하도록 하기
+    const postCount = await Post.find(query).countDocuments().exec();
+    ctx.set('Last-Page', Math.ceil(postCount / 10));
 
     ctx.body = posts;
   } catch (e) {
@@ -121,7 +144,7 @@ export const category = async (ctx) => {
 };
 
 /**
- * GET /api/posts/filter/:id
+ * GET /api/posts/filter?page=&id=
  *
  * @brief     로그인 회원 포스트 리스트를 전달
  * @param {*} ctx

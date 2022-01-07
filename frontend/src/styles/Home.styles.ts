@@ -58,7 +58,6 @@ export const BlueBanner = styled.div`
     font-size: 28px;
     font-weight: 500;
     color: #1850a3;
-    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2);
     transition: all 0.2s ease-in;
 
     &:hover {
@@ -69,7 +68,39 @@ export const BlueBanner = styled.div`
 `
 export const PopularPostBanner = styled.div`
   padding: 70px 0 125px;
+
+  .popularPostContainer {
+    display: flex;
+    justify-content: space-between;
+
+    .popularPost {
+      position: relative;
+      width: 320px;
+      height: 432px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+
+      img {
+        position: absolute;
+        right: 34px;
+      }
+    }
+  }
 `
 export const LatestPostBanner = styled.div`
+  position: relative;
   padding: 70px 0 125px;
+
+  .viewMoreBtn {
+    position: absolute;
+    top: 80px;
+    right: 0;
+    font-size: 20px;
+    color: #666;
+
+    &:hover {
+      color: #000;
+    }
+  }
 `

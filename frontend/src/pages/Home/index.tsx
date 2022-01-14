@@ -7,6 +7,9 @@ import {
   LatestPostBanner,
 } from '../../styles/Home.styles'
 import Search from '../../components/Search'
+import num1 from '../../assets/img/num1.png'
+import num2 from '../../assets/img/num2.png'
+import num3 from '../../assets/img/num3.png'
 
 interface IHomeProps {}
 
@@ -44,9 +47,24 @@ export default function Home(props: IHomeProps) {
       </BlueBanner>
       <PopularPostBanner className="wrap">
         <div className="title">인기 게시글</div>
+        <div className="popularPostContainer">
+          <div className="popularPost">
+            <img src={num1} alt="1등 뱃지" />
+          </div>
+          <div className="popularPost">
+            <img src={num2} alt="2등 뱃지" />
+          </div>
+          <div className="popularPost">
+            <img src={num3} alt="3등 뱃지" />
+          </div>
+        </div>
       </PopularPostBanner>
       <LatestPostBanner className="wrap">
         <div className="title">최신 게시글</div>
+        <button className="viewMoreBtn">더보기 +</button>
+        <div className="latestPostContainer">
+          <div className="latestPost"></div>
+        </div>
       </LatestPostBanner>
     </HomeContainer>
   )

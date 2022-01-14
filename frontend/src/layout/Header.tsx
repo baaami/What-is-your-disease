@@ -23,14 +23,14 @@ export default function Header(props: IHeaderProps) {
           <Link to="/">
             <img src={logo} alt="logo" />
           </Link>
-          <Link className="signupTxt" to="/signup">
+          <Link className="signupTxt" to="/login">
             로그인 / 회원가입
           </Link>
         </div>
       </HeaderContainer>
       <Switch>
         <Route path="/" exact component={Home} />
-        <Route path="/signup" component={Signup} />
+        <Route path="/login" component={Signup} />
         <Route path="/category" component={Category} />
         <Route path="/mypage" component={Mypage} />
         <Route path="/infoForm" component={InfoForm} />

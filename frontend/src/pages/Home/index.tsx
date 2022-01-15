@@ -1,11 +1,5 @@
 import * as React from 'react'
-import {
-  HomeContainer,
-  CategoryBanner,
-  BlueBanner,
-  PopularPostBanner,
-  LatestPostBanner,
-} from '../../styles/Home.styles'
+import { HomeContainer, CategoryBanner, BlueBanner, PopularPostBanner, LatestPostBanner } from '../../styles/Home.styles'
 import Search from '../../components/Search'
 import num1 from '../../assets/img/num1.png'
 import num2 from '../../assets/img/num2.png'

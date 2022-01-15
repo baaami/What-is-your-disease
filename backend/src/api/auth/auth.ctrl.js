@@ -167,15 +167,15 @@ export const google = async (ctx) => {
         'content-type': 'application/x-www-form-urlencoded',
       },
       data: qs.stringify({
-        grant_type: 'authorization_code',
+        code: code,
         client_id: process.env.GOOGLE_ID,
         client_secret: process.env.GOOGLE_SECRET,
         redirect_uri: process.env.GOOGLE_CALLBACK_URL,
-        code: code,
+        grant_type: 'authorization_code',
       }),
     });
   } catch (err) {
-    console.log(err.response.data);
+    console.log(err);
   }
 
   console.log('[TEST] RepToken : ', RepToken);

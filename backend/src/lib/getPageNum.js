@@ -7,6 +7,7 @@ const getPageNum = async (ctx, next) => {
   }
 
   ctx.page = page;
+  next();
 };
 
 export default getPageNum;

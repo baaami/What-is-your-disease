@@ -124,6 +124,20 @@ export const LatestPostBanner = styled.div`
   position: relative;
   padding: 70px 0 125px;
 
+  @keyframes arrowShaking {
+    0% {
+      transform: translateX(0);
+    }
+
+    50% {
+      transform: translateX(8px);
+    }
+
+    100% {
+      transform: translateX(0);
+    }
+  }
+
   .viewMoreBtn {
     position: absolute;
     top: 80px;
@@ -159,7 +173,7 @@ export const LatestPostBanner = styled.div`
       }
 
       &:hover img {
-        right: 0;
+        animation: arrowShaking 1.5s infinite;
       }
     }
   }

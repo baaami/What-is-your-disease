@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useEffect } from 'react'
 import {
   HomeContainer,
   CategoryBanner,
@@ -9,6 +9,7 @@ import {
 import Search from '../../components/Search'
 import { Link } from 'react-router-dom'
 import arrow from '../../assets/img/arrow_right.png'
+import API from 'service/api'
 
 interface IHomeProps {}
 
@@ -51,6 +52,21 @@ const popularPosts = [
 ]
 
 export default function Home(props: IHomeProps) {
+  const getLatestPosts = async () => {
+    await API.posts
+      .getPosts()
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }
+
+  useEffect(() => {
+    getLatestPosts()
+  }, [])
+
   return (
     <HomeContainer>
       <Search />

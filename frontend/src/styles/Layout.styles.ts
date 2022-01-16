@@ -15,14 +15,15 @@ export const HeaderContainer = styled.div`
     justify-content: space-between;
     align-items: center;
     height: 125px;
-
-    .headerTxt {
-      color: #333;
-      font-size: 20px;
-      text-decoration: none;
-
-      &:hover {
-        color: #3c6d2e;
+    .rightArea {
+      .headerTxt {
+        color: #333;
+        font-size: 20px;
+        text-decoration: none;
+        margin: 0 10px;
+        &:hover {
+          color: #3c6d2e;
+        }
       }
     }
   }

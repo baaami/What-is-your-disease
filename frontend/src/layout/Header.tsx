@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { HeaderContainer } from '../styles/Layout.styles'
-import { Link, Route, Switch } from 'react-router-dom'
+import { Link, Route, Switch, useHistory } from 'react-router-dom'
 import logo from '../assets/img/hlogo.svg'
 import Home from '../pages/Home'
 import Signup from '../pages/Signup'
@@ -18,8 +18,9 @@ import Gauth from '../pages/Gauth'
 interface IHeaderProps {}
 
 export default function Header(props: IHeaderProps) {
+  const history = useHistory()
   const logoutHandler = async () => {
-    return localStorage.removeItem('jwttoken')
+    localStorage.removeItem('jwttoken')
   }
 
   return (
@@ -29,15 +30,25 @@ export default function Header(props: IHeaderProps) {
           <Link to="/">
             <img src={logo} alt="logo" />
           </Link>
-          {localStorage.getItem('jwttoken') ? (
-            <button className="headerTxt" onClick={logoutHandler}>
-              마이페이지
-            </button>
-          ) : (
-            <Link className="headerTxt" to="/login">
-              로그인 / 회원가입
-            </Link>
-          )}
+          <div className="rightArea">
+            {localStorage.getItem('jwttoken') ? (
+              <>
+                <button
+                  className="headerTxt"
+                  onClick={() => history.push('/mypage')}
+                >
+                  마이페이지
+                </button>
+                <button className="headerTxt" onClick={logoutHandler}>
+                  로그아웃
+                </button>
+              </>
+            ) : (
+              <Link className="headerTxt" to="/login">
+                로그인 / 회원가입
+              </Link>
+            )}
+          </div>
         </div>
       </HeaderContainer>
       <Switch>

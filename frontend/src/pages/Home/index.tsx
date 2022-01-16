@@ -54,7 +54,7 @@ const popularPosts = [
 export default function Home(props: IHomeProps) {
   const getLatestPosts = async () => {
     await API.posts
-      .getPosts()
+      .getLatestPosts()
       .then((res) => {
         console.log(res.data)
       })

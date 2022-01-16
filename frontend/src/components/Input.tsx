@@ -49,6 +49,7 @@ const Input = (props: InputModel) => {
         type={type}
         id={id}
         className={className}
+        name={name}
         autoComplete={autoComplete}
         value={value}
         onChange={onChange}

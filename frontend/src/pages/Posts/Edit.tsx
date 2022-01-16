@@ -41,7 +41,7 @@ export default function PostsEdit(props: IPostsEditProps) {
     [],
   )
   return (
-    <PostEditContainer>
+    <PostEditContainer className="wrap">
       <Input
         id="posts_title"
         type="text"
@@ -59,6 +59,7 @@ export default function PostsEdit(props: IPostsEditProps) {
         onChange={setEditContents}
         modules={modules}
         theme="snow"
+        style={{ height: '300px' }}
         placeholder="내용을 입력해주세요."
       />
     </PostEditContainer>

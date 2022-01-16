@@ -18,6 +18,10 @@ import Gauth from '../pages/Gauth'
 interface IHeaderProps {}
 
 export default function Header(props: IHeaderProps) {
+  const logoutHandler = async () => {
+    return localStorage.removeItem('jwttoken')
+  }
+
   return (
     <>
       <HeaderContainer>
@@ -25,9 +29,15 @@ export default function Header(props: IHeaderProps) {
           <Link to="/">
             <img src={logo} alt="logo" />
           </Link>
-          <Link className="signupTxt" to="/login">
-            로그인 / 회원가입
-          </Link>
+          {localStorage.getItem('jwttoken') ? (
+            <button className="headerTxt" onClick={logoutHandler}>
+              마이페이지
+            </button>
+          ) : (
+            <Link className="headerTxt" to="/login">
+              로그인 / 회원가입
+            </Link>
+          )}
         </div>
       </HeaderContainer>
       <Switch>

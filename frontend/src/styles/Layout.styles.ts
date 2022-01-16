@@ -16,7 +16,7 @@ export const HeaderContainer = styled.div`
     align-items: center;
     height: 125px;
 
-    .signupTxt {
+    .headerTxt {
       color: #333;
       font-size: 20px;
       text-decoration: none;

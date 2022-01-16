@@ -1,9 +1,17 @@
 import * as React from 'react'
-import { HomeContainer, CategoryBanner, BlueBanner, PopularPostBanner, LatestPostBanner } from '../../styles/Home.styles'
+import {
+  HomeContainer,
+  CategoryBanner,
+  BlueBanner,
+  PopularPostBanner,
+  LatestPostBanner,
+} from '../../styles/Home.styles'
 import Search from '../../components/Search'
 import num1 from '../../assets/img/num1.png'
 import num2 from '../../assets/img/num2.png'
 import num3 from '../../assets/img/num3.png'
+import { Link } from 'react-router-dom'
+import arrow from '../../assets/img/arrow_right.png'
 
 interface IHomeProps {}
 
@@ -37,7 +45,11 @@ export default function Home(props: IHomeProps) {
       </CategoryBanner>
       <BlueBanner>
         <h3>너의 건강상태도 알려줘~!</h3>
-        <button>로그인 하고 글 쓰러가기</button>
+        {localStorage.getItem('jwttoken') ? (
+          <Link to="/posts/edit">글 쓰러가기</Link>
+        ) : (
+          <Link to="/login">로그인 하고 글 쓰러가기</Link>
+        )}
       </BlueBanner>
       <PopularPostBanner className="wrap">
         <div className="title">인기 게시글</div>
@@ -57,7 +69,10 @@ export default function Home(props: IHomeProps) {
         <div className="title">최신 게시글</div>
         <button className="viewMoreBtn">더보기 +</button>
         <div className="latestPostContainer">
-          <div className="latestPost"></div>
+          <div className="latestPost">
+            <div className="postTitle">제목들어갈 부분</div>
+            <img src={arrow} alt="화살표 아이콘" />
+          </div>
         </div>
       </LatestPostBanner>
     </HomeContainer>

@@ -50,11 +50,14 @@ export const BlueBanner = styled.div`
     font-weight: 900;
     color: #fff;
   }
-  button {
+  a {
     width: 400px;
     height: 65px;
     background: #fff;
     border-radius: 65px;
+    text-decoration: none;
+    line-height: 64px;
+    text-align: center;
     font-size: 28px;
     font-weight: 500;
     color: #1850a3;

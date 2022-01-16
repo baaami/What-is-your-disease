@@ -55,7 +55,6 @@ export const BlueBanner = styled.div`
     height: 65px;
     background: #fff;
     border-radius: 65px;
-    text-decoration: none;
     line-height: 64px;
     text-align: center;
     font-size: 28px;
@@ -88,6 +87,36 @@ export const PopularPostBanner = styled.div`
         position: absolute;
         right: 34px;
       }
+      h2 {
+        margin: 50px 30px;
+        font-size: 22px;
+        font-weight: 400;
+      }
+      h3 {
+        margin: 0 30px;
+        font-size: 22px;
+        font-weight: 400;
+        color: #111;
+      }
+      p {
+        display: -webkit-box;
+        word-wrap: break-word;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 125px;
+        line-height: 24px;
+        margin: 35px 30px 40px;
+        font-size: 18px;
+        color: #333;
+      }
+      h4 {
+        margin: 0 30px;
+        text-align: end;
+        font-size: 16px;
+        font-weight: 400;
+      }
     }
   }
 `
@@ -104,6 +133,34 @@ export const LatestPostBanner = styled.div`
 
     &:hover {
       color: #000;
+    }
+  }
+  .latestPostContainer {
+    .latestPost {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      line-height: 80px;
+      padding: 0 25px;
+
+      .postTitle {
+        font-size: 22px;
+        color: #333;
+      }
+      img {
+        position: relative;
+        right: 10px;
+        height: 18px;
+        transition: all 0.3s ease-in;
+      }
+
+      &:nth-of-type(2n + 1) {
+        background: #f4f4f4;
+      }
+
+      &:hover img {
+        right: 0;
+      }
     }
   }
 `

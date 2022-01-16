@@ -7,9 +7,6 @@ import {
   LatestPostBanner,
 } from '../../styles/Home.styles'
 import Search from '../../components/Search'
-import num1 from '../../assets/img/num1.png'
-import num2 from '../../assets/img/num2.png'
-import num3 from '../../assets/img/num3.png'
 import { Link } from 'react-router-dom'
 import arrow from '../../assets/img/arrow_right.png'
 
@@ -24,6 +21,33 @@ const categories = [
   { id: '5', imgUrl: '/assets/img/muscle.svg', name: '근육통' },
   { id: '6', imgUrl: '/assets/img/virus.svg', name: '바이러스' },
   { id: '7', imgUrl: '/assets/img/stomache.svg', name: '복통' },
+]
+
+const popularPosts = [
+  {
+    img: '/assets/img/num1.png',
+    category: '카테고리',
+    title: '제목',
+    content:
+      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not o',
+    author: '작성자',
+  },
+  {
+    img: '/assets/img/num2.png',
+    category: '카테고리',
+    title: '제목',
+    content:
+      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not o',
+    author: '작성자',
+  },
+  {
+    img: '/assets/img/num3.png',
+    category: '카테고리',
+    title: '제목',
+    content:
+      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not o',
+    author: '작성자',
+  },
 ]
 
 export default function Home(props: IHomeProps) {
@@ -54,25 +78,39 @@ export default function Home(props: IHomeProps) {
       <PopularPostBanner className="wrap">
         <div className="title">인기 게시글</div>
         <div className="popularPostContainer">
-          <div className="popularPost">
-            <img src={num1} alt="1등 뱃지" />
-          </div>
-          <div className="popularPost">
-            <img src={num2} alt="2등 뱃지" />
-          </div>
-          <div className="popularPost">
-            <img src={num3} alt="3등 뱃지" />
-          </div>
+          {popularPosts.map((item, idx) => (
+            <Link
+              to=""
+              className="popularPost"
+              key={`popularPosts: ${idx.toString()}`}
+            >
+              <img src={item.img} alt="뱃지" />
+              <h2>#{item.category}</h2>
+              <h3>{item.title}</h3>
+              <p>{item.content}</p>
+              <h4>{item.author}</h4>
+            </Link>
+          ))}
         </div>
       </PopularPostBanner>
       <LatestPostBanner className="wrap">
         <div className="title">최신 게시글</div>
-        <button className="viewMoreBtn">더보기 +</button>
+        <Link to="/posts/lists" className="viewMoreBtn">
+          더보기 +
+        </Link>
         <div className="latestPostContainer">
-          <div className="latestPost">
+          <Link to="" className="latestPost">
             <div className="postTitle">제목들어갈 부분</div>
             <img src={arrow} alt="화살표 아이콘" />
-          </div>
+          </Link>
+          <Link to="" className="latestPost">
+            <div className="postTitle">제목들어갈 부분</div>
+            <img src={arrow} alt="화살표 아이콘" />
+          </Link>
+          <Link to="" className="latestPost">
+            <div className="postTitle">제목들어갈 부분</div>
+            <img src={arrow} alt="화살표 아이콘" />
+          </Link>
         </div>
       </LatestPostBanner>
     </HomeContainer>

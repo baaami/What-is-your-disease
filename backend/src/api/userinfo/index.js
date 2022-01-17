@@ -5,6 +5,6 @@ import checkLoggedIn from '../../lib/checkLoggedIn';
 const userinfo = new Router();
 
 // 유저 정보 업데이트
-userinfo.patch('/update', userinfoCtrl.update);
+userinfo.patch('/update', checkLoggedIn, userinfoCtrl.update);
 
 export default userinfo;

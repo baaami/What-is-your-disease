@@ -1,9 +1,24 @@
 import Axios, { AxiosRequestConfig } from 'axios'
-import { BASE_URL, GET, JSON_HEADER } from 'shared/api_constant'
-
+import { BASE_URL, GET, PATCH, JSON_HEADER } from 'shared/api_constant'
+import { UserInfoModel } from '../model/authModel'
 export const auth = {
+  updateUserInfo: async (userInfo: UserInfoModel) => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: PATCH,
+      url: '/api/userinfo/update',
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+      data: {
+        ...userInfo,
+      },
+    }
+    return Axios(config)
+  },
   logout: async () => {
-    const token = localStorage.get('jwttoken')
+    const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
       url: 'api/auth/logout',

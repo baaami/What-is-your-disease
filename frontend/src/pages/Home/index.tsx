@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   HomeContainer,
   CategoryBanner,
@@ -52,11 +52,12 @@ const popularPosts = [
 ]
 
 export default function Home(props: IHomeProps) {
+  const [latest_posts, setLatestPosts] = useState([])
   const getLatestPosts = async () => {
     await API.posts
       .getLatestPosts()
       .then((res) => {
-        console.log(res.data)
+        setLatestPosts(res.data)
       })
       .catch((e) => {
         console.log(e)
@@ -115,18 +116,16 @@ export default function Home(props: IHomeProps) {
           더보기 +
         </Link>
         <div className="latestPostContainer">
-          <Link to="" className="latestPost">
-            <div className="postTitle">제목들어갈 부분</div>
-            <img src={arrow} alt="화살표 아이콘" />
-          </Link>
-          <Link to="" className="latestPost">
-            <div className="postTitle">제목들어갈 부분</div>
-            <img src={arrow} alt="화살표 아이콘" />
-          </Link>
-          <Link to="" className="latestPost">
-            <div className="postTitle">제목들어갈 부분</div>
-            <img src={arrow} alt="화살표 아이콘" />
-          </Link>
+          {latest_posts.map((item: any) => {
+            return (
+              <>
+                <Link to="" className="latestPost">
+                  <div className="postTitle">{item.title}</div>
+                  <img src={arrow} alt="화살표 아이콘" />
+                </Link>
+              </>
+            )
+          })}
         </div>
       </LatestPostBanner>
     </HomeContainer>

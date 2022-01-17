@@ -4,7 +4,7 @@ import styled from 'styled-components'
 interface InputModel {
   label?: string
   type: 'text' | 'password' | 'search' | 'file'
-  value: string
+  value: string | number | undefined
   onChange: React.ChangeEventHandler<HTMLInputElement>
   onFocus?: React.FocusEventHandler<HTMLInputElement>
   onBlur?: React.FocusEventHandler<HTMLInputElement>

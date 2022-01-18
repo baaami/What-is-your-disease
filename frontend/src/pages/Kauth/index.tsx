@@ -2,10 +2,14 @@ import * as React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useEffect } from 'react'
 import client from '../../lib/client'
+import { useRecoilState } from 'recoil'
+import { currentUserInfo } from 'store/userInfo'
+
 interface KauthProps {}
 
 export default function Kauth(props: KauthProps) {
   const history = useHistory()
+  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
 
   useEffect(() => {
     // 인가 코드
@@ -28,9 +32,17 @@ export default function Kauth(props: KauthProps) {
           !res.data.user._doc.info.gender === undefined
         ) {
           // 회원정보 입력 페이지로 이동
+          setUserInfo({
+            ...userInfo,
+            ...res.data.user._doc,
+          })
           alert('로그인에 성공하였습니다. 회원 정보 입력 페이지로 이동합니다.')
           history.push('/infoForm')
         } else {
+          setUserInfo({
+            ...userInfo,
+            ...res.data.user._doc,
+          })
           history.replace('/') // 토큰 받았았고 로그인됐으니 화면 전환시켜줌(메인으로)
         }
       })

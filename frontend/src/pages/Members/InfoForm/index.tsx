@@ -1,11 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FormContainer, FormRow, UserForm } from 'styles/InfoForm.styles'
 import Input from 'components/Input'
 import API from 'service/api'
-import { UserInfoModel } from 'service/model/authModel'
+import { useHistory } from 'react-router-dom'
+import { useRecoilState } from 'recoil'
+import { currentUserInfo } from 'store/userInfo'
 interface IInfoFormProps {}
 
 export default function InfoForm(props: IInfoFormProps) {
+  const history = useHistory()
+
+  const [userInfo] = useRecoilState(currentUserInfo)
+  const { name, age, gender, bloodtype, allergy, medicines } = userInfo.info
   const [form_value, setFormValue] = useState({
     name: '',
     age: '',
@@ -37,12 +43,30 @@ export default function InfoForm(props: IInfoFormProps) {
     await API.auth
       .updateUserInfo(req_data)
       .then((res: any) => {
-        console.log(res.data)
+        alert('회원정보 수정에 성공하였습니다.')
+        history.push('/mypage')
       })
       .catch((e) => {
         console.log(e)
+        alert('회원정보 수정중 오류가 발생했습니다.')
       })
   }
+
+  const mountSetForm = () => {
+    setFormValue({
+      ...form_value,
+      name,
+      age,
+      gender,
+      bloodtype,
+      allergy: allergy.join(', '),
+      medicines: medicines.join(', '),
+    })
+  }
+
+  useEffect(() => {
+    mountSetForm()
+  }, [])
 
   return (
     <FormContainer className="wrap">

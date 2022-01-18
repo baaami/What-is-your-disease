@@ -26,6 +26,10 @@ export const update = async (ctx) => {
   }
 };
 
+/**
+ * GET /api/userinfo/accounts
+ * 유저 정보 전달
+ */
 export const accounts = async (ctx) => {
   let currentUser = await ctx.request.headers.authorization
     .replace("Bearer", "")
@@ -35,7 +39,6 @@ export const accounts = async (ctx) => {
   });
   try {
     const user = await User.findById(currentUser);
-    console.log(user);
     ctx.status = 200;
     ctx.body = user;
   } catch (e) {

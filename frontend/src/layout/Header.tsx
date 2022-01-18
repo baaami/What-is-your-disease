@@ -27,6 +27,7 @@ export default function Header(props: IHeaderProps) {
 
   const logoutHandler = async () => {
     localStorage.removeItem('jwttoken')
+    localStorage.removeItem('userInfo')
     setUserInfo({
       ...userInfo,
       provider: '',

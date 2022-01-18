@@ -1,6 +1,7 @@
-import * as React from 'react'
+import React, { useEffect } from 'react'
 import { HeaderContainer } from '../styles/Layout.styles'
 import { Link, Route, Switch, useHistory } from 'react-router-dom'
+import { useRecoilState } from 'recoil'
 import logo from '../assets/img/hlogo.svg'
 import Home from '../pages/Home'
 import Signup from '../pages/Signup'
@@ -14,14 +15,48 @@ import Search from '../pages/Search'
 import Kauth from '../pages/Kauth'
 import Nauth from '../pages/Nauth'
 import Gauth from '../pages/Gauth'
+import API from 'service/api'
+import { currentUserInfo } from 'store/userInfo'
 
 interface IHeaderProps {}
 
 export default function Header(props: IHeaderProps) {
   const history = useHistory()
+
+  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
+
   const logoutHandler = async () => {
     localStorage.removeItem('jwttoken')
+    setUserInfo({
+      ...userInfo,
+      provider: '',
+      providerId: '',
+      _id: '',
+      info: {
+        name: '',
+        age: '',
+        gender: '',
+        bloodtype: '',
+        allergy: [],
+        medicines: [],
+      },
+    })
   }
+
+  const getUserInfo = async () => {
+    await API.auth
+      .getUserInfo()
+      .then((res) => {
+        setUserInfo({ ...userInfo, ...res.data })
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }
+
+  useEffect(() => {
+    getUserInfo()
+  }, [])
 
   return (
     <>
@@ -31,7 +66,7 @@ export default function Header(props: IHeaderProps) {
             <img src={logo} alt="logo" />
           </Link>
           <div className="rightArea">
-            {localStorage.getItem('jwttoken') ? (
+            {userInfo._id !== '' ? (
               <>
                 <button
                   className="headerTxt"

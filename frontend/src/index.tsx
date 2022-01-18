@@ -3,12 +3,15 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App'
+import { RecoilRoot } from 'recoil'
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App children={React.Children} />
-    </BrowserRouter>
+    <RecoilRoot>
+      <BrowserRouter>
+        <App children={React.Children} />
+      </BrowserRouter>
+    </RecoilRoot>
   </React.StrictMode>,
   document.getElementById('root'),
 )

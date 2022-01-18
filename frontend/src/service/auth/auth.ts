@@ -30,4 +30,17 @@ export const auth = {
 
     return Axios(config)
   },
+  getUserInfo: async () => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: GET,
+      url: 'api/userinfo/accounts',
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+    }
+
+    return Axios(config)
+  },
 }

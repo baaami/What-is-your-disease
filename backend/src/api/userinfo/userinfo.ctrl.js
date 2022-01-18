@@ -1,7 +1,7 @@
-import User from '../../models/user';
-import jwt from '../../lib/jwt';
+import User from "../../models/user";
+import jwt from "../../lib/jwt";
 
-const secretKey = require('../../lib/secretkey').secretKey;
+const secretKey = require("../../lib/secretkey").secretKey;
 
 export const update = async (ctx) => {
   const info = ctx.request.body;
@@ -15,7 +15,7 @@ export const update = async (ctx) => {
       new: true,
     }).exec();
     if (!user) {
-      console.log('User Update fail');
+      console.log("User Update fail");
       ctx.status = 404;
       return;
     }
@@ -23,5 +23,22 @@ export const update = async (ctx) => {
     ctx.body = user;
   } catch (err) {
     ctx.throw(500, err);
+  }
+};
+
+export const accounts = async (ctx) => {
+  let currentUser = await ctx.request.headers.authorization
+    .replace("Bearer", "")
+    .trim();
+  await jwt.verify(currentUser).then((res) => {
+    currentUser = res._id;
+  });
+  try {
+    const user = await User.findById(currentUser);
+    console.log(user);
+    ctx.status = 200;
+    ctx.body = user;
+  } catch (e) {
+    console.log(e);
   }
 };

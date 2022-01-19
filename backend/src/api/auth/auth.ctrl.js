@@ -50,15 +50,14 @@ export const kakao = async (ctx) => {
     is_new = false;
   const _id = mongoose.Types.ObjectId();
   const providerId = RepUser.data.id;
-  console.log('[TEST] providerId : ', providerId);
 
   try {
     CheckedUser = await User.findByproviderId(providerId);
+    console.log('[TEST] CheckedUser : ', CheckedUser);
   } catch (err) {
     ctx.throw(err, 500);
   }
 
-  console.log('Checked User : ', CheckedUser);
   if (!CheckedUser) {
     // 첫번째 로그인
     is_new = true;
@@ -80,11 +79,13 @@ export const kakao = async (ctx) => {
 
     try {
       user = await User.findById(_id);
+      console.log('[TEST] user : ', user);
     } catch (err) {
       console.log(err);
     }
   } else {
     // 두번째 로그인일 경우
+    // TODO : { ...CheckedUser} 시에 원하지 않는 mongodb 객체가 생겨남, 얕은 복사(?)를 하여도 문제가 없는지 확인
     user = CheckedUser;
   }
 
@@ -144,26 +145,24 @@ export const naver = async (ctx) => {
   const _id = mongoose.Types.ObjectId();
 
   console.log('[TEST] RepUser.data : ', RepUser.data);
-  const { id } = RepUser.data.response;
+  const providerId = RepUser.data.response.id;
 
   // TODO : provider도 AND 연산으로 같이 찾도록 개선
-  const CheckedUser = await User.findByproviderId(id);
+  const CheckedUser = await User.findByproviderId(providerId);
   if (!CheckedUser) {
     is_new = true;
     // 첫번째 로그인
     const NewUser = new User({
       _id,
-      providerId: id,
+      providerId,
       provider,
     });
     await NewUser.save(); // 데이터베이스에 저장
 
     user = await User.findById(_id);
-    console.log('[TEST] First User : ', user);
   } else {
     // 두번째 로그인일 경우
-    user = { ...CheckedUser };
-    console.log('[TEST] Exist User  : ', user);
+    user = CheckedUser;
   }
 
   // TODO : 두번째 이상 로그인일 경우 자체 토큰을 새로 발급해줄 필요성이 있을지 확인
@@ -250,7 +249,7 @@ export const google = async (ctx) => {
     console.log('[TEST] First User : ', user);
   } else {
     // 두번째 로그인일 경우
-    user = { ...CheckedUser };
+    user = CheckedUser;
     // console.log('[TEST] Exist User  : ', user);
   }
 

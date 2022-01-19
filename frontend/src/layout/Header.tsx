@@ -26,22 +26,30 @@ export default function Header(props: IHeaderProps) {
   const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
 
   const logoutHandler = async () => {
-    localStorage.removeItem('jwttoken')
-    localStorage.removeItem('userInfo')
-    setUserInfo({
-      ...userInfo,
-      provider: '',
-      providerId: '',
-      _id: '',
-      info: {
-        name: '',
-        age: '',
-        gender: '',
-        bloodtype: '',
-        allergy: [],
-        medicines: [],
-      },
-    })
+    await API.auth
+      .logout()
+      .then((res) => {
+        localStorage.removeItem('jwttoken')
+        localStorage.removeItem('userInfo')
+        setUserInfo({
+          ...userInfo,
+          provider: '',
+          providerId: '',
+          _id: '',
+          info: {
+            name: '',
+            age: '',
+            gender: '',
+            bloodtype: '',
+            allergy: [],
+            medicines: [],
+          },
+        })
+        history.replace('/')
+      })
+      .catch((e) => {
+        console.log(e.response)
+      })
   }
 
   const getUserInfo = async () => {

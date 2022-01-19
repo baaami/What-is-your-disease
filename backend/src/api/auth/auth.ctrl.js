@@ -46,21 +46,26 @@ export const kakao = async (ctx) => {
 
   let user,
     NewUser,
+    CheckedUser,
     is_new = false;
   const _id = mongoose.Types.ObjectId();
-  const { id } = RepUser.data;
-  console.log('[TEST] id : ', id);
-  const CheckedUser = await User.findByproviderId(id);
-  console.log('kakao login!');
+  const providerId = RepUser.data.id;
+  console.log('[TEST] providerId : ', providerId);
+
+  try {
+    CheckedUser = await User.findByproviderId(providerId);
+  } catch (err) {
+    ctx.throw(err, 500);
+  }
+
   console.log('Checked User : ', CheckedUser);
   if (!CheckedUser) {
     // 첫번째 로그인
-    // 1. 카카오에서 전달 받은 User data에서 필요한 정보를 파싱하여 db에 저장
     is_new = true;
     try {
       NewUser = new User({
         _id,
-        providerId: id,
+        providerId,
         provider: 'kakao',
       });
     } catch (err) {
@@ -80,7 +85,7 @@ export const kakao = async (ctx) => {
     }
   } else {
     // 두번째 로그인일 경우
-    user = { ...CheckedUser };
+    user = CheckedUser;
   }
 
   // 자체 토큰 발급
@@ -264,6 +269,5 @@ export const google = async (ctx) => {
 };
 
 export const logout = async (ctx) => {
-  ctx.logout();
-  ctx.response.redirect('/');
+  ctx.status = 204; // No Content
 };

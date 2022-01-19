@@ -26,30 +26,23 @@ export default function Header(props: IHeaderProps) {
   const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
 
   const logoutHandler = async () => {
-    await API.auth
-      .logout()
-      .then((res) => {
-        localStorage.removeItem('jwttoken')
-        localStorage.removeItem('userInfo')
-        setUserInfo({
-          ...userInfo,
-          provider: '',
-          providerId: '',
-          _id: '',
-          info: {
-            name: '',
-            age: '',
-            gender: '',
-            bloodtype: '',
-            allergy: [],
-            medicines: [],
-          },
-        })
-        history.replace('/')
-      })
-      .catch((e) => {
-        console.log(e.response)
-      })
+    localStorage.removeItem('jwttoken')
+    localStorage.removeItem('userInfo')
+    setUserInfo({
+      ...userInfo,
+      provider: '',
+      providerId: '',
+      _id: '',
+      info: {
+        name: '',
+        age: '',
+        gender: '',
+        bloodtype: '',
+        allergy: [],
+        medicines: [],
+      },
+    })
+    history.replace('/')
   }
 
   const getUserInfo = async () => {
@@ -103,7 +96,7 @@ export default function Header(props: IHeaderProps) {
         <Route path="/infoForm" component={InfoForm} />
         <Route path="/posts/lists" component={PostsLists} />
         <Route path="/posts/edit" component={PostsEdit} />
-        <Route path="/posts/detail" component={PostsDetail} />
+        <Route path="/posts/detail/:postId" component={PostsDetail} />
         <Route path="/search" component={Search} />
         <Route path="/api/auth/callback/kakao" component={Kauth} />
         <Route path="/api/auth/callback/naver" component={Nauth} />

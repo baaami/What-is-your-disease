@@ -52,9 +52,6 @@ export default function PostsEdit(props: IPostsEditProps) {
       title: posts_title,
       body: edit_contents,
       category: 'test',
-      user: JSON.parse(
-        localStorage.getItem('userInfo') as string,
-      ) as PostUserModel,
     }
 
     await API.post

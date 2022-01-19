@@ -2,7 +2,6 @@ export interface CreatePostModel {
   title: string
   body: string
   category: string
-  user: PostUserModel
 }
 
 export interface PostUserModel {

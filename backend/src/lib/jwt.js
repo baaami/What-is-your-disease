@@ -9,7 +9,7 @@ const TOKEN_INVALID = -2;
 module.exports = {
   sign: async (user) => {
     const payload = {
-      _id: user._doc._id,
+      _id: user._id,
     };
 
     const incoded = {

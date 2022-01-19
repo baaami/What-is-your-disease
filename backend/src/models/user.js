@@ -18,7 +18,7 @@ const UserSchema = new Schema({
 
 // 스태틱 메서드
 UserSchema.statics.findByproviderId = function (providerId) {
-  return this.findOne({ providerId });
+  return this.findOne({ providerId })._doc;
 };
 
 const User = mongoose.model('User', UserSchema);

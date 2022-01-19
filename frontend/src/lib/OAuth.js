@@ -13,4 +13,4 @@ export const NAVER_AUTH_URL = `https://nid.naver.com/oauth2.0/authorize?response
 const GOOGLE_CLIENT_ID = config.GOOGLE_CLIENT_ID
 const GOOGLE_REDIRECT_URI = 'http://localhost:3001/api/auth/callback/google'
 
-export const GOOGLE_AUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&scope=https://www.googleapis.com/auth/contacts.readonly`
+export const GOOGLE_AUTH_URL = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&scope=https://www.googleapis.com/auth/userinfo.profile`

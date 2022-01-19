@@ -20,13 +20,13 @@ export const kakao = async (ctx) => {
       },
       data: qs.stringify({
         grant_type: 'authorization_code',
-        client_id: process.env.CLIENT_ID,
-        redirect_uri: process.env.REDIRECT_URI,
+        client_id: process.env.KAKAO_ID,
+        redirect_uri: process.env.KAKAO_CALLBACK_URL,
         code: code,
       }),
     });
   } catch (err) {
-    console.log(err.response.data);
+    console.log(err.response);
   }
 
   const { access_token } = RepToken.data;
@@ -44,23 +44,40 @@ export const kakao = async (ctx) => {
     console.log(err.response.data);
   }
 
-  let user;
+  let user,
+    NewUser,
+    is_new = false;
   const _id = mongoose.Types.ObjectId();
   const { id } = RepUser.data;
+  console.log('[TEST] id : ', id);
   const CheckedUser = await User.findByproviderId(id);
-
+  console.log('kakao login!');
   console.log('Checked User : ', CheckedUser);
   if (!CheckedUser) {
     // 첫번째 로그인
     // 1. 카카오에서 전달 받은 User data에서 필요한 정보를 파싱하여 db에 저장
-    const NewUser = new User({
-      _id,
-      providerId: id,
-      provider: 'kakao',
-    });
-    await NewUser.save(); // 데이터베이스에 저장
+    is_new = true;
+    try {
+      NewUser = new User({
+        _id,
+        providerId: id,
+        provider: 'kakao',
+      });
+    } catch (err) {
+      console.log(err);
+    }
 
-    user = await User.findById(_id);
+    try {
+      await NewUser.save(); // 데이터베이스에 저장
+    } catch (err) {
+      console.log(err);
+    }
+
+    try {
+      user = await User.findById(_id);
+    } catch (err) {
+      console.log(err);
+    }
   } else {
     // 두번째 로그인일 경우
     user = { ...CheckedUser };
@@ -71,9 +88,11 @@ export const kakao = async (ctx) => {
 
   result = {
     token: jwtToken.token,
+    is_new: is_new,
     user: user,
   };
 
+  console.log('[TEST] result : ', result);
   // access token을 JWT를 사용하여 서버만의 토큰으로 발급 후 front에 전달
   ctx.body = result;
 };
@@ -81,6 +100,7 @@ export const kakao = async (ctx) => {
 export const naver = async (ctx) => {
   // 인가 코드 획득
   const { code } = ctx.request.body;
+  const provider = 'naver';
   let RepToken, RepUser, result;
 
   // access 토큰 요청
@@ -114,7 +134,8 @@ export const naver = async (ctx) => {
     console.log(err.response.data);
   }
 
-  let user;
+  let user,
+    is_new = false;
   const _id = mongoose.Types.ObjectId();
 
   console.log('[TEST] RepUser.data : ', RepUser.data);
@@ -123,11 +144,12 @@ export const naver = async (ctx) => {
   // TODO : provider도 AND 연산으로 같이 찾도록 개선
   const CheckedUser = await User.findByproviderId(id);
   if (!CheckedUser) {
+    is_new = true;
     // 첫번째 로그인
     const NewUser = new User({
       _id,
       providerId: id,
-      provider: 'naver',
+      provider,
     });
     await NewUser.save(); // 데이터베이스에 저장
 
@@ -145,8 +167,11 @@ export const naver = async (ctx) => {
 
   result = {
     token: jwtToken.token,
+    is_new: is_new,
     user: user,
   };
+
+  console.log('[TEST] result :', result);
 
   // access token을 JWT를 사용하여 서버만의 토큰으로 발급 후 front에 전달
   ctx.body = result;
@@ -155,9 +180,9 @@ export const naver = async (ctx) => {
 export const google = async (ctx) => {
   // 인가 코드 획득
   const { code } = ctx.request.body;
+  const provider = 'google';
   let RepToken, RepUser, result;
 
-  console.log('[TEST] code : ', code);
   // access 토큰 요청
   try {
     RepToken = await axios({
@@ -178,15 +203,13 @@ export const google = async (ctx) => {
     console.log(err);
   }
 
-  console.log('[TEST] RepToken : ', RepToken);
-
   const { access_token } = RepToken.data;
 
   // 유저 데이터 요청
   try {
     RepUser = await axios({
-      method: 'get',
-      url: 'https://kapi.kakao.com/v2/user/me',
+      method: 'GET',
+      url: `https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses`,
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
@@ -195,24 +218,31 @@ export const google = async (ctx) => {
     console.log(err.response.data);
   }
 
-  let user;
+  // 유저 확인 및 DB 저장
+  let user,
+    CheckedUser,
+    is_new = false;
   const _id = mongoose.Types.ObjectId();
-  const { id } = RepUser.data;
-  const CheckedUser = await User.findByproviderId(id);
+  const providerId = RepUser.data.resourceName.split('/')[1];
 
-  console.log('Checked User : ', CheckedUser);
+  try {
+    CheckedUser = await User.findByproviderId(providerId);
+  } catch (err) {
+    ctx.throw(err, 500);
+  }
+
   if (!CheckedUser) {
     // 첫번째 로그인
-    // 1. 카카오에서 전달 받은 User data에서 필요한 정보를 파싱하여 db에 저장
+    is_new = true;
     const NewUser = new User({
       _id,
-      providerId: id,
-      provider: 'kakao',
+      providerId,
+      provider: 'google',
     });
     await NewUser.save(); // 데이터베이스에 저장
 
     user = await User.findById(_id);
-    // console.log('[TEST] First User : ', user);
+    console.log('[TEST] First User : ', user);
   } else {
     // 두번째 로그인일 경우
     user = { ...CheckedUser };
@@ -220,14 +250,16 @@ export const google = async (ctx) => {
   }
 
   // 자체 토큰 발급
+  console.log('[TEST] user : ', user);
   const jwtToken = await jwt.sign(user);
 
   result = {
     token: jwtToken.token,
+    is_new: is_new,
     user: user,
   };
 
-  // access token을 JWT를 사용하여 서버만의 토큰으로 발급 후 front에 전달
+  // // access token을 JWT를 사용하여 서버만의 토큰으로 발급 후 front에 전달
   ctx.body = result;
 };
 

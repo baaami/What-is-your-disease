@@ -10,7 +10,7 @@ interface IInfoFormProps {}
 export default function InfoForm(props: IInfoFormProps) {
   const history = useHistory()
 
-  const [userInfo] = useRecoilState(currentUserInfo)
+  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
   const { name, age, gender, bloodtype, allergy, medicines } = userInfo.info
   const [form_value, setFormValue] = useState({
     name: '',
@@ -32,6 +32,17 @@ export default function InfoForm(props: IInfoFormProps) {
 
   const handleSubmitUserInfo = async () => {
     const { name, age, gender, bloodtype, allergy, medicines } = form_value
+    setUserInfo({
+      ...userInfo,
+      info: {
+        name,
+        age,
+        gender,
+        bloodtype,
+        allergy: allergy.replaceAll(' ', '').split(','),
+        medicines: medicines.replaceAll(' ', '').split(','),
+      },
+    })
     const req_data = {
       name,
       age,

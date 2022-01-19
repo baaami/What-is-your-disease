@@ -8,7 +8,7 @@ const post = new Router();
  * 특정 포스트 조회
  * GET /api/post/:id
  */
-post.get('/:id', postCtrl.getPostById, postCtrl.read);
+post.get('/:id', postCtrl.checkPostById, postCtrl.read);
 
 /**
  * 포스트 작성
@@ -21,7 +21,7 @@ post.post('/write', checkLoggedIn, postCtrl.write);
  */
 post.patch(
   '/:id',
-  postCtrl.getPostById,
+  postCtrl.checkPostById,
   checkLoggedIn,
   postCtrl.checkOwnPost,
   postCtrl.update,
@@ -33,7 +33,7 @@ post.patch(
  */
 post.delete(
   '/:id',
-  postCtrl.getPostById,
+  postCtrl.checkPostById,
   checkLoggedIn,
   postCtrl.checkOwnPost,
   postCtrl.remove,

@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 const { ObjectId } = mongoose.Types;
 
 // post id 검증
-export const getPostById = async (ctx, next) => {
+export const checkPostById = async (ctx, next) => {
   const { id } = ctx.params;
   if (!ObjectId.isValid(id)) {
     ctx.status = 400;
@@ -43,6 +43,7 @@ export const read = async (ctx) => {
   const post = ctx.state.post;
 
   try {
+    // 조회 수 증가
     const result = await Post.findOneAndUpdate(
       { _id: post._id },
       { $inc: { views: 1 } },
@@ -55,7 +56,7 @@ export const read = async (ctx) => {
   } catch (e) {
     ctx.throw(500, e);
   }
-  ctx.body = ctx.state.post;
+  ctx.body = post;
 };
 
 /**
@@ -64,12 +65,12 @@ export const read = async (ctx) => {
  * {
  *    title: '제목',
  *    body:  '내용',
- *    tags: ['태그1', '태그2']
+ *    category: '카테고리',
  * }
  */
 export const write = async (ctx) => {
   // REST API의 Reuqest Body는 ctx.request.body에서 조회 가능
-  const { title, body, category, user } = ctx.request.body;
+  const { title, body, category } = ctx.request.body;
 
   const post = new Post({
     title,
@@ -77,7 +78,7 @@ export const write = async (ctx) => {
     category,
     views: 0,
     comments: [],
-    user,
+    user: ctx.state.user,
   });
   try {
     // async/await 문법으로 데이터베이스 저장 요청을 완료할 때 까지 대기
@@ -101,7 +102,7 @@ export const write = async (ctx) => {
  * }
  */
 export const update = async (ctx) => {
-  const { id } = ctx.params;
+  const id = ctx.state.post._id;
 
   const nextData = { ...ctx.request.body }; // 객체를 복사하고
   try {
@@ -131,7 +132,7 @@ export const remove = async (ctx) => {
    * findByIdAndRemove : id를 찾아서 지운다.
    * findOneAndRemove : 특정 조건을 만족하는 데이터 하나를 찾아서 제거한다.
    */
-  const { id } = ctx.params;
+  const id = ctx.state.post._id;
   try {
     console.log('id : ', id);
     await Post.findByIdAndRemove(id).exec();

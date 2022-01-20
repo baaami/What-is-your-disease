@@ -41,3 +41,14 @@ li {
   font-size: 28px;
   color: #111;
 }
+
+@media (max-width: 1080px) {
+  .wrap {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  .title {
+    font-size: 23px;
+  }
+}

@@ -3,14 +3,22 @@ import blueBanner from '../assets/img/blueBanner.jpg'
 
 export const HomeContainer = styled.div`
   padding-top: 170px;
+
+  @media (max-width: 768px) {
+    padding-top: 125px;
+  }
 `
 export const CategoryBanner = styled.div`
   padding: 70px 0 125px;
 
+  @media (max-width: 768px) {
+    padding: 40px 0 95px;
+  }
+
   .categoryItemContainer {
     display: flex;
     flex-wrap: wrap;
-    gap: 150px 14.8%;
+    gap: 120px 14.8%;
 
     img {
       transition: transform 0.8s;
@@ -44,12 +52,22 @@ export const BlueBanner = styled.div`
   background-size: contain;
   background-color: #2a7efc;
 
+  @media (max-width: 1014px) {
+    height: 200px;
+  }
+
   h3 {
     margin-bottom: 40px;
     font-size: 34px;
     font-weight: 900;
     color: #fff;
+
+    @media (max-width: 1014px) {
+      margin-bottom: 20px;
+      font-size: 25px;
+    }
   }
+
   a {
     width: 400px;
     height: 65px;
@@ -62,6 +80,13 @@ export const BlueBanner = styled.div`
     color: #1850a3;
     transition: all 0.2s ease-in;
 
+    @media (max-width: 1014px) {
+      width: 200px;
+      height: 45px;
+      line-height: 45px;
+      font-size: 18px;
+    }
+
     &:hover {
       background: #1850a3;
       color: #fff;
@@ -71,9 +96,17 @@ export const BlueBanner = styled.div`
 export const PopularPostBanner = styled.div`
   padding: 70px 0 125px;
 
+  @media (max-width: 768px) {
+    padding: 40px 0 95px;
+  }
+
   .popularPostContainer {
     display: flex;
     justify-content: space-between;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
 
     .popularPost {
       position: relative;
@@ -83,20 +116,53 @@ export const PopularPostBanner = styled.div`
       border: 1px solid #ccc;
       border-radius: 8px;
 
+      @media (max-width: 1014px) {
+        width: 260px;
+        height: 320px;
+        margin-bottom: 35px;
+      }
+
+      @media (max-width: 768px) {
+        width: 100%;
+        height: auto;
+      }
+
       img {
         position: absolute;
         right: 34px;
+
+        @media (max-width: 1014px) {
+          right: 15px;
+        }
       }
       h2 {
         margin: 50px 30px;
         font-size: 22px;
         font-weight: 400;
+
+        @media (max-width: 1014px) {
+          margin: 50px 15px 20px;
+          font-size: 20px;
+        }
+        @media (max-width: 768px) {
+          margin: 15px;
+          font-size: 17px;
+        }
       }
       h3 {
         margin: 0 30px;
         font-size: 22px;
         font-weight: 400;
         color: #111;
+
+        @media (max-width: 1014px) {
+          margin: 10px 15px;
+          font-size: 20px;
+        }
+        @media (max-width: 768px) {
+          margin: 0 15px;
+          font-size: 18px;
+        }
       }
       p {
         display: -webkit-box;
@@ -110,12 +176,30 @@ export const PopularPostBanner = styled.div`
         margin: 35px 30px 40px;
         font-size: 18px;
         color: #333;
+
+        @media (max-width: 1014px) {
+          margin: 15px;
+          font-size: 15px;
+        }
+        @media (max-width: 768px) {
+          height: 55px;
+          line-height: 20px;
+          font-size: 14px;
+        }
       }
       h4 {
         margin: 0 30px;
         text-align: end;
         font-size: 16px;
         font-weight: 400;
+
+        @media (max-width: 1014px) {
+          font-size: 14px;
+        }
+        @media (max-width: 768px) {
+          font-size: 12px;
+          margin-bottom: 15px;
+        }
       }
     }
   }
@@ -123,6 +207,10 @@ export const PopularPostBanner = styled.div`
 export const LatestPostBanner = styled.div`
   position: relative;
   padding: 70px 0 125px;
+
+  @media (max-width: 768px) {
+    padding: 40px 0 95px;
+  }
 
   @keyframes arrowShaking {
     0% {

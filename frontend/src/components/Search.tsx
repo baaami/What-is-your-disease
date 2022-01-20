@@ -27,8 +27,16 @@ const SearchContainer = styled.div`
     background: #f9f9f9;
     box-shadow: 1px 10px 7px -11px rgba(0, 0, 0, 0.2);
 
+    @media (max-width: 768px) {
+      padding: 10px 25px;
+    }
+
     &::placeholder {
       color: #999;
+
+      @media (max-width: 768px) {
+        font-size: 15px;
+      }
     }
     &:focus {
       background: #fff;
@@ -42,5 +50,11 @@ const SearchContainer = styled.div`
     right: 35px;
     background: transparent;
     border: none;
+
+    img {
+      @media (max-width: 768px) {
+        width: 20px;
+      }
+    }
   }
 `

@@ -32,7 +32,7 @@ export const posts = {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
-      url: `api/posts/user/${id}`,
+      url: `/api/posts/user/${id}`,
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,

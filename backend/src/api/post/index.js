@@ -1,6 +1,6 @@
-const Router = require('koa-router');
-import * as postCtrl from './post.ctrl';
-import checkLoggedIn from '../../lib/checkLoggedIn';
+const Router = require("koa-router");
+import * as postCtrl from "./post.ctrl";
+import checkLoggedIn from "../../lib/checkLoggedIn";
 
 const post = new Router();
 
@@ -8,23 +8,23 @@ const post = new Router();
  * 특정 포스트 조회
  * GET /api/post/:id
  */
-post.get('/:id', postCtrl.checkPostById, postCtrl.read);
+post.get("/:id", postCtrl.checkPostById, postCtrl.read);
 
 /**
  * 포스트 작성
  * POST /api/post/write
  */
-post.post('/write', checkLoggedIn, postCtrl.write);
+post.post("/write", checkLoggedIn, postCtrl.write);
 
 /**
  * 포스트 수정 (특정 필드 변경)
  */
 post.patch(
-  '/:id',
+  "/edit/:id",
   postCtrl.checkPostById,
   checkLoggedIn,
   postCtrl.checkOwnPost,
-  postCtrl.update,
+  postCtrl.update
 );
 
 /**
@@ -32,11 +32,11 @@ post.patch(
  * DELETE /api/post/:id
  */
 post.delete(
-  '/:id',
+  "/delete/:id",
   postCtrl.checkPostById,
   checkLoggedIn,
   postCtrl.checkOwnPost,
-  postCtrl.remove,
+  postCtrl.remove
 );
 
 export default post;

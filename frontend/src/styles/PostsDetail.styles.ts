@@ -23,4 +23,14 @@ export const PostsDetailContainer = styled.div`
     padding: 30px;
     font-size: 22px;
   }
+
+  & .buttonRow {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+
+    & .delBtn {
+      background-color: gray;
+    }
+  }
 `

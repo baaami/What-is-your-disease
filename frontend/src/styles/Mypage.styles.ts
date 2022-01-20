@@ -7,6 +7,16 @@ export const MyPageContainer = styled.div`
     font-size: 22px;
     margin-bottom: 30px;
   }
+
+  & .greeting {
+    font-size: 24px;
+    margin-bottom: 78px;
+
+    & span {
+      color: #3c6d2e;
+      font-weight: 900;
+    }
+  }
 `
 export const UserInfoWrap = styled.div`
   & .userInfoTitle {

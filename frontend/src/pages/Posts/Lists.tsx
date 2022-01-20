@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { PostListsContainer, PostListsWrap } from 'styles/PostLists.styles'
 import Search from '../../components/Search'
@@ -7,6 +7,9 @@ import arrow from '../../assets/img/arrow_right.png'
 interface IPostsListsProps {}
 
 export default function PostsLists(props: IPostsListsProps) {
+  useEffect(() => {
+    window.scrollTo({ top: 0 })
+  }, [])
   return (
     <PostListsContainer>
       <Search />

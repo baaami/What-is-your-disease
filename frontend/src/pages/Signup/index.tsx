@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useEffect } from 'react'
 import { SignupWrapper } from '../../styles/Singup.styles'
 import naver from '../../assets/img/naver_login.png'
 import kakao from '../../assets/img/kakao_login.png'
@@ -23,6 +23,10 @@ export default function Signup(props: ISignupProps) {
   const getGoogleCode = () => {
     window.location.href = GOOGLE_AUTH_URL
   }
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 })
+  }, [])
 
   return (
     <SignupWrapper className="wrap">

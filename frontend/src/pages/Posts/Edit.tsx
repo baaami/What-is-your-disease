@@ -1,21 +1,23 @@
-import React, { useState, useRef, useMemo } from 'react'
+import React, { useState, useRef, useMemo, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import Input from 'components/Input'
+import Button from 'components/Button'
 
 import API from 'service/api'
-import { PostUserModel } from 'service/model/postModel'
 
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { PostEditContainer } from 'styles/PostsEdit.styles'
-import { userInfo } from 'os'
+
+import { PostModel } from 'pages/Posts/Detail'
 
 interface IPostsEditProps {}
 
 export default function PostsEdit(props: IPostsEditProps) {
   const history = useHistory()
   const quill_ref = useRef<ReactQuill>()
+  const [pushState, setPushState] = useState<PostModel>({} as PostModel)
   const [posts_title, setPostsTitle] = useState('')
   const [edit_contents, setEditContents] = useState('')
 
@@ -64,6 +66,53 @@ export default function PostsEdit(props: IPostsEditProps) {
       })
   }
 
+  const onClickEdit = async () => {
+    const req_data = {
+      title: posts_title,
+      body: edit_contents,
+      category: pushState.category,
+    }
+    await API.post
+      .editPost(pushState._id, req_data)
+      .then((res) => {
+        alert('게시물 수정에 성공했습니다.')
+        history.push('/posts/lists')
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }
+
+  const isEditButton = () => {
+    if (pushState) {
+      return (
+        <>
+          <Button type="button" onClick={onClickEdit}>
+            수정
+          </Button>
+        </>
+      )
+    } else {
+      return (
+        <>
+          <Button type="button" onClick={handleSubmitPost}>
+            작성
+          </Button>
+        </>
+      )
+    }
+  }
+
+  useEffect(() => {
+    const path_state = history.location.state as PostModel
+    if (path_state) {
+      setPostsTitle(path_state.title)
+      setEditContents(path_state.body)
+      setPushState(path_state)
+    }
+    window.scrollTo({ top: 0 })
+  }, [])
+
   return (
     <>
       <PostEditContainer className="wrap">
@@ -89,7 +138,7 @@ export default function PostsEdit(props: IPostsEditProps) {
             placeholder="내용을 입력해주세요."
           />
         </div>
-        <button onClick={handleSubmitPost}>작성</button>
+        <div className="buttonRow">{isEditButton()}</div>
       </PostEditContainer>
     </>
   )

@@ -45,7 +45,7 @@ export default function Mypage(props: IMypageProps) {
 
   useEffect(() => {
     getMyPosts()
-  }, [])
+  }, [userInfo])
 
   return (
     <MyPageContainer className="wrap">

@@ -4,6 +4,7 @@ import {
   UserInfoWrap,
   UserInfoCard,
   MyPostsWrap,
+  LogoutButton,
 } from 'styles/Mypage.styles'
 import { LatestPostBanner } from 'styles/Home.styles'
 import arrow from 'assets/img/arrow_right.png'
@@ -16,7 +17,7 @@ interface IMypageProps {}
 
 export default function Mypage(props: IMypageProps) {
   const history = useHistory()
-  const [userInfo] = useRecoilState(currentUserInfo)
+  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
   const [myPosts, setMyPosts] = useState([])
   const getArrayToJsx = (arr: Array<string>) => {
     return arr.map((item, index) => {
@@ -26,6 +27,26 @@ export default function Mypage(props: IMypageProps) {
         return <span>{item}, </span>
       }
     })
+  }
+
+  const logoutHandler = async () => {
+    localStorage.removeItem('jwttoken')
+    localStorage.removeItem('userInfo')
+    setUserInfo({
+      ...userInfo,
+      provider: '',
+      providerId: '',
+      _id: '',
+      info: {
+        name: '',
+        age: '',
+        gender: '',
+        bloodtype: '',
+        allergy: [],
+        medicines: [],
+      },
+    })
+    history.replace('/')
   }
 
   const getMyPosts = async () => {
@@ -88,7 +109,7 @@ export default function Mypage(props: IMypageProps) {
         </section>
       </UserInfoWrap>
       <MyPostsWrap>
-        <LatestPostBanner className="wrap">
+        <LatestPostBanner>
           <div className="myPageTitle">내 게시글</div>
           <div className="latestPostContainer">
             {myPosts.map((item: any) => {
@@ -104,6 +125,7 @@ export default function Mypage(props: IMypageProps) {
           </div>
         </LatestPostBanner>
       </MyPostsWrap>
+      <LogoutButton onClick={logoutHandler}>로그아웃</LogoutButton>
     </MyPageContainer>
   )
 }

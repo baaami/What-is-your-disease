@@ -6,7 +6,7 @@ export const HeaderContainer = styled.div`
   top: 0;
   z-index: 99;
   width: 100%;
-  height: 125px;
+  height: 110px;
   background: #fff;
   box-shadow: 0px 13px 9px -11px rgb(230 230 230 / 54%);
 
@@ -18,7 +18,7 @@ export const HeaderContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 125px;
+    height: 110px;
 
     @media (max-width: 768px) {
       height: 85px;
@@ -27,6 +27,9 @@ export const HeaderContainer = styled.div`
     img {
       @media (max-width: 768px) {
         width: 150px;
+      }
+      @media (max-width: 414px) {
+        width: 110px;
       }
     }
     .rightArea {
@@ -38,6 +41,9 @@ export const HeaderContainer = styled.div`
 
         @media (max-width: 768px) {
           font-size: 16px;
+        }
+        @media (max-width: 414px) {
+          font-size: 14px;
         }
 
         &:hover {

@@ -3,8 +3,11 @@ import {
   HomeContainer,
   CategoryBanner,
   BlueBanner,
+  BlueBannerWrapper,
   PopularPostBanner,
   LatestPostBanner,
+  DarkBg,
+  BlueBannerBg,
 } from '../../styles/Home.styles'
 import Search from '../../components/Search'
 import { Link } from 'react-router-dom'
@@ -77,21 +80,27 @@ export default function Home(props: IHomeProps) {
           {categories.map((item) => {
             return (
               <div className="categoryItem" key={`category: ${item.id}`}>
-                <img src={item.imgUrl} alt={`${item.name} 아이콘`} />
-                <h2>{item.name}</h2>
+                <div className="categoryItemWrap">
+                  <img src={item.imgUrl} alt={`${item.name} 아이콘`} />
+                  <h2>{item.name}</h2>
+                </div>
               </div>
             )
           })}
         </div>
       </CategoryBanner>
-      <BlueBanner>
-        <h3>너의 건강상태도 알려줘~!</h3>
-        {localStorage.getItem('jwttoken') ? (
-          <Link to="/posts/edit">글 쓰러가기</Link>
-        ) : (
-          <Link to="/login">로그인 하고 글 쓰러가기</Link>
-        )}
-      </BlueBanner>
+      <BlueBannerWrapper>
+        <DarkBg />
+        <BlueBannerBg />
+        <BlueBanner>
+          <h3>너의 건강상태도 알려줘~!</h3>
+          {localStorage.getItem('jwttoken') ? (
+            <Link to="/posts/edit">글 쓰러가기</Link>
+          ) : (
+            <Link to="/login">로그인 하고 글 쓰러가기</Link>
+          )}
+        </BlueBanner>
+      </BlueBannerWrapper>
       <PopularPostBanner className="wrap">
         <div className="title">인기 게시글</div>
         <div className="popularPostContainer">

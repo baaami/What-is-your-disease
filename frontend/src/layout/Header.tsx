@@ -25,26 +25,6 @@ export default function Header(props: IHeaderProps) {
 
   const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
 
-  const logoutHandler = async () => {
-    localStorage.removeItem('jwttoken')
-    localStorage.removeItem('userInfo')
-    setUserInfo({
-      ...userInfo,
-      provider: '',
-      providerId: '',
-      _id: '',
-      info: {
-        name: '',
-        age: '',
-        gender: '',
-        bloodtype: '',
-        allergy: [],
-        medicines: [],
-      },
-    })
-    history.replace('/')
-  }
-
   const getUserInfo = async () => {
     await API.auth
       .getUserInfo()
@@ -69,17 +49,12 @@ export default function Header(props: IHeaderProps) {
           </Link>
           <div className="rightArea">
             {userInfo._id !== '' ? (
-              <>
-                <button
-                  className="headerTxt"
-                  onClick={() => history.push('/mypage')}
-                >
-                  마이페이지
-                </button>
-                <button className="headerTxt" onClick={logoutHandler}>
-                  로그아웃
-                </button>
-              </>
+              <button
+                className="headerTxt"
+                onClick={() => history.push('/mypage')}
+              >
+                마이페이지
+              </button>
             ) : (
               <Link className="headerTxt" to="/login">
                 로그인 / 회원가입

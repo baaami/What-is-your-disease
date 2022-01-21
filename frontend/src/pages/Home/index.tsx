@@ -56,6 +56,7 @@ const popularPosts = [
 
 export default function Home(props: IHomeProps) {
   const [latest_posts, setLatestPosts] = useState([])
+  const [hot_posts, setHotPosts] = useState([])
   const getLatestPosts = async () => {
     await API.posts
       .getLatestPosts()
@@ -67,8 +68,20 @@ export default function Home(props: IHomeProps) {
       })
   }
 
+  const getHotPosts = async () => {
+    await API.posts
+      .getHotPosts()
+      .then((res) => {
+        setHotPosts(res.data)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }
+
   useEffect(() => {
     getLatestPosts()
+    getHotPosts()
     window.scrollTo({ top: 0 })
   }, [])
 
@@ -105,17 +118,17 @@ export default function Home(props: IHomeProps) {
       <PopularPostBanner className="wrap">
         <div className="title">인기 게시글</div>
         <div className="popularPostContainer">
-          {popularPosts.map((item, idx) => (
+          {hot_posts.map((item: any, idx) => (
             <Link
               to=""
               className="popularPost"
               key={`popularPosts: ${idx.toString()}`}
             >
-              <img src={item.img} alt="뱃지" />
+              <img src={popularPosts[idx].img} alt="뱃지" />
               <h2>#{item.category}</h2>
               <h3>{item.title}</h3>
-              <p>{item.content}</p>
-              <h4>{item.author}</h4>
+              <p dangerouslySetInnerHTML={{ __html: item.body }}></p>
+              <h4>{item.user.info.name}</h4>
             </Link>
           ))}
         </div>

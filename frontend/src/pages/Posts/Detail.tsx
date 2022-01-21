@@ -86,7 +86,9 @@ export default function PostsDetail(props: RouteComponentProps) {
             </Button>
           </>
         )}
-        <Button type="button">목록</Button>
+        <Button type="button" onClick={() => history.push('/')}>
+          목록
+        </Button>
       </section>
     </PostsDetailContainer>
   )

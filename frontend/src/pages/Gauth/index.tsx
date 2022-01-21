@@ -35,6 +35,7 @@ export default function Gauth(props: GauthProps) {
           alert('로그인에 성공하였습니다. 회원 정보 입력 페이지로 이동합니다.')
           history.push('/infoForm')
         } else {
+          alert('로그인에 성공했습니다.')
           setUserInfo({
             ...userInfo,
             ...user,
@@ -47,7 +48,7 @@ export default function Gauth(props: GauthProps) {
         window.alert('로그인에 실패하였습니다.')
         history.replace('/login') // 로그인 실패하면 로그인화면으로 돌려보냄
       })
-  })
+  }, [])
 
   return <div></div>
 }

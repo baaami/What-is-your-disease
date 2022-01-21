@@ -84,7 +84,7 @@ export default function PostsEdit(props: IPostsEditProps) {
   }
 
   const isEditButton = () => {
-    if (pushState) {
+    if (pushState._id) {
       return (
         <>
           <Button type="button" onClick={onClickEdit}>

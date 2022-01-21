@@ -77,6 +77,7 @@ export default function InfoForm(props: IInfoFormProps) {
 
   useEffect(() => {
     mountSetForm()
+    window.scrollTo({ top: 0 })
   }, [])
 
   return (

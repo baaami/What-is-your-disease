@@ -69,6 +69,7 @@ export default function Home(props: IHomeProps) {
 
   useEffect(() => {
     getLatestPosts()
+    window.scrollTo({ top: 0 })
   }, [])
 
   return (

@@ -50,14 +50,16 @@ export default function Mypage(props: IMypageProps) {
   }
 
   const getMyPosts = async () => {
-    await API.posts
-      .getMyPosts(userInfo._id)
-      .then((res) => {
-        setMyPosts(res.data)
-      })
-      .catch((e) => {
-        console.log(e)
-      })
+    if (userInfo._id) {
+      await API.posts
+        .getMyPosts(userInfo._id)
+        .then((res) => {
+          setMyPosts(res.data)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    }
   }
 
   const onClickEditButton = () => {
@@ -66,11 +68,18 @@ export default function Mypage(props: IMypageProps) {
 
   useEffect(() => {
     getMyPosts()
+  }, [userInfo])
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 })
   }, [])
 
   return (
     <MyPageContainer className="wrap">
       <UserInfoWrap>
+        <div className="greeting">
+          안녕하세요 <span>"{userInfo.info.name}"</span> 님
+        </div>
         <section className="myPageTitle userInfoTitle">
           <div>내 정보</div>
           <div>

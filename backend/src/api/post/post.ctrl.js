@@ -1,7 +1,32 @@
-import Post from "../../models/post";
-import mongoose from "mongoose";
+import Post from '../../models/post';
+import mongoose from 'mongoose';
+import sanitizeHtml from 'sanitize-html';
 
 const { ObjectId } = mongoose.Types;
+
+const sanitizeOption = {
+  allowedTags: [
+    'h1',
+    'h2',
+    'b',
+    'i',
+    'u',
+    's',
+    'p',
+    'ul',
+    'ol',
+    'li',
+    'blockquote',
+    'a',
+    'img',
+  ],
+  allowedAttributes: {
+    a: ['href', 'name', 'target'],
+    img: ['src'],
+    li: ['class'],
+  },
+  allowedSchemes: ['data', 'http'],
+};
 
 // post id 검증
 export const checkPostById = async (ctx, next) => {
@@ -47,11 +72,11 @@ export const read = async (ctx) => {
     const result = await Post.findOneAndUpdate(
       { _id: post._id },
       { $inc: { views: 1 } },
-      { new: true }
+      { new: true },
     );
 
     if (!result) {
-      console.log("findOneAndUpdate Error");
+      console.log('findOneAndUpdate Error');
     }
   } catch (e) {
     ctx.throw(500, e);
@@ -74,7 +99,7 @@ export const write = async (ctx) => {
 
   const post = new Post({
     title,
-    body,
+    body: sanitizeHtml(body, sanitizeOption),
     category,
     views: 0,
     comments: [],
@@ -105,6 +130,10 @@ export const update = async (ctx) => {
   const id = ctx.state.post._id;
 
   const nextData = { ...ctx.request.body }; // 객체를 복사하고
+
+  if (nextData.body) {
+    nextData.body = sanitizeHtml(nextData.body, sanitizeOption);
+  }
   try {
     const post = await Post.findByIdAndUpdate(id, nextData, {
       new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
@@ -135,7 +164,7 @@ export const remove = async (ctx) => {
    */
   const id = ctx.state.post._id;
   try {
-    console.log("id : ", id);
+    console.log('id : ', id);
     await Post.findByIdAndRemove(id).exec();
     ctx.status = 204; // No Content (성공하기는 했지만 응답할 데이터는 없음)
   } catch (e) {

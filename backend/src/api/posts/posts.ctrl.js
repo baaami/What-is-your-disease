@@ -4,13 +4,36 @@ import sanitizeHtml from 'sanitize-html';
 import User from '../../models/user';
 
 const { ObjectId } = mongoose.Types;
-const PageNum = 10;
+
+const sanitizeOption = {
+  allowedTags: [
+    'h1',
+    'h2',
+    'b',
+    'i',
+    'u',
+    's',
+    'p',
+    'ul',
+    'ol',
+    'li',
+    'blockquote',
+    'a',
+    'img',
+  ],
+  allowedAttributes: {
+    a: ['href', 'name', 'target'],
+    img: ['src'],
+    li: ['class'],
+  },
+  allowedSchemes: ['data', 'http'],
+};
 
 const removeHtmlAndShorten = (body) => {
   const filtered = sanitizeHtml(body, {
     allowedTags: [],
   });
-  return filtered.length < 200 ? filtered : `${filtered.slice(0, 200)}...`;
+  return filtered;
 };
 
 /**

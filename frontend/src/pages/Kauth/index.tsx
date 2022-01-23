@@ -29,10 +29,8 @@ export default function Kauth(props: KauthProps) {
             ...userInfo,
             ...user,
           })
-          alert('로그인에 성공하였습니다. 회원 정보 입력 페이지로 이동합니다.')
           history.push('/infoForm')
         } else {
-          alert('로그인에 성공 했습니다.')
           setUserInfo({
             ...userInfo,
             ...user,

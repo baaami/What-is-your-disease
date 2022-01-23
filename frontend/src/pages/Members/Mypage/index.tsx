@@ -124,7 +124,7 @@ export default function Mypage(props: IMypageProps) {
             {myPosts.map((item: any) => {
               return (
                 <>
-                  <Link to="" className="latestPost">
+                  <Link to={`/posts/detail/${item._id}`} className="latestPost">
                     <div className="postTitle">{item.title}</div>
                     <img src={arrow} alt="화살표 아이콘" />
                   </Link>

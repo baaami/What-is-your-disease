@@ -118,13 +118,13 @@ export default function Home(props: IHomeProps) {
       <PopularPostBanner className="wrap">
         <div className="title">인기 게시글</div>
         <div className="popularPostContainer">
-          {hot_posts.map((item: any, idx) => (
+          {hot_posts.slice(0, 3).map((item: any, idx) => (
             <Link
-              to=""
+              to={`/posts/detail/${item._id}`}
               className="popularPost"
               key={`popularPosts: ${idx.toString()}`}
             >
-              <img src={popularPosts[idx].img} alt="뱃지" />
+              <img src={popularPosts[idx]?.img} alt="뱃지" />
               <h2>#{item.category}</h2>
               <h3>{item.title}</h3>
               <p dangerouslySetInnerHTML={{ __html: item.body }}></p>

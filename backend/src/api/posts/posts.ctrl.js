@@ -51,7 +51,7 @@ export const latest = async (ctx) => {
       .exec();
 
     ctx.body = posts.map((post) => ({
-      ...post,
+      ...post.toJSON(),
       body: removeHtmlAndShorten(post.body),
     }));
   } catch (e) {
@@ -74,7 +74,7 @@ export const hot = async (ctx) => {
       .exec();
 
     ctx.body = posts.map((post) => ({
-      ...post,
+      ...post.toJSON(),
       body: removeHtmlAndShorten(post.body),
     }));
   } catch (e) {
@@ -110,7 +110,7 @@ export const user = async (ctx) => {
       .exec();
 
     ctx.body = posts.map((post) => ({
-      ...post,
+      ...post.toJSON(),
       body: removeHtmlAndShorten(post.body),
     }));
   } catch (e) {
@@ -144,7 +144,7 @@ export const category = async (ctx) => {
       .exec();
 
     ctx.body = posts.map((post) => ({
-      ...post,
+      ...post.toJSON(),
       body: removeHtmlAndShorten(post.body),
     }));
   } catch (e) {

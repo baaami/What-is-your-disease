@@ -2,7 +2,6 @@ import Post from '../../models/post';
 import mongoose from 'mongoose';
 import sanitizeHtml from 'sanitize-html';
 import User from '../../models/user';
-import { categoryTable } from '../../lib/categoryTable';
 
 const { ObjectId } = mongoose.Types;
 
@@ -35,6 +34,21 @@ const removeHtmlAndShorten = (body) => {
     allowedTags: [],
   });
   return filtered;
+};
+
+const getOldestPosts = async (ctx, query) => {
+  let posts;
+  try {
+    posts = await Post.find(query)
+      .sort({ publishedDate: 1 })
+      .limit(10)
+      .lean()
+      .exec();
+  } catch (err) {
+    ctx.throw(500, e);
+  }
+
+  return posts;
 };
 
 const getLatestPosts = async (ctx, query) => {
@@ -186,6 +200,14 @@ export const filter = async (ctx) => {
     case 'latest': {
       try {
         posts = await getLatestPosts(ctx);
+      } catch (err) {
+        ctx.throw(500, err);
+      }
+      break;
+    }
+    case 'oldest': {
+      try {
+        posts = await getOldestPosts(ctx);
       } catch (err) {
         ctx.throw(500, err);
       }

@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 
 import Input from 'components/Input'
 import Button from 'components/Button'
+import DropDown from 'components/DropDown'
 
 import API from 'service/api'
 
@@ -10,7 +11,8 @@ import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { PostEditContainer } from 'styles/PostsEdit.styles'
 
-import { PostModel } from 'pages/Posts/Detail'
+import { PostModel } from 'model/postsModel'
+import { categoryList } from 'static/constant'
 
 interface IPostsEditProps {}
 
@@ -20,7 +22,9 @@ export default function PostsEdit(props: IPostsEditProps) {
   const [pushState, setPushState] = useState<PostModel>({} as PostModel)
   const [posts_title, setPostsTitle] = useState('')
   const [edit_contents, setEditContents] = useState('')
-
+  const [filter, setFilter] = useState(
+    pushState.category ? pushState.category : categoryList[0],
+  )
   // useMemo를 사용하지 않으면, 키를 입력할 때마다, imageHandler 때문에 focus가 계속 풀리게 됨.
   const modules = useMemo(
     () => ({
@@ -53,7 +57,7 @@ export default function PostsEdit(props: IPostsEditProps) {
     const req_data = {
       title: posts_title,
       body: edit_contents,
-      category: 'test',
+      category: filter,
     }
 
     await API.post
@@ -70,7 +74,7 @@ export default function PostsEdit(props: IPostsEditProps) {
     const req_data = {
       title: posts_title,
       body: edit_contents,
-      category: pushState.category,
+      category: filter,
     }
     await API.post
       .editPost(pushState._id, req_data)
@@ -116,13 +120,21 @@ export default function PostsEdit(props: IPostsEditProps) {
   return (
     <>
       <PostEditContainer className="wrap">
-        <Input
-          id="posts_title"
-          type="text"
-          placeholder="제목을 입력해주세요"
-          value={posts_title}
-          onChange={(e) => setPostsTitle(e.target.value)}
-        />
+        <div className="topWrap">
+          <Input
+            id="posts_title"
+            type="text"
+            placeholder="제목을 입력해주세요"
+            value={posts_title}
+            onChange={(e) => setPostsTitle(e.target.value)}
+          />
+          <DropDown
+            filter_data={categoryList}
+            setFilter={setFilter}
+            now_value={filter}
+            style={{ fontSize: '16px' }}
+          />
+        </div>
         <div>
           <ReactQuill
             ref={(element) => {

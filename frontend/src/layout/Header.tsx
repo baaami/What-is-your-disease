@@ -8,6 +8,7 @@ import Signup from '../pages/Signup'
 import Category from '../pages/Category'
 import Mypage from '../pages/Members/Mypage'
 import PostsLists from '../pages/Posts/Lists'
+import CategoryPosts from 'pages/Posts/CategoryPosts'
 import InfoForm from '../pages/Members/InfoForm'
 import PostsEdit from '../pages/Posts/Edit'
 import PostsDetail from '../pages/Posts/Detail'
@@ -70,6 +71,7 @@ export default function Header(props: IHeaderProps) {
         <Route path="/mypage" component={Mypage} />
         <Route path="/infoForm" component={InfoForm} />
         <Route path="/posts/lists" component={PostsLists} />
+        <Route path="/posts/category/lists/:type" component={CategoryPosts} />
         <Route path="/posts/edit" component={PostsEdit} />
         <Route path="/posts/detail/:postId" component={PostsDetail} />
         <Route path="/search" component={Search} />

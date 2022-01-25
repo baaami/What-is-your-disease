@@ -1,32 +1,32 @@
-import Post from '../../models/post';
-import mongoose from 'mongoose';
-import sanitizeHtml from 'sanitize-html';
-import User from '../../models/user';
+import Post from "../../models/post";
+import mongoose from "mongoose";
+import sanitizeHtml from "sanitize-html";
+import User from "../../models/user";
 
 const { ObjectId } = mongoose.Types;
 
 const sanitizeOption = {
   allowedTags: [
-    'h1',
-    'h2',
-    'b',
-    'i',
-    'u',
-    's',
-    'p',
-    'ul',
-    'ol',
-    'li',
-    'blockquote',
-    'a',
-    'img',
+    "h1",
+    "h2",
+    "b",
+    "i",
+    "u",
+    "s",
+    "p",
+    "ul",
+    "ol",
+    "li",
+    "blockquote",
+    "a",
+    "img",
   ],
   allowedAttributes: {
-    a: ['href', 'name', 'target'],
-    img: ['src'],
-    li: ['class'],
+    a: ["href", "name", "target"],
+    img: ["src"],
+    li: ["class"],
   },
-  allowedSchemes: ['data', 'http'],
+  allowedSchemes: ["data", "http"],
 };
 
 const removeHtmlAndShorten = (body) => {
@@ -36,7 +36,7 @@ const removeHtmlAndShorten = (body) => {
   return filtered;
 };
 
-const getOldestPosts = async (ctx, query) => {
+const getOldestPosts = async (query) => {
   let posts;
   try {
     posts = await Post.find(query)
@@ -60,7 +60,7 @@ const getLatestPosts = async (ctx, query) => {
       .lean()
       .exec();
   } catch (err) {
-    ctx.throw(500, e);
+    ctx.throw(500, err);
   }
 
   return posts;
@@ -140,7 +140,7 @@ export const user = async (ctx) => {
   }
 
   const query = {
-    ...(user._id ? { 'user._id': user._id } : {}),
+    ...(user._id ? { "user._id": user._id } : {}),
   };
 
   try {
@@ -163,7 +163,6 @@ export const user = async (ctx) => {
  */
 export const category = async (ctx) => {
   const { category } = ctx.query;
-
   if (!category) {
     ctx.status = 400;
     return;
@@ -175,7 +174,14 @@ export const category = async (ctx) => {
   };
 
   try {
-    const posts = await getLatestPosts(query);
+    /**
+     * 2022-01-26 add 박지후
+     */
+    const posts = await Post.find(query)
+      .sort({ publishedDate: -1 })
+      .limit(10)
+      .lean()
+      .exec();
 
     ctx.body = posts.map((post) => ({
       ...post,
@@ -193,11 +199,11 @@ export const category = async (ctx) => {
  * @param {*} ctx
  */
 export const filter = async (ctx) => {
-  const { id } = ctx.params;
-
+  const { orderBy } = ctx.params;
+  console.log(orderBy);
   let posts;
-  switch (id) {
-    case 'latest': {
+  switch (orderBy) {
+    case "최신순": {
       try {
         posts = await getLatestPosts(ctx);
       } catch (err) {
@@ -205,7 +211,7 @@ export const filter = async (ctx) => {
       }
       break;
     }
-    case 'oldest': {
+    case "오래된순": {
       try {
         posts = await getOldestPosts(ctx);
       } catch (err) {
@@ -213,7 +219,7 @@ export const filter = async (ctx) => {
       }
       break;
     }
-    case 'hot': {
+    case "인기순": {
       // 인기순
       try {
         posts = await getHotPosts(ctx);
@@ -223,7 +229,7 @@ export const filter = async (ctx) => {
       break;
     }
   }
-
+  console.log(posts);
   ctx.body = posts.map((post) => ({
     ...post,
     body: removeHtmlAndShorten(post.body),

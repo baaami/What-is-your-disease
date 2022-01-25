@@ -4,21 +4,21 @@ import { PostsDetailContainer } from 'styles/PostsDetail.styles'
 import Search from 'components/Search'
 import Button from 'components/Button'
 import API from 'service/api'
-import { PostUserModel } from 'service/model/postModel'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
+import { PostModel } from 'model/postsModel'
 interface IPostsDetailProps {}
 
-export interface PostModel {
-  body: string
-  category: string
-  publishedDate: string
-  title: string
-  user: PostUserModel
-  views: number
-  __v: number
-  _id: string
-}
+// export interface PostModel {
+//   body: string
+//   category: string
+//   publishedDate: string
+//   title: string
+//   user: PostUserModel
+//   views: number
+//   __v: number
+//   _id: string
+// }
 export default function PostsDetail(props: RouteComponentProps) {
   const history = useHistory()
   const [userInfo] = useRecoilState(currentUserInfo)
@@ -64,6 +64,7 @@ export default function PostsDetail(props: RouteComponentProps) {
       <section className="postTitle">{post.title}</section>
       <section className="postInfo">
         <div>작성자: {post?.user?.info.name}</div>
+        <div>카테고리: {post?.category}</div>
         <div>조회수: {post?.views}</div>
       </section>
       <hr />

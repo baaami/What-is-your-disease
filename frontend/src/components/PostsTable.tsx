@@ -1,20 +1,22 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import arrow from '../../assets/img/arrow_right.png'
+import arrow from 'assets/img/arrow_right.png'
 
 const PostsTable = (props: any) => {
   return (
     <LatestPostBanner className="wrap">
-      <div className="title">최신 게시글</div>
-      <Link to="/posts/lists" className="viewMoreBtn">
-        더보기 +
-      </Link>
+      {props.title && <div className="title">{props?.title}</div>}
+      {props.is_more_button && (
+        <Link to="/posts/lists" className="viewMoreBtn">
+          더보기 +
+        </Link>
+      )}
       <div className="latestPostContainer">
         {props.posts.map((item: any) => {
           return (
             <>
-              <Link to="" className="latestPost">
+              <Link to={`/posts/detail/${item._id}`} className="latestPost">
                 <div className="postTitle">{item.title}</div>
                 <img src={arrow} alt="화살표 아이콘" />
               </Link>
@@ -30,7 +32,7 @@ export default PostsTable
 
 export const LatestPostBanner = styled.div`
   position: relative;
-  padding: 70px 0 125px;
+  /* padding: 70px 0 125px; */
 
   @keyframes arrowShaking {
     0% {

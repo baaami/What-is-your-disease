@@ -10,7 +10,7 @@ import {
   BlueBannerBg,
 } from '../../styles/Home.styles'
 import Search from '../../components/Search'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import arrow from '../../assets/img/arrow_right.png'
 import API from 'service/api'
 
@@ -55,6 +55,7 @@ const popularPosts = [
 ]
 
 export default function Home(props: IHomeProps) {
+  const history = useHistory()
   const [latest_posts, setLatestPosts] = useState([])
   const [hot_posts, setHotPosts] = useState([])
   const getLatestPosts = async () => {
@@ -93,7 +94,13 @@ export default function Home(props: IHomeProps) {
         <div className="categoryItemContainer">
           {categories.map((item) => {
             return (
-              <div className="categoryItem" key={`category: ${item.id}`}>
+              <div
+                className="categoryItem"
+                key={`category: ${item.id}`}
+                onClick={() =>
+                  history.push(`/posts/category/lists/${item.name}`)
+                }
+              >
                 <div className="categoryItemWrap">
                   <img src={item.imgUrl} alt={`${item.name} 아이콘`} />
                   <h2>{item.name}</h2>

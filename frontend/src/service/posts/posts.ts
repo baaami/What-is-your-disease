@@ -40,4 +40,31 @@ export const posts = {
     }
     return Axios(config)
   },
+  getFilterPosts: async (orderBy: string) => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: GET,
+      url: `/api/posts/filter/${orderBy}`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+    }
+    return Axios(config)
+  },
+  getCategoryPosts: async (category: string) => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: GET,
+      url: `/api/posts/`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        category,
+      },
+    }
+    return Axios(config)
+  },
 }

@@ -95,14 +95,17 @@ export const read = async (ctx) => {
  */
 export const write = async (ctx) => {
   // REST API의 Reuqest Body는 ctx.request.body에서 조회 가능
-  const { title, body, category } = ctx.request.body;
+  const { title, body, category, tags } = ctx.request.body;
+
+  // TODO : body 검증하도록 변경하기
 
   const post = new Post({
     title,
     body: sanitizeHtml(body, sanitizeOption),
     category,
-    views: 0,
+    views: 1,
     comments: [],
+    tags,
     user: ctx.state.user,
   });
   try {
@@ -164,10 +167,33 @@ export const remove = async (ctx) => {
    */
   const id = ctx.state.post._id;
   try {
-    console.log('id : ', id);
     await Post.findByIdAndRemove(id).exec();
     ctx.status = 204; // No Content (성공하기는 했지만 응답할 데이터는 없음)
   } catch (e) {
     ctx.throw(500, e);
   }
 };
+
+/**
+ * 댓글 등록
+ * PATCH /api/post/:id/comments/
+ */
+export const cmUpload = async (ctx) => {};
+
+/**
+ * 댓글 삭제
+ * DELETE /api/post/:id/comments/:commentId
+ */
+export const cmDelete = async (ctx) => {};
+
+/**
+ * 답글 등록
+ * PATCH /api/post/:id/comments/:commentId/replies
+ */
+export const rpUpload = async (ctx) => {};
+
+/**
+ * 답글 삭제
+ * DELETE /api/post/:id/comments/:commentId/replies/:replyId
+ */
+export const rpDelete = async (ctx) => {};

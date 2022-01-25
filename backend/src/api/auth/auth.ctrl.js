@@ -246,15 +246,12 @@ export const google = async (ctx) => {
     await NewUser.save(); // 데이터베이스에 저장
 
     user = await User.findById(_id);
-    console.log('[TEST] First User : ', user);
   } else {
     // 두번째 로그인일 경우
     user = CheckedUser;
-    // console.log('[TEST] Exist User  : ', user);
   }
 
   // 자체 토큰 발급
-  console.log('[TEST] user : ', user);
   const jwtToken = await jwt.sign(user);
 
   result = {
@@ -262,7 +259,6 @@ export const google = async (ctx) => {
     is_new: is_new,
     user: user,
   };
-
   // // access token을 JWT를 사용하여 서버만의 토큰으로 발급 후 front에 전달
   ctx.body = result;
 };

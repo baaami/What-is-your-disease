@@ -2,6 +2,7 @@ import Post from '../../models/post';
 import mongoose from 'mongoose';
 import sanitizeHtml from 'sanitize-html';
 import User from '../../models/user';
+import { categoryTable } from '../../lib/categoryTable';
 
 const { ObjectId } = mongoose.Types;
 
@@ -36,50 +37,76 @@ const removeHtmlAndShorten = (body) => {
   return filtered;
 };
 
+const getLatestPosts = async (ctx, query) => {
+  let posts;
+  try {
+    posts = await Post.find(query)
+      .sort({ publishedDate: -1 })
+      .limit(10)
+      .lean()
+      .exec();
+  } catch (err) {
+    ctx.throw(500, e);
+  }
+
+  return posts;
+};
+
+const getHotPosts = async (ctx, query) => {
+  let posts;
+  try {
+    posts = await Post.find(query).sort({ views: -1 }).limit(10).lean().exec();
+  } catch (err) {
+    ctx.throw(500, e);
+  }
+  return posts;
+};
+
 /**
- * GET /api/posts/latest?page=
+ * GET /api/posts/latest
  *
  * @brief     최신 포스트 리스트를 전달
  * @param {*} ctx
  */
 export const latest = async (ctx) => {
-  try {
-    const posts = await Post.find({})
-      .sort({ publishedDate: -1 })
-      .limit(10)
-      .lean()
-      .exec();
+  let posts;
 
-    ctx.body = posts.map((post) => ({
-      ...post.toJSON(),
-      body: removeHtmlAndShorten(post.body),
-    }));
-  } catch (e) {
-    ctx.throw(500, e);
+  const query = {};
+
+  try {
+    posts = await getLatestPosts(ctx, query);
+  } catch (err) {
+    ctx.throw(500, err);
   }
+
+  // response
+  ctx.body = posts.map((post) => ({
+    ...post,
+    body: removeHtmlAndShorten(post.body),
+  }));
 };
 
 /**
- * GET /api/posts/hot?page=
+ * GET /api/posts/hot
  *
  * @brief     인기 포스트 리스트를 전달
  * @param {*} ctx
  */
 export const hot = async (ctx) => {
-  try {
-    const posts = await Post.find({})
-      .sort({ views: -1 })
-      .limit(10)
-      .lean()
-      .exec();
+  let posts;
 
-    ctx.body = posts.map((post) => ({
-      ...post.toJSON(),
-      body: removeHtmlAndShorten(post.body),
-    }));
-  } catch (e) {
-    ctx.throw(500, e);
+  const query = {};
+
+  try {
+    posts = await getHotPosts(ctx, query);
+  } catch (err) {
+    ctx.throw(500, err);
   }
+
+  ctx.body = posts.map((post) => ({
+    ...post,
+    body: removeHtmlAndShorten(post.body),
+  }));
 };
 
 /**
@@ -103,14 +130,10 @@ export const user = async (ctx) => {
   };
 
   try {
-    const posts = await Post.find(query)
-      .sort({ _id: -1 })
-      .limit(10)
-      .lean()
-      .exec();
+    const posts = await getLatestPosts(ctx, query);
 
     ctx.body = posts.map((post) => ({
-      ...post.toJSON(),
+      ...post,
       body: removeHtmlAndShorten(post.body),
     }));
   } catch (e) {
@@ -119,7 +142,7 @@ export const user = async (ctx) => {
 };
 
 /**
- * GET /api/posts?page=&category=
+ * GET /api/posts?category=
  *
  * @brief     로그인 회원 포스트 리스트를 전달
  * @param {*} ctx
@@ -132,19 +155,16 @@ export const category = async (ctx) => {
     return;
   }
 
+  // category 값이 존재할 경우 category 필드에서 확인 후 획득
   const query = {
     ...(category ? { category: category } : {}),
   };
 
   try {
-    const posts = await Post.find(query)
-      .sort({ _id: -1 })
-      .limit(10)
-      .lean()
-      .exec();
+    const posts = await getLatestPosts(query);
 
     ctx.body = posts.map((post) => ({
-      ...post.toJSON(),
+      ...post,
       body: removeHtmlAndShorten(post.body),
     }));
   } catch (e) {
@@ -153,9 +173,37 @@ export const category = async (ctx) => {
 };
 
 /**
- * GET /api/posts/filter?page=&id=
+ * GET /api/posts/filter
  *
  * @brief     로그인 회원 포스트 리스트를 전달
  * @param {*} ctx
  */
-export const filter = async (ctx) => {};
+export const filter = async (ctx) => {
+  const { id } = ctx.params;
+
+  let posts;
+  switch (id) {
+    case 'latest': {
+      try {
+        posts = await getLatestPosts(ctx);
+      } catch (err) {
+        ctx.throw(500, err);
+      }
+      break;
+    }
+    case 'hot': {
+      // 인기순
+      try {
+        posts = await getHotPosts(ctx);
+      } catch (err) {
+        ctx.throw(500, err);
+      }
+      break;
+    }
+  }
+
+  ctx.body = posts.map((post) => ({
+    ...post,
+    body: removeHtmlAndShorten(post.body),
+  }));
+};

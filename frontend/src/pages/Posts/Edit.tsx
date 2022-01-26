@@ -63,7 +63,9 @@ export default function PostsEdit(props: IPostsEditProps) {
     await API.post
       .createPost(req_data)
       .then((res) => {
-        history.push('/')
+        history.push(`/posts/detail/${res.data._id}`, {
+          is_create_state: true,
+        })
       })
       .catch((e) => {
         console.log(e)
@@ -80,7 +82,7 @@ export default function PostsEdit(props: IPostsEditProps) {
       .editPost(pushState._id, req_data)
       .then((res) => {
         alert('게시물 수정에 성공했습니다.')
-        history.push('/posts/lists')
+        history.goBack()
       })
       .catch((e) => {
         console.log(e)

@@ -59,6 +59,16 @@ export default function PostsDetail(props: RouteComponentProps) {
       })
   }
 
+  const onClickListsLink = () => {
+    const stateFromPush = history.location.state as {
+      is_create_state?: boolean
+    }
+    if (stateFromPush?.is_create_state) {
+      history.push('/')
+    } else {
+      history.goBack()
+    }
+  }
   useEffect(() => {
     getPost()
     window.scrollTo({ top: 0 })
@@ -129,7 +139,7 @@ export default function PostsDetail(props: RouteComponentProps) {
             </Button>
           </>
         )}
-        <Button type="button" onClick={() => history.push('/')}>
+        <Button type="button" onClick={() => onClickListsLink()}>
           목록
         </Button>
       </Buttons>

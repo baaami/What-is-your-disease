@@ -54,8 +54,12 @@ export default function InfoForm(props: IInfoFormProps) {
     await API.auth
       .updateUserInfo(req_data)
       .then((res: any) => {
-        alert('회원정보 수정에 성공하였습니다.')
-        history.push('/mypage')
+        if (name && age && gender) {
+          alert('회원정보 수정에 성공하였습니다.')
+          history.push('/mypage')
+        } else {
+          alert('필수 사항을 모두 입력해주세요.')
+        }
       })
       .catch((e) => {
         console.log(e)

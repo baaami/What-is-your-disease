@@ -211,7 +211,8 @@ export const PopularPostBanner = styled.div`
 
   .popularPostContainer {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 20px;
 
     @media (max-width: 768px) {
       flex-direction: column;
@@ -227,8 +228,8 @@ export const PopularPostBanner = styled.div`
 
       @media (max-width: 1014px) {
         width: 260px;
-        height: 320px;
-        margin-bottom: 35px;
+        height: 340px;
+        margin-bottom: 10px;
       }
 
       @media (max-width: 768px) {

@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router-dom'
-import { PostsDetailContainer } from 'styles/PostsDetail.styles'
+import {
+  PostsDetailContainer,
+  CommentsSection,
+  Buttons,
+} from 'styles/PostsDetail.styles'
 import Search from 'components/Search'
 import Button from 'components/Button'
 import API from 'service/api'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
 import { PostModel } from 'model/postsModel'
+import reply from '../../assets/img/reply.svg'
+
 interface IPostsDetailProps {}
 
 // export interface PostModel {
@@ -58,6 +64,12 @@ export default function PostsDetail(props: RouteComponentProps) {
     window.scrollTo({ top: 0 })
   }, [])
 
+  const Comments = [
+    { txt: '오 꿀팀 감사합니다.' },
+    { txt: '좋은 하루 되세요~' },
+    { txt: '감사합니다:)' },
+  ]
+
   return (
     <PostsDetailContainer className="wrap">
       <Search />
@@ -72,7 +84,37 @@ export default function PostsDetail(props: RouteComponentProps) {
         className="postContents"
         dangerouslySetInnerHTML={{ __html: post?.body }}
       ></section>
-      <section className="buttonRow">
+      <Button type="button" className="commentsBtn" onClick={undefined}>
+        + 댓글 작성하기
+      </Button>
+      <CommentsSection className="wrap">
+        {Comments.map((comment, idx) => {
+          return (
+            <div className="comment" key={idx}>
+              <span>{`작성자`}</span>
+              {comment.txt}
+              <Button type="button" className="replyBtn" onClick={undefined}>
+                <img src={reply} alt="답글 아이콘" />
+              </Button>
+              <div className="replyWrap">
+                <div className="reply">
+                  <span>{`작성자`}</span>답글입니다.
+                </div>
+                <div className="reply">
+                  <span>{`작성자`}</span>답글입니다.
+                </div>
+                <div className="reply">
+                  <span>{`작성자`}</span>답글입니다.
+                </div>
+                <div className="reply">
+                  <span>{`작성자`}</span>답글입니다.
+                </div>
+              </div>
+            </div>
+          )
+        })}
+      </CommentsSection>
+      <Buttons className="buttonRow">
         {post.user?._id === userInfo?._id && (
           <>
             <Button
@@ -90,7 +132,7 @@ export default function PostsDetail(props: RouteComponentProps) {
         <Button type="button" onClick={() => history.push('/')}>
           목록
         </Button>
-      </section>
+      </Buttons>
     </PostsDetailContainer>
   )
 }

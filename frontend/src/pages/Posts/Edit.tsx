@@ -15,7 +15,22 @@ import { PostModel } from 'model/postsModel'
 import { categoryList } from 'static/constant'
 
 interface IPostsEditProps {}
-
+const formats = [
+  'header',
+  'font',
+  'size',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'blockquote',
+  'list',
+  'bullet',
+  'indent',
+  'link',
+  'image',
+  'video',
+]
 export default function PostsEdit(props: IPostsEditProps) {
   const history = useHistory()
   const quill_ref = useRef<ReactQuill>()
@@ -144,6 +159,7 @@ export default function PostsEdit(props: IPostsEditProps) {
                 quill_ref.current = element
               }
             }}
+            formats={formats}
             value={edit_contents}
             onChange={setEditContents}
             modules={modules}

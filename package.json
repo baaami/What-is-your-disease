@@ -1,0 +1,16 @@
+{
+  "name": "What-is-your-disease",
+  "version": "1.0.0",
+  "main": "./backend/src/index.js",
+  "repository": "https://github.com/SeongBeom27/What-is-your-disease.git",
+  "author": "jeehoo0767 <jeehoo0767@naver.com>",
+  "license": "MIT",
+  "scripts": {
+    "server": "cd backend && npm run test",
+    "client": "cd frontend && npm run start",
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+  },
+  "devDependencies": {
+    "concurrently": "^7.0.0"
+  }
+}

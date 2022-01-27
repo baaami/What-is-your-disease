@@ -1,6 +1,4 @@
 import mongoose, { Schema } from 'mongoose';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
 
 const UserSchema = new Schema({
   _id: mongoose.Types.ObjectId,
@@ -10,9 +8,10 @@ const UserSchema = new Schema({
     name: String,
     age: Number,
     gender: String,
+    nickname: String,
     bloodtype: String,
-    allergy: Array,
-    medicines: Array,
+    allergy: [String],
+    medicines: [String],
   },
 });
 

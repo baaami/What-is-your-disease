@@ -17,7 +17,7 @@ const checkLoggedIn = async (ctx, next) => {
       // decoded_id를 DB에서 조회하여 사용자 find
       const ExistUser = await User.findById(_id);
       if (ExistUser) {
-        ctx.state.user = ExistUser;
+        ctx.state.user = ExistUser.toJSON();
         return next();
       } else {
         ctx.status = 401;

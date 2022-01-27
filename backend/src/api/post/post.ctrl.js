@@ -91,6 +91,7 @@ export const read = async (ctx) => {
  *    title: '제목',
  *    body:  '내용',
  *    category: '카테고리',
+ *    tags: ['태그1', '태그2', ...],
  * }
  */
 export const write = async (ctx) => {

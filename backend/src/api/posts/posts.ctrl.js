@@ -77,7 +77,8 @@ const getHotPosts = async (ctx, query) => {
 };
 
 /**
- * GET /api/posts/latest
+ * TODO : querystring 존재여부를 확인하여서 query를 생성해주는 미들웨어 적용하도록하기
+ * GET /api/posts/latest?tag=
  *
  * @brief     최신 포스트 리스트를 전달
  * @param {*} ctx
@@ -85,7 +86,7 @@ const getHotPosts = async (ctx, query) => {
 export const latest = async (ctx) => {
   let posts;
 
-  const query = {};
+  const query = ctx.state.query;
 
   try {
     posts = await getLatestPosts(ctx, query);
@@ -108,8 +109,7 @@ export const latest = async (ctx) => {
  */
 export const hot = async (ctx) => {
   let posts;
-
-  const query = {};
+  const query = ctx.state.query;
 
   try {
     posts = await getHotPosts(ctx, query);

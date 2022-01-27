@@ -1,29 +1,40 @@
-import User from "../../models/user";
-import jwt from "../../lib/jwt";
-
-const secretKey = require("../../lib/secretkey").secretKey;
+import User from '../../models/user';
+import Post from '../../models/post';
+import jwt from '../../lib/jwt';
 
 export const update = async (ctx) => {
   const info = ctx.request.body;
-  let CurUser = ctx.state.user;
+  let user,
+    NextUser,
+    PrevUser = ctx.state.user;
 
-  // user 내용 update`
-  CurUser.info = info;
-  const _id = CurUser._id;
+  // TODO : 1개의 식으로 나타내기
+  NextUser = { ...PrevUser };
+  NextUser.info = info;
+
+  const _id = NextUser._id;
   try {
-    const user = await User.findByIdAndUpdate(_id, CurUser, {
+    user = await User.findByIdAndUpdate(_id, NextUser, {
       new: true,
     }).exec();
     if (!user) {
-      console.log("User Update fail");
+      console.log('User Update fail');
       ctx.status = 404;
       return;
     }
-
-    ctx.body = user;
   } catch (err) {
     ctx.throw(500, err);
   }
+
+  // 이전 User 닉네임과 이후 User 닉네임이 다를 경우
+  if (PrevUser.info.name !== NextUser.info.name) {
+    const _ = await Post.findByNameAndUpdate(
+      PrevUser.info.name,
+      NextUser.info.name,
+    );
+  }
+
+  ctx.body = user;
 };
 
 /**
@@ -32,7 +43,7 @@ export const update = async (ctx) => {
  */
 export const accounts = async (ctx) => {
   let currentUser = await ctx.request.headers.authorization
-    .replace("Bearer", "")
+    .replace('Bearer', '')
     .trim();
   await jwt.verify(currentUser).then((res) => {
     currentUser = res._id;

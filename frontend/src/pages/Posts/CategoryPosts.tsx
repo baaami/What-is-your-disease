@@ -36,7 +36,6 @@ export default function PostsLists({
     await API.posts
       .getCategoryPosts(category)
       .then((res) => {
-        console.log(res.data)
         setPostsList(res.data)
       })
       .catch((e) => {

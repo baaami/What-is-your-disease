@@ -38,6 +38,13 @@ export default function PostsDetail(props: RouteComponentProps) {
   }
 
   const onClickDelete = async () => {
+    if (
+      !window.confirm(
+        '삭제된 게시글은 되돌릴 수 없습니다. 정말로 삭제 하시겠습니까?',
+      )
+    ) {
+      return
+    }
     await API.post
       .deletePost(post._id)
       .then((res) => {
@@ -77,6 +84,16 @@ export default function PostsDetail(props: RouteComponentProps) {
       <section className="postInfo">
         <div>작성자: {post?.user?.info.name}</div>
         <div>카테고리: {post?.category}</div>
+        <div>
+          해쉬태그:{' '}
+          {post?.tags?.map((item, index) => {
+            if (index === post.tags.length - 1) {
+              return <span>#{item}</span>
+            } else {
+              return <span>#{item}, </span>
+            }
+          })}
+        </div>
         <div>조회수: {post?.views}</div>
       </section>
       <hr />

@@ -17,6 +17,7 @@ interface InputModel {
   margin?: number
   error?: string
   onClickSearch?: () => void
+  onEnterSearch?: () => void
   onEnter?: () => void
   onReset?: () => void
   autoComplete?: string
@@ -38,10 +39,17 @@ const Input = (props: InputModel) => {
     margin,
     error,
     onClickSearch,
+    onEnterSearch,
     onEnter,
     onReset,
     autoComplete,
   } = props
+
+  const _onEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && onEnter) {
+      onEnter()
+    }
+  }
   return (
     <>
       {label ? <LabelStyle>{label}</LabelStyle> : <></>}
@@ -58,6 +66,7 @@ const Input = (props: InputModel) => {
         placeholder={placeholder}
         maxLength={maxLength}
         disabled={disabled}
+        onKeyPress={_onEnter}
       ></InputStyle>
     </>
   )

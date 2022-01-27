@@ -5,6 +5,7 @@ export interface PostModel {
   category: string
   publishedDate: string
   title: string
+  tags: Array<string>
   user: PostUserModel
   views: number
   __v: number

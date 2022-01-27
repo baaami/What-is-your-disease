@@ -40,6 +40,8 @@ export default function PostsEdit(props: IPostsEditProps) {
   const [filter, setFilter] = useState(
     pushState.category ? pushState.category : categoryList[0],
   )
+  const [hashtag_value, setHashtagValue] = useState('')
+  const [hashtag_list, setHashtagList] = useState<Array<string>>([])
   // useMemo를 사용하지 않으면, 키를 입력할 때마다, imageHandler 때문에 focus가 계속 풀리게 됨.
   const modules = useMemo(
     () => ({
@@ -73,6 +75,7 @@ export default function PostsEdit(props: IPostsEditProps) {
       title: posts_title,
       body: edit_contents,
       category: filter,
+      tags: [...hashtag_list],
     }
 
     await API.post
@@ -124,11 +127,25 @@ export default function PostsEdit(props: IPostsEditProps) {
     }
   }
 
+  const addHashtag = () => {
+    const next_hashtag_list = [...hashtag_list, hashtag_value]
+
+    setHashtagList(next_hashtag_list)
+    setHashtagValue('')
+  }
+
+  const removeHashtag = (target_tag: string) => {
+    const next_hashtag = hashtag_list.filter((item) => item !== target_tag)
+
+    setHashtagList(next_hashtag)
+  }
+
   useEffect(() => {
     const path_state = history.location.state as PostModel
     if (path_state) {
       setPostsTitle(path_state.title)
       setEditContents(path_state.body)
+      setHashtagList(path_state.tags)
       setPushState(path_state)
     }
     window.scrollTo({ top: 0 })
@@ -152,6 +169,30 @@ export default function PostsEdit(props: IPostsEditProps) {
             style={{ fontSize: '16px' }}
           />
         </div>
+        <section className="hashtagArea">
+          <div className="hashtagForm">
+            <div>
+              <Input
+                id="hashtag"
+                type="text"
+                placeholder="해쉬태그를 입력하세요."
+                value={hashtag_value}
+                onChange={(e) => setHashtagValue(e.target.value)}
+                onEnter={addHashtag}
+              />
+              <button onClick={addHashtag}>추가</button>
+            </div>
+          </div>
+          <div className="hashtagList">
+            {hashtag_list.map((item) => {
+              return (
+                <div onClick={() => removeHashtag(item)}>
+                  #{item} <span>X</span>
+                </div>
+              )
+            })}
+          </div>
+        </section>
         <div>
           <ReactQuill
             ref={(element) => {

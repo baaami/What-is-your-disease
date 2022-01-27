@@ -15,16 +15,6 @@ import reply from '../../assets/img/reply.svg'
 
 interface IPostsDetailProps {}
 
-// export interface PostModel {
-//   body: string
-//   category: string
-//   publishedDate: string
-//   title: string
-//   user: PostUserModel
-//   views: number
-//   __v: number
-//   _id: string
-// }
 export default function PostsDetail(props: RouteComponentProps) {
   const history = useHistory()
   const [userInfo] = useRecoilState(currentUserInfo)

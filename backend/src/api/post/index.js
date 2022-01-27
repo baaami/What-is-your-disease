@@ -1,8 +1,11 @@
 const Router = require('koa-router');
 import * as postCtrl from './post.ctrl';
 import checkLoggedIn from '../../lib/checkLoggedIn';
+import comment from './comment';
 
 const post = new Router();
+
+post.use('/comment', comment.routes());
 
 /**
  * 특정 포스트 조회

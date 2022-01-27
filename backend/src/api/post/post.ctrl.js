@@ -174,27 +174,3 @@ export const remove = async (ctx) => {
     ctx.throw(500, e);
   }
 };
-
-/**
- * 댓글 등록
- * PATCH /api/post/:id/comments/
- */
-export const cmUpload = async (ctx) => {};
-
-/**
- * 댓글 삭제
- * DELETE /api/post/:id/comments/:commentId
- */
-export const cmDelete = async (ctx) => {};
-
-/**
- * 답글 등록
- * PATCH /api/post/:id/comments/:commentId/replies
- */
-export const rpUpload = async (ctx) => {};
-
-/**
- * 답글 삭제
- * DELETE /api/post/:id/comments/:commentId/replies/:replyId
- */
-export const rpDelete = async (ctx) => {};

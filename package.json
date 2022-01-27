@@ -8,7 +8,7 @@
   "scripts": {
     "server": "cd backend && npm run test",
     "client": "cd frontend && npm run start",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+    "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "devDependencies": {
     "concurrently": "^7.0.0"

@@ -72,7 +72,7 @@ export const cmDelete = async (ctx) => {
 
   // 해당 댓글 삭제 진행
   const newComments = curPost.comments.filter(
-    (comment) => comment._id !== commentId,
+    (comment) => comment.comment._id !== commentId,
   );
 
   const nextPost = { ...curPost };

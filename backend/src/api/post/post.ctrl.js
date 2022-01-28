@@ -28,7 +28,13 @@ const sanitizeOption = {
   allowedSchemes: ['data', 'http'],
 };
 
-// post id 검증
+/**
+ * @brief Id를 통하여 Post 검증 후 존재 시 ctx.state.post로 전달
+ *
+ * @param {*} ctx
+ * @param {*} next
+ * @returns
+ */
 export const checkPostById = async (ctx, next) => {
   const { id } = ctx.params;
   if (!ObjectId.isValid(id)) {

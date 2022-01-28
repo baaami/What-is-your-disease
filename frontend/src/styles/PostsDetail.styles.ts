@@ -17,6 +17,15 @@ export const PostsDetailContainer = styled.div`
     & div {
       font-size: 22px;
       margin-bottom: 10px;
+
+      &.hashtag {
+        span {
+          cursor: pointer;
+          &:hover {
+            color: #666;
+          }
+        }
+      }
     }
   }
 

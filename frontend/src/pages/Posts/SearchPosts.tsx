@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
-import { PostListsContainer, PostListsWrap } from 'styles/CategoryPosts.styles'
+import { PostListsContainer, PostListsWrap } from 'styles/SearchPosts.styles'
 import Search from '../../components/Search'
-import arrow from '../../assets/img/arrow_right.png'
 import PostsTable from 'components/PostsTable'
-import DropDown from 'components/DropDown'
 import API from 'service/api'
 import { PostModel } from 'model/postsModel'
 const categories = [
@@ -18,19 +16,20 @@ const categories = [
   { id: '7', imgUrl: '/assets/img/stomache.svg', name: '복통' },
 ]
 
-export default function PostsLists({
+interface IPostsListsProps {}
+
+const dropdownOption = ['최신순', '오래된순', '인기순']
+
+export default function SearchPosts({
   history,
   match,
   location,
-}: RouteComponentProps<{ type: string }>) {
-  const [filter, setFilter] = useState('최신순')
+}: RouteComponentProps<{ type: string; value: string }>) {
   const [postsList, setPostsList] = useState<PostModel[]>([])
-  const [now_category, setNowCategory] = useState<
-    { id: string; imgUrl: string; name: string }[]
-  >([])
-  const getFilterPosts = async (category: string) => {
+  const [now_tag, setNowTag] = useState<string>('')
+  const getHashTagPosts = async (hashtag: string) => {
     await API.posts
-      .getCategoryPosts(category)
+      .getTagSearch(hashtag)
       .then((res) => {
         setPostsList(res.data)
       })
@@ -40,12 +39,12 @@ export default function PostsLists({
   }
 
   useEffect(() => {
-    setNowCategory(categories.filter((item) => item.name === match.params.type))
+    setNowTag(match.params.value)
     window.scrollTo({ top: 0 })
   }, [])
 
   useEffect(() => {
-    getFilterPosts(match.params.type)
+    getHashTagPosts(match.params.value)
   }, [match.params.type])
 
   return (
@@ -53,18 +52,7 @@ export default function PostsLists({
       <Search />
       <PostListsWrap className="wrap">
         <div className="titleWrap">
-          <img
-            src={now_category?.[0]?.imgUrl}
-            alt="카테고리 이미지"
-            className="categoryImg"
-          />
-          <div className="categoryName">{now_category?.[0]?.name}</div>
-          {/* <div className="title">게시글</div>
-          <DropDown
-            now_value={filter}
-            filter_data={dropdownOption}
-            setFilter={setFilter}
-          /> */}
+          <span>#{now_tag}</span>에 대한 검색결과 입니다.
         </div>
         {postsList.length === 0 && (
           <div className="noData">조회된 결과가 없습니다.</div>

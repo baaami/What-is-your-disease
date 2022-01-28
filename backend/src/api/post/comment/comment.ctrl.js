@@ -1,29 +1,29 @@
-import mongoose from 'mongoose';
-import Post from '../../models/post';
-import sanitizeHtml from 'sanitize-html';
+import mongoose from "mongoose";
+import Post from "../../../models/post";
+import sanitizeHtml from "sanitize-html";
 
 const sanitizeOption = {
   allowedTags: [
-    'h1',
-    'h2',
-    'b',
-    'i',
-    'u',
-    's',
-    'p',
-    'ul',
-    'ol',
-    'li',
-    'blockquote',
-    'a',
-    'img',
+    "h1",
+    "h2",
+    "b",
+    "i",
+    "u",
+    "s",
+    "p",
+    "ul",
+    "ol",
+    "li",
+    "blockquote",
+    "a",
+    "img",
   ],
   allowedAttributes: {
-    a: ['href', 'name', 'target'],
-    img: ['src'],
-    li: ['class'],
+    a: ["href", "name", "target"],
+    img: ["src"],
+    li: ["class"],
   },
-  allowedSchemes: ['data', 'http'],
+  allowedSchemes: ["data", "http"],
 };
 
 /**
@@ -72,7 +72,7 @@ export const cmDelete = async (ctx) => {
 
   // 해당 댓글 삭제 진행
   const newComments = curPost.comments.filter(
-    (comment) => comment.comment._id !== commentId,
+    (comment) => comment.comment._id !== commentId
   );
 
   const nextPost = { ...curPost };

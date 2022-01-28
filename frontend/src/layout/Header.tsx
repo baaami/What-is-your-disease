@@ -12,6 +12,7 @@ import CategoryPosts from 'pages/Posts/CategoryPosts'
 import InfoForm from '../pages/Members/InfoForm'
 import PostsEdit from '../pages/Posts/Edit'
 import PostsDetail from '../pages/Posts/Detail'
+import SearchPosts from 'pages/Posts/SearchPosts'
 import Kauth from '../pages/Kauth'
 import Nauth from '../pages/Nauth'
 import Gauth from '../pages/Gauth'
@@ -69,8 +70,12 @@ export default function Header(props: IHeaderProps) {
         <Route path="/category" component={Category} />
         <Route path="/mypage" component={Mypage} />
         <Route path="/infoForm" component={InfoForm} />
-        <Route path="/posts/lists" component={PostsLists} />
+        <Route path="/posts/lists" exact component={PostsLists} />
         <Route path="/posts/category/lists/:type" component={CategoryPosts} />
+        <Route
+          path="/posts/lists/search/:type/:value"
+          component={SearchPosts}
+        />
         <Route path="/posts/edit" component={PostsEdit} />
         <Route path="/posts/detail/:postId" component={PostsDetail} />
         <Route path="/api/auth/callback/kakao" component={Kauth} />

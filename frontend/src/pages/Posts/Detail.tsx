@@ -66,6 +66,11 @@ export default function PostsDetail(props: RouteComponentProps) {
       history.goBack()
     }
   }
+
+  const onClickHashtag = (target_hashtag: string) => {
+    history.push(`/posts/lists/search/hashtag/${target_hashtag}`)
+  }
+
   useEffect(() => {
     getPost()
     window.scrollTo({ top: 0 })
@@ -84,13 +89,13 @@ export default function PostsDetail(props: RouteComponentProps) {
       <section className="postInfo">
         <div>작성자: {post?.user?.info.name}</div>
         <div>카테고리: {post?.category}</div>
-        <div>
+        <div className="hashtag">
           해쉬태그:{' '}
           {post?.tags?.map((item, index) => {
             if (index === post.tags.length - 1) {
-              return <span>#{item}</span>
+              return <span onClick={() => onClickHashtag(item)}>#{item}</span>
             } else {
-              return <span>#{item}, </span>
+              return <span onClick={() => onClickHashtag(item)}>#{item}, </span>
             }
           })}
         </div>

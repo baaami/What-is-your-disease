@@ -1,13 +1,32 @@
-import * as React from 'react'
+import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import icon from '../assets/img/search.svg'
+import API from 'service/api'
 
 interface ISearchProps {}
 
 export default function Search(props: ISearchProps) {
+  const history = useHistory()
+
+  const [value, setValue] = useState('')
+
+  const onEnterSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      history.push(`/posts/lists/search/form/${value}`)
+    }
+  }
+
   return (
     <SearchContainer className="wrap">
-      <input type="text" placeholder="검색어를 입력하세요." />
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="검색어를 입력하세요."
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyPress={(e) => onEnterSearch(e)}
+      />
       <button>
         <img src={icon} alt="search icon" />
       </button>

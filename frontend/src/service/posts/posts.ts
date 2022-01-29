@@ -82,4 +82,19 @@ export const posts = {
     }
     return Axios(config)
   },
+  getSearchPosts: async (value: string) => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: GET,
+      url: `/api/search/`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        q: value,
+      },
+    }
+    return Axios(config)
+  },
 }

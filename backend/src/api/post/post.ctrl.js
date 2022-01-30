@@ -49,7 +49,7 @@ export const checkPostById = async (ctx, next) => {
     if (!post) {
       ctx.status = 404;
     }
-    ctx.state.post = post;
+    ctx.state.post = post.toJSON();
     return next();
   } catch (e) {
     ctx.throw(500, e);

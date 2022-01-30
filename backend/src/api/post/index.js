@@ -42,47 +42,4 @@ post.delete(
   postCtrl.remove,
 );
 
-// TODO : 리팩토링 필요 라우팅 만들기 post -> comment -> reply
-// comment
-
-/**
- * 댓글 등록
- */
-post.patch(
-  '/:id/comments',
-  postCtrl.checkPostById,
-  checkLoggedIn,
-  postCtrl.update,
-);
-
-/**
- * 댓글 삭제
- */
-post.delete(
-  '/:id/comments/:commentId',
-  postCtrl.checkPostById,
-  checkLoggedIn,
-  postCtrl.update,
-);
-
-/**
- * 답글 등록
- */
-post.patch(
-  '/:id/comments/:commentId/replies',
-  postCtrl.checkPostById,
-  checkLoggedIn,
-  postCtrl.update,
-);
-
-/**
- * 답글 삭제
- */
-post.delete(
-  '/:id/comments/:commentId/replies/:replyId',
-  postCtrl.checkPostById,
-  checkLoggedIn,
-  postCtrl.update,
-);
-
 export default post;

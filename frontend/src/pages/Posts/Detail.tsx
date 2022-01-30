@@ -102,6 +102,9 @@ export default function PostsDetail(props: RouteComponentProps) {
         <div>조회수: {post?.views}</div>
       </section>
       <hr />
+      <div className="createdAt">
+        작성일: {post?.publishedDate.split('T')[0]}
+      </div>
       <section
         className="postContents"
         dangerouslySetInnerHTML={{ __html: post?.body }}

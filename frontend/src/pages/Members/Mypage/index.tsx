@@ -41,6 +41,7 @@ export default function Mypage(props: IMypageProps) {
         name: '',
         age: '',
         gender: '',
+        nickname: '',
         bloodtype: '',
         allergy: [],
         medicines: [],
@@ -89,16 +90,20 @@ export default function Mypage(props: IMypageProps) {
         <section className="cardWrap">
           <UserInfoCard>
             <section className="cardRow">
-              <div>이름</div>
+              <div className="rightCol">이름</div>
               <div>{userInfo.info.name}</div>
             </section>
             <section className="cardRow">
-              <div>나이</div>
+              <div className="rightCol">나이</div>
               <div>{userInfo.info.age}</div>
             </section>
             <section className="cardRow">
-              <div>성별</div>
+              <div className="rightCol">성별</div>
               <div>{userInfo.info.gender}</div>
+            </section>
+            <section className="cardRow">
+              <div className="rightCol">닉네임</div>
+              <div>{userInfo.info.nickname}</div>
             </section>
           </UserInfoCard>
           <UserInfoCard>

@@ -55,7 +55,8 @@ export const FormRow = styled.div`
       width: 360px;
     }
     &#age,
-    &#gender {
+    &#gender,
+    &#nickname {
       width: 150px;
     }
     &#blood_type {

@@ -11,6 +11,7 @@ export const currentUserInfo = atom({
       name: '',
       age: '',
       gender: '',
+      nickname: '',
       bloodtype: '',
       allergy: [] as string[],
       medicines: [] as string[],

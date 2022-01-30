@@ -29,6 +29,11 @@ export const PostsDetailContainer = styled.div`
     }
   }
 
+  & .createdAt {
+    margin-top: 10px;
+    text-align: right;
+  }
+
   & .postContents {
     margin-bottom: 50px;
     padding: 30px 0;

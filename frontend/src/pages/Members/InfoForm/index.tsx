@@ -11,14 +11,23 @@ export default function InfoForm(props: IInfoFormProps) {
   const history = useHistory()
 
   const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
-  const { name, age, gender, bloodtype, allergy, medicines } = userInfo.info
+  const { name, age, gender, nickname, bloodtype, allergy, medicines } =
+    userInfo.info
   const [form_value, setFormValue] = useState({
     name: '',
     age: '',
     gender: '',
+    nickname: '',
     bloodtype: '',
     allergy: '',
     medicines: '',
+  })
+
+  const [validation_error, setValidationError] = useState({
+    name: false,
+    age: false,
+    gender: false,
+    nickname: false,
   })
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,13 +40,19 @@ export default function InfoForm(props: IInfoFormProps) {
   }
 
   const handleSubmitUserInfo = async () => {
-    const { name, age, gender, bloodtype, allergy, medicines } = form_value
+    if (!checkValidation()) {
+      return
+    }
+
+    const { name, age, gender, nickname, bloodtype, allergy, medicines } =
+      form_value
     setUserInfo({
       ...userInfo,
       info: {
         name,
         age,
         gender,
+        nickname,
         bloodtype,
         allergy: allergy.replaceAll(' ', '').split(','),
         medicines: medicines.replaceAll(' ', '').split(','),
@@ -47,6 +62,7 @@ export default function InfoForm(props: IInfoFormProps) {
       name,
       age,
       gender,
+      nickname,
       bloodtype,
       allergy: allergy.replaceAll(' ', '').split(','),
       medicines: medicines.replaceAll(' ', '').split(','),
@@ -54,17 +70,52 @@ export default function InfoForm(props: IInfoFormProps) {
     await API.auth
       .updateUserInfo(req_data)
       .then((res: any) => {
-        if (name && age && gender) {
-          alert('회원정보 수정에 성공하였습니다.')
-          history.push('/mypage')
-        } else {
-          alert('필수 사항을 모두 입력해주세요.')
-        }
+        alert('회원정보 수정에 성공하였습니다.')
+        history.push('/mypage')
       })
       .catch((e) => {
         console.log(e)
         alert('회원정보 수정중 오류가 발생했습니다.')
       })
+  }
+
+  const checkValidation = () => {
+    const { name, age, gender, nickname } = form_value
+    let validation_trigger = true
+    let validation_list = {
+      name,
+      age,
+      gender,
+      nickname,
+    } as { [key: string]: string }
+
+    let validation_res = {
+      name: true,
+      age: true,
+      gender: true,
+      nickname: true,
+    } as { [key: string]: boolean }
+
+    for (let [key, value] of Object.entries(validation_list)) {
+      if (value === '' || value === undefined) {
+        validation_trigger = false
+        validation_res[key] = false
+      }
+    }
+
+    console.log(validation_res)
+    setValidationError({
+      ...validation_error,
+      ...validation_res,
+    })
+
+    if (!validation_trigger) {
+      console.log('폴스리턴')
+      return false
+    } else {
+      console.log('트루리턴')
+      return true
+    }
   }
 
   const mountSetForm = () => {
@@ -73,6 +124,7 @@ export default function InfoForm(props: IInfoFormProps) {
       name,
       age,
       gender,
+      nickname,
       bloodtype,
       allergy: allergy.join(', '),
       medicines: medicines.join(', '),
@@ -104,6 +156,11 @@ export default function InfoForm(props: IInfoFormProps) {
               value={form_value.name}
               onChange={handleFormChange}
               autoComplete="off"
+              error={
+                !validation_error.name
+                  ? '이름은 필수 입력사항입니다.'
+                  : undefined
+              }
             />
           </div>
         </FormRow>
@@ -117,6 +174,11 @@ export default function InfoForm(props: IInfoFormProps) {
               value={form_value.age}
               onChange={handleFormChange}
               autoComplete="off"
+              error={
+                !validation_error.age
+                  ? '나이는 필수 입력사항입니다.'
+                  : undefined
+              }
             />
           </div>
         </FormRow>
@@ -130,6 +192,30 @@ export default function InfoForm(props: IInfoFormProps) {
               value={form_value.gender}
               onChange={handleFormChange}
               autoComplete="off"
+              error={
+                !validation_error.gender
+                  ? '성별은 필수 입력사항입니다.'
+                  : undefined
+              }
+            />
+          </div>
+        </FormRow>
+        <FormRow className="formRow">
+          <div className="label">닉네임</div>
+          <div>
+            <Input
+              id="nickname"
+              type="text"
+              name="nickname"
+              value={form_value.nickname}
+              onChange={handleFormChange}
+              autoComplete="off"
+              placeholder="닉네임을 입력해주세요"
+              error={
+                !validation_error.nickname
+                  ? '성별은 필수 입력사항 입니다'
+                  : undefined
+              }
             />
           </div>
         </FormRow>

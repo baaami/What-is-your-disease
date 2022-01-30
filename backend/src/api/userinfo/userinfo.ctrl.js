@@ -1,6 +1,6 @@
-import User from '../../models/user';
-import Post from '../../models/post';
-import jwt from '../../lib/jwt';
+import User from "../../models/user";
+import Post from "../../models/post";
+import jwt from "../../lib/jwt";
 
 export const update = async (ctx) => {
   const info = ctx.request.body;
@@ -11,14 +11,37 @@ export const update = async (ctx) => {
   // TODO : 1개의 식으로 나타내기
   NextUser = { ...PrevUser };
   NextUser.info = info;
+  console.log(NextUser);
 
+  try {
+    // 유저 정보가 바꼇다면 게시글 중에 해당 유저가 쓴 게시글의 정보도
+    // 바뀐 유저의 정보로 업데이트
+    await Post.updateMany(
+      {
+        "user._id": {
+          $eq: PrevUser._id,
+        },
+      },
+      {
+        $set: {
+          user: NextUser,
+        },
+      },
+      {
+        multi: true,
+      }
+    );
+  } catch (e) {
+    console.log(e);
+  }
   const _id = NextUser._id;
   try {
     user = await User.findByIdAndUpdate(_id, NextUser, {
       new: true,
     }).exec();
+
     if (!user) {
-      console.log('User Update fail');
+      console.log("User Update fail");
       ctx.status = 404;
       return;
     }
@@ -30,7 +53,7 @@ export const update = async (ctx) => {
   if (PrevUser.info.name !== NextUser.info.name) {
     const _ = await Post.findByNameAndUpdate(
       PrevUser.info.name,
-      NextUser.info.name,
+      NextUser.info.name
     );
   }
 
@@ -43,7 +66,7 @@ export const update = async (ctx) => {
  */
 export const accounts = async (ctx) => {
   let currentUser = await ctx.request.headers.authorization
-    .replace('Bearer', '')
+    .replace("Bearer", "")
     .trim();
   await jwt.verify(currentUser).then((res) => {
     currentUser = res._id;

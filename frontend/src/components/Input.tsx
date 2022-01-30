@@ -68,6 +68,7 @@ const Input = (props: InputModel) => {
         disabled={disabled}
         onKeyPress={_onEnter}
       ></InputStyle>
+      {error && <ErrorLbel className="error-label">{error}</ErrorLbel>}
     </>
   )
 }
@@ -93,4 +94,9 @@ const InputStyle = styled.input`
   padding: 0 14px;
   text-align: left;
   outline: none;
+`
+const ErrorLbel = styled.p`
+  color: red;
+  font-size: 12px;
+  margin-top: 8px;
 `

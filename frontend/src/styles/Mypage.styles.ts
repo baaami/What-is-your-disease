@@ -52,6 +52,9 @@ export const UserInfoWrap = styled.div`
 `
 export const UserInfoCard = styled.div`
   padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   flex: 1 1 50%;
   border-radius: 6px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
@@ -75,6 +78,9 @@ export const UserInfoCard = styled.div`
 
     &:last-child {
       margin-bottom: 0px;
+    }
+    & .rightCol {
+      width: 60px;
     }
     & .leftCol {
       width: 100.2px;

@@ -125,6 +125,9 @@ export default function Home(props: IHomeProps) {
       <PopularPostBanner className="wrap">
         <div className="title">인기 게시글</div>
         <div className="popularPostContainer">
+          {hot_posts.length === 0 && (
+            <div className="noData">조회된 결과가 없습니다.</div>
+          )}
           {hot_posts.slice(0, 3).map((item: any, idx) => (
             <Link
               to={`/posts/detail/${item._id}`}
@@ -135,7 +138,7 @@ export default function Home(props: IHomeProps) {
               <h2>#{item.category}</h2>
               <h3>{item.title}</h3>
               <p dangerouslySetInnerHTML={{ __html: item.body }}></p>
-              <h4>{item.user.info.name}</h4>
+              <h4>{item.user.info.nickname}</h4>
             </Link>
           ))}
         </div>
@@ -146,6 +149,9 @@ export default function Home(props: IHomeProps) {
           더보기 +
         </Link>
         <div className="latestPostContainer">
+          {hot_posts.length === 0 && (
+            <div className="noData">조회된 결과가 없습니다.</div>
+          )}
           {latest_posts.map((item: any) => {
             return (
               <>

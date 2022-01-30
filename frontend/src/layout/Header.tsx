@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { HeaderContainer } from '../styles/Layout.styles'
-import { Link, Route, Switch, useHistory } from 'react-router-dom'
+import { Link, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import logo from '../assets/img/hlogo.svg'
 import Home from '../pages/Home'
@@ -22,6 +22,7 @@ import { currentUserInfo } from 'store/userInfo'
 interface IHeaderProps {}
 
 export default function Header(props: IHeaderProps) {
+  const location = useLocation()
   const history = useHistory()
 
   const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
@@ -40,6 +41,17 @@ export default function Header(props: IHeaderProps) {
   useEffect(() => {
     getUserInfo()
   }, [])
+
+  useEffect(() => {
+    if (
+      localStorage.getItem('jwttoken') &&
+      !userInfo.info.name &&
+      location.pathname !== '/infoForm'
+    ) {
+      alert('회원정보 작성 후 이용 바랍니다.')
+      history.push('/infoForm')
+    }
+  }, [location.pathname])
 
   return (
     <>

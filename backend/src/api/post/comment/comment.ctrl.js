@@ -1,56 +1,102 @@
-import mongoose from "mongoose";
-import Post from "../../../models/post";
-import sanitizeHtml from "sanitize-html";
+import mongoose from 'mongoose';
+import Post from '../../../models/post';
+import Comment from '../../../models/comment';
+import sanitizeHtml from 'sanitize-html';
 
-const sanitizeOption = {
-  allowedTags: [
-    "h1",
-    "h2",
-    "b",
-    "i",
-    "u",
-    "s",
-    "p",
-    "ul",
-    "ol",
-    "li",
-    "blockquote",
-    "a",
-    "img",
-  ],
-  allowedAttributes: {
-    a: ["href", "name", "target"],
-    img: ["src"],
-    li: ["class"],
-  },
-  allowedSchemes: ["data", "http"],
+const { ObjectId } = mongoose.Types;
+/**
+ * @brief Id를 통하여 Comment 검증 후 존재 시 ctx.state.comment로 전달
+ *
+ * @param {*} ctx
+ * @param {*} next
+ * @returns
+ */
+export const checkCommentById = async (ctx, next) => {
+  const { commentId } = ctx.params;
+  if (!ObjectId.isValid(commentId)) {
+    ctx.status = 400;
+    return;
+  }
+
+  try {
+    const comment = await Comment.findById(commentId);
+
+    // 포스트가 존재하지 않을 때
+    if (!comment) {
+      ctx.status = 404;
+    }
+    ctx.state.comment = comment.toJSON();
+    return next();
+  } catch (e) {
+    ctx.throw(500, e);
+  }
 };
 
 /**
  * 댓글 등록
- * PATCH /api/post/comments/:id
+ * POST /api/post/comment/:id
  */
 export const cmUpload = async (ctx) => {
+  // 1. 필요한 값 할당
   const curPost = ctx.state.post;
+  const { text } = ctx.request.body;
+  const comment = new Comment({
+    text,
+  });
 
-  let post;
-  const { comment } = ctx.request.body;
-
-  // TODO : db에 댓글만 추가하도록 해야함, RDBMS과 같이 Join을 사용해야함
-  // -> 현재 로직은 댓글이 수정될 때마다 포스트 전체가 한 번 업데이트가 되는 형태
-  const nextPost = { ...curPost }; // 객체를 복사하고
-  nextPost.comments.push(comment);
-
-  // TODO : 댓글, 답글 body는 전부 sanitize 적용해야하므로 함수 작성 필요
-  if (nextPost.body) {
-    nextPost.body = sanitizeHtml(nextPost.body, sanitizeOption);
+  // 2. 해당 Post에 추가되는 commentId 추가
+  const nextPost = { ...curPost };
+  console.log('[TEST] nextPost.commentIds', nextPost.commentIds);
+  nextPost.commentIds.push(comment._id);
+  try {
+    const _ = await Post.findByIdAndUpdate(
+      curPost._id,
+      {
+        commentIds: nextPost.commentIds,
+      },
+      {
+        new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
+        // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
+      },
+    ).exec();
+  } catch (e) {
+    ctx.throw(500, e);
   }
 
+  // 3. comment 생성
   try {
-    post = await Post.findByIdAndUpdate(curPost._id, nextPost, {
-      new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
-      // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
-    }).exec();
+    await comment.save();
+    ctx.body = comment;
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};
+
+/**
+ * 댓글 삭제
+ * DELETE /api/post/comment/:id/:commentId
+ */
+export const cmDelete = async (ctx) => {
+  const curPost = ctx.state.post;
+  const { commentId } = ctx.params;
+
+  // 해당 댓글 삭제 진행
+  // Type -> comment : new ObjectId
+  //         commenㅌtId : String
+  const newId = curPost.commentIds.filter((Id) => Id != commentId);
+
+  // 1. post에서 해당 댓글 id 제거
+  try {
+    const post = await Post.findByIdAndUpdate(
+      curPost._id,
+      {
+        commentIds: newId,
+      },
+      {
+        new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
+        // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
+      },
+    ).exec();
     if (!post) {
       ctx.status = 404;
       return;
@@ -59,36 +105,10 @@ export const cmUpload = async (ctx) => {
     ctx.throw(500, e);
   }
 
-  ctx.body = post.comments;
-};
-
-/**
- * 댓글 삭제
- * DELETE /api/post/comments/:id/:commentId
- */
-export const cmDelete = async (ctx) => {
-  const curPost = ctx.state.post;
-  const { commentId } = ctx.params;
-
-  // 해당 댓글 삭제 진행
-  const newComments = curPost.comments.filter(
-    (comment) => comment.comment._id !== commentId
-  );
-
-  const nextPost = { ...curPost };
-  nextPost.comments = newComments;
-
+  // 2. 댓글 컬렉션에서 해당 id 제거
   try {
-    const post = await Post.findByIdAndUpdate(nextPost._id, nextPost, {
-      new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
-      // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
-    }).exec();
-    if (!post) {
-      ctx.status = 404;
-      return;
-    }
-
-    ctx.body = newComments;
+    const comment = await Comment.findByIdAndRemove(commentId).exec();
+    ctx.status = 204; // No Content (성공하기는 했지만 응답할 데이터는 없음)
   } catch (e) {
     ctx.throw(500, e);
   }

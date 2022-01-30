@@ -1,31 +1,31 @@
-import Post from "../../models/post";
-import mongoose from "mongoose";
-import sanitizeHtml from "sanitize-html";
+import Post from '../../models/post';
+import mongoose from 'mongoose';
+import sanitizeHtml from 'sanitize-html';
 
 const { ObjectId } = mongoose.Types;
 
 const sanitizeOption = {
   allowedTags: [
-    "h1",
-    "h2",
-    "b",
-    "i",
-    "u",
-    "s",
-    "p",
-    "ul",
-    "ol",
-    "li",
-    "blockquote",
-    "a",
-    "img",
+    'h1',
+    'h2',
+    'b',
+    'i',
+    'u',
+    's',
+    'p',
+    'ul',
+    'ol',
+    'li',
+    'blockquote',
+    'a',
+    'img',
   ],
   allowedAttributes: {
-    a: ["href", "name", "target"],
-    img: ["src"],
-    li: ["class"],
+    a: ['href', 'name', 'target'],
+    img: ['src'],
+    li: ['class'],
   },
-  allowedSchemes: ["data", "http"],
+  allowedSchemes: ['data', 'http'],
 };
 
 /**
@@ -78,11 +78,11 @@ export const read = async (ctx) => {
     const result = await Post.findOneAndUpdate(
       { _id: post._id },
       { $inc: { views: 1 } },
-      { new: true }
+      { new: true },
     );
 
     if (!result) {
-      console.log("findOneAndUpdate Error");
+      console.log('findOneAndUpdate Error');
     }
   } catch (e) {
     ctx.throw(500, e);
@@ -110,7 +110,7 @@ export const write = async (ctx) => {
     body: sanitizeHtml(body, sanitizeOption),
     category,
     views: 1,
-    comments: [],
+    commentIds: [],
     tags,
     user: ctx.state.user,
   });

@@ -9,7 +9,7 @@ const PostSchema = new Schema({
   body: String,
   category: String,
   views: Number,
-  comments: Array,
+  commentIds: [mongoose.Types.ObjectId],
   tags: [String],
   publishedDate: {
     type: Date,

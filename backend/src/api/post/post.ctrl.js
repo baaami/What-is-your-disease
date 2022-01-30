@@ -1,31 +1,31 @@
-import Post from '../../models/post';
-import mongoose from 'mongoose';
-import sanitizeHtml from 'sanitize-html';
+import Post from "../../models/post";
+import mongoose from "mongoose";
+import sanitizeHtml from "sanitize-html";
 
 const { ObjectId } = mongoose.Types;
 
 const sanitizeOption = {
   allowedTags: [
-    'h1',
-    'h2',
-    'b',
-    'i',
-    'u',
-    's',
-    'p',
-    'ul',
-    'ol',
-    'li',
-    'blockquote',
-    'a',
-    'img',
+    "h1",
+    "h2",
+    "b",
+    "i",
+    "u",
+    "s",
+    "p",
+    "ul",
+    "ol",
+    "li",
+    "blockquote",
+    "a",
+    "img",
   ],
   allowedAttributes: {
-    a: ['href', 'name', 'target'],
-    img: ['src'],
-    li: ['class'],
+    a: ["href", "name", "target"],
+    img: ["src"],
+    li: ["class"],
   },
-  allowedSchemes: ['data', 'http'],
+  allowedSchemes: ["data", "http"],
 };
 
 /**
@@ -78,11 +78,11 @@ export const read = async (ctx) => {
     const result = await Post.findOneAndUpdate(
       { _id: post._id },
       { $inc: { views: 1 } },
-      { new: true },
+      { new: true }
     );
 
     if (!result) {
-      console.log('findOneAndUpdate Error');
+      console.log("findOneAndUpdate Error");
     }
   } catch (e) {
     ctx.throw(500, e);
@@ -103,7 +103,6 @@ export const read = async (ctx) => {
 export const write = async (ctx) => {
   // REST API의 Reuqest Body는 ctx.request.body에서 조회 가능
   const { title, body, category, tags } = ctx.request.body;
-
   // TODO : body 검증하도록 변경하기
 
   const post = new Post({
@@ -178,5 +177,22 @@ export const remove = async (ctx) => {
     ctx.status = 204; // No Content (성공하기는 했지만 응답할 데이터는 없음)
   } catch (e) {
     ctx.throw(500, e);
+  }
+};
+
+/**
+ * 서버 경로에 이미지 업로드
+ * @param {*} ctx
+ * @param {*} next
+ */
+export const upLoadImage = async (ctx, next) => {
+  try {
+    const files = ctx.request.files.map((item) => {
+      return `/src/api/post/uploads/${item.filename}`;
+    });
+
+    ctx.body = files;
+  } catch (e) {
+    console.log(e);
   }
 };

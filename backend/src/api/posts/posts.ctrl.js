@@ -1,32 +1,32 @@
-import Post from '../../models/post';
-import mongoose from 'mongoose';
-import sanitizeHtml from 'sanitize-html';
-import User from '../../models/user';
+import Post from "../../models/post";
+import mongoose from "mongoose";
+import sanitizeHtml from "sanitize-html";
+import User from "../../models/user";
 
 const { ObjectId } = mongoose.Types;
 
 const sanitizeOption = {
   allowedTags: [
-    'h1',
-    'h2',
-    'b',
-    'i',
-    'u',
-    's',
-    'p',
-    'ul',
-    'ol',
-    'li',
-    'blockquote',
-    'a',
-    'img',
+    "h1",
+    "h2",
+    "b",
+    "i",
+    "u",
+    "s",
+    "p",
+    "ul",
+    "ol",
+    "li",
+    "blockquote",
+    "a",
+    "img",
   ],
   allowedAttributes: {
-    a: ['href', 'name', 'target'],
-    img: ['src'],
-    li: ['class'],
+    a: ["href", "name", "target"],
+    img: ["src"],
+    li: ["class"],
   },
-  allowedSchemes: ['data', 'http'],
+  allowedSchemes: ["data", "http"],
 };
 
 const removeHtmlAndShorten = (body) => {
@@ -139,7 +139,7 @@ export const user = async (ctx) => {
   }
 
   const query = {
-    ...(user._id ? { 'user._id': user._id } : {}),
+    ...(user._id ? { "user._id": user._id } : {}),
   };
 
   try {
@@ -201,7 +201,7 @@ export const filter = async (ctx) => {
   const { orderBy } = ctx.params;
   let posts;
   switch (orderBy) {
-    case '최신순': {
+    case "최신순": {
       try {
         const query = {};
         posts = await getLatestPosts(ctx, query);
@@ -210,7 +210,7 @@ export const filter = async (ctx) => {
       }
       break;
     }
-    case '오래된순': {
+    case "오래된순": {
       try {
         const query = {};
         posts = await getOldestPosts(ctx, query);
@@ -219,7 +219,7 @@ export const filter = async (ctx) => {
       }
       break;
     }
-    case '인기순': {
+    case "인기순": {
       // 인기순
       try {
         const query = {};

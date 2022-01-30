@@ -1,6 +1,6 @@
 import Axios, { AxiosRequestConfig } from 'axios'
 import {
-  BASE_URL,
+  FORM_HEADER,
   GET,
   JSON_HEADER,
   POST,
@@ -61,6 +61,21 @@ export const post = {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,
       },
+    }
+    return Axios(config)
+  },
+  uploadImage: async (img: File) => {
+    const formData = new FormData()
+    formData.append('file', img)
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: POST,
+      url: `/api/post/upload`,
+      headers: {
+        ...FORM_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+      data: formData,
     }
     return Axios(config)
   },

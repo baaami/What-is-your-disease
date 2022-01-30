@@ -264,6 +264,9 @@ export const PopularPostBanner = styled.div`
         font-size: 22px;
         font-weight: 400;
         color: #111;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
 
         @media (max-width: 1014px) {
           margin: 10px 15px;

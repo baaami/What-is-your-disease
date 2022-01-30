@@ -7,8 +7,10 @@ import DropDown from 'components/DropDown'
 
 import API from 'service/api'
 
-import ReactQuill from 'react-quill'
+import ReactQuill, { Quill } from 'react-quill'
+import ImageResize from 'quill-image-resize-module'
 import 'react-quill/dist/quill.snow.css'
+
 import { PostEditContainer } from 'styles/PostsEdit.styles'
 
 import { PostModel } from 'model/postsModel'
@@ -42,6 +44,39 @@ export default function PostsEdit(props: IPostsEditProps) {
   )
   const [hashtag_value, setHashtagValue] = useState('')
   const [hashtag_list, setHashtagList] = useState<Array<string>>([])
+
+  const imageHandler = (e: any) => {
+    // 이미지를 업로드 할 input element 생성
+    const input = document.createElement('input')
+    input.setAttribute('name', 'file')
+    input.setAttribute('type', 'file')
+    input.setAttribute('accept', 'image/*')
+    document.body.appendChild(input)
+
+    input.click()
+
+    input.onchange = async () => {
+      const file = input.files?.[0]
+      console.log(file)
+
+      // 백엔드 서버 경로에 이미지를 저장하고 이미지 경로를 받아오기
+      const res = await API.post.uploadImage(file as File)
+      const file_path = res.data as string[]
+
+      const range = quill_ref.current?.getEditor().getSelection()?.index
+      if (range !== null && range !== undefined) {
+        let quill = quill_ref.current?.getEditor()
+
+        quill?.setSelection(range, 1)
+
+        file_path.forEach((item) => {
+          quill?.insertEmbed(range + 1, 'image', `http://localhost:4000${item}`)
+        })
+      }
+    }
+    console.log(e)
+  }
+
   // useMemo를 사용하지 않으면, 키를 입력할 때마다, imageHandler 때문에 focus가 계속 풀리게 됨.
   const modules = useMemo(
     () => ({
@@ -63,7 +98,7 @@ export default function PostsEdit(props: IPostsEditProps) {
         ],
         handlers: {
           // 이미지 핸들러가 들어갈 키
-          image: '',
+          image: imageHandler,
         },
       },
     }),
@@ -71,6 +106,9 @@ export default function PostsEdit(props: IPostsEditProps) {
   )
 
   const handleSubmitPost = async () => {
+    if (posts_title === '') {
+      return alert('제목을 입해주세요')
+    }
     const req_data = {
       title: posts_title,
       body: edit_contents,
@@ -91,6 +129,9 @@ export default function PostsEdit(props: IPostsEditProps) {
   }
 
   const onClickEdit = async () => {
+    if (posts_title === '') {
+      return alert('제목을 입해주세요')
+    }
     const req_data = {
       title: posts_title,
       body: edit_contents,

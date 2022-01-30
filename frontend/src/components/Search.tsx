@@ -11,8 +11,8 @@ export default function Search(props: ISearchProps) {
 
   const [value, setValue] = useState('')
 
-  const onEnterSearch = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+  const onEnterSearch = async (e: any, click: string) => {
+    if (e.key === 'Enter' || click === 'click_event') {
       history.push(`/posts/lists/search/form/${value}`)
     }
   }
@@ -25,10 +25,14 @@ export default function Search(props: ISearchProps) {
         placeholder="검색어를 입력하세요."
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        onKeyPress={(e) => onEnterSearch(e)}
+        onKeyPress={(e) => onEnterSearch(e, '')}
       />
       <button>
-        <img src={icon} alt="search icon" />
+        <img
+          src={icon}
+          alt="search icon"
+          onClick={(e) => onEnterSearch(e, 'click_event')}
+        />
       </button>
     </SearchContainer>
   )

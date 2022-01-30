@@ -33,6 +33,9 @@ export const PostsDetailContainer = styled.div`
     margin-bottom: 50px;
     padding: 30px 0;
     font-size: 20px;
+    * img {
+      width: 100%;
+    }
   }
 
   .commentsBtn {

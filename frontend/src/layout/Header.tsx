@@ -42,18 +42,18 @@ export default function Header(props: IHeaderProps) {
     getUserInfo()
   }, [])
 
-  useEffect(() => {
-    if (
-      localStorage.getItem('jwttoken') &&
-      !userInfo.info.name &&
-      location.pathname !== '/infoForm'
-    ) {
-      alert('회원정보 작성 후 이용 바랍니다.')
-      history.push('/infoForm')
-    } else {
-      getUserInfo()
-    }
-  }, [location.pathname])
+  // useEffect(() => {
+  //   if (
+  //     localStorage.getItem('jwttoken') &&
+  //     !userInfo.info.name &&
+  //     location.pathname !== '/infoForm'
+  //   ) {
+  //     alert('회원정보 작성 후 이용 바랍니다.')
+  //     history.push('/infoForm')
+  //   } else {
+  //     getUserInfo()
+  //   }
+  // }, [location.pathname])
 
   return (
     <>

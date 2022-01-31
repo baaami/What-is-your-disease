@@ -50,6 +50,8 @@ export default function Header(props: IHeaderProps) {
     ) {
       alert('회원정보 작성 후 이용 바랍니다.')
       history.push('/infoForm')
+    } else {
+      getUserInfo()
     }
   }, [location.pathname])
 

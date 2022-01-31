@@ -19,6 +19,7 @@ export default function PostsDetail(props: RouteComponentProps) {
   const history = useHistory()
   const [userInfo] = useRecoilState(currentUserInfo)
   const [post, setPost] = useState<PostModel>({} as PostModel)
+
   const getPost = async () => {
     const urlParam = props.match.params as { postId: string }
     const postId = urlParam.postId
@@ -26,7 +27,6 @@ export default function PostsDetail(props: RouteComponentProps) {
     await API.post
       .getPost(postId)
       .then((res) => {
-        console.log(res.data)
         setPost(res.data.data.post)
       })
       .catch((e) => {
@@ -88,7 +88,7 @@ export default function PostsDetail(props: RouteComponentProps) {
       <Search />
       <section className="postTitle">{post.title}</section>
       <section className="postInfo">
-        <div>작성자: {post?.user?.info.name}</div>
+        <div>작성자: {post?.user?.info.nickname}</div>
         <div>카테고리: {post?.category}</div>
         <div className="hashtag">
           해쉬태그:{' '}

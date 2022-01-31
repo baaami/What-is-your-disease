@@ -31,6 +31,23 @@ export default function Header(props: IHeaderProps) {
     await API.auth
       .getUserInfo()
       .then((res) => {
+        if (res.data === '') {
+          return setUserInfo({
+            ...userInfo,
+            provider: '',
+            providerId: '',
+            _id: '',
+            info: {
+              name: '',
+              age: '',
+              gender: '',
+              nickname: '',
+              bloodtype: '',
+              allergy: [],
+              medicines: [],
+            },
+          })
+        }
         setUserInfo({ ...userInfo, ...res.data })
       })
       .catch((e) => {
@@ -39,21 +56,19 @@ export default function Header(props: IHeaderProps) {
   }
 
   useEffect(() => {
-    getUserInfo()
-  }, [])
-
-  // useEffect(() => {
-  //   if (
-  //     localStorage.getItem('jwttoken') &&
-  //     !userInfo.info.name &&
-  //     location.pathname !== '/infoForm'
-  //   ) {
-  //     alert('회원정보 작성 후 이용 바랍니다.')
-  //     history.push('/infoForm')
-  //   } else {
-  //     getUserInfo()
-  //   }
-  // }, [location.pathname])
+    if (
+      localStorage.getItem('jwttoken') &&
+      !userInfo.info.name &&
+      userInfo.info.name !== '' &&
+      location.pathname !== '/infoForm'
+    ) {
+      alert('회원정보 작성 후 이용 바랍니다.')
+      history.push('/infoForm')
+    } else {
+      console.log('유저정보가 있을때 실행')
+      getUserInfo()
+    }
+  }, [location.pathname])
 
   return (
     <>

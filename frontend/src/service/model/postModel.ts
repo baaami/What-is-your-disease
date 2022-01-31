@@ -12,6 +12,7 @@ export interface PostUserModel {
     name: string
     age: number | string
     gender: string
+    nickname: string
     bloodtype?: string
     allergy?: Array<string>
     medicines?: Array<string>

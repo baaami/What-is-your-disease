@@ -318,64 +318,9 @@ export const PopularPostBanner = styled.div`
   }
 `
 export const LatestPostBanner = styled.div`
-  position: relative;
   padding: 70px 0 125px;
 
   @media (max-width: 768px) {
     padding: 40px 0 95px;
-  }
-
-  @keyframes arrowShaking {
-    0% {
-      transform: translateX(0);
-    }
-
-    50% {
-      transform: translateX(8px);
-    }
-
-    100% {
-      transform: translateX(0);
-    }
-  }
-
-  .viewMoreBtn {
-    position: absolute;
-    top: 80px;
-    right: 0;
-    font-size: 20px;
-    color: #666;
-
-    &:hover {
-      color: #000;
-    }
-  }
-  .latestPostContainer {
-    .latestPost {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      line-height: 80px;
-      padding: 0 25px;
-
-      .postTitle {
-        font-size: 22px;
-        color: #333;
-      }
-      img {
-        position: relative;
-        right: 10px;
-        height: 18px;
-        transition: all 0.3s ease-in;
-      }
-
-      &:nth-of-type(2n + 1) {
-        background: #f4f4f4;
-      }
-
-      &:hover img {
-        animation: arrowShaking 1.5s infinite;
-      }
-    }
   }
 `

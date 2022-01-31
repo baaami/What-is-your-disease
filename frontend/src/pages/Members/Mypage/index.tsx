@@ -12,6 +12,7 @@ import { currentUserInfo } from 'store/userInfo'
 import { Link, useHistory } from 'react-router-dom'
 import API from 'service/api'
 import PostsTable from 'components/PostsTable'
+import Pagination from 'components/Pagination'
 
 interface IMypageProps {}
 
@@ -19,6 +20,8 @@ export default function Mypage(props: IMypageProps) {
   const history = useHistory()
   const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
   const [myPosts, setMyPosts] = useState([])
+  const [total_cnt, setTotalCnt] = useState(0)
+  const [current_page, setCurrentPage] = useState(1)
   const getArrayToJsx = (arr: Array<string>) => {
     return arr.map((item, index) => {
       if (index === arr.length - 1) {
@@ -53,8 +56,9 @@ export default function Mypage(props: IMypageProps) {
   const getMyPosts = async () => {
     if (userInfo._id) {
       await API.posts
-        .getMyPosts(userInfo._id)
+        .getMyPosts(userInfo._id, current_page)
         .then((res) => {
+          setTotalCnt(res.data.postTotalCnt)
           setMyPosts(res.data.data.post)
         })
         .catch((e) => {
@@ -69,7 +73,7 @@ export default function Mypage(props: IMypageProps) {
 
   useEffect(() => {
     getMyPosts()
-  }, [userInfo])
+  }, [userInfo, current_page])
 
   useEffect(() => {
     window.scrollTo({ top: 0 })
@@ -124,6 +128,13 @@ export default function Mypage(props: IMypageProps) {
       </UserInfoWrap>
       <MyPostsWrap>
         <PostsTable posts={myPosts} title="내 게시글" is_more_button={false} />
+        <Pagination
+          total_count={total_cnt}
+          current_page={current_page}
+          per_page={10}
+          onChange={setCurrentPage}
+          block={5}
+        />
       </MyPostsWrap>
       <LogoutButton onClick={logoutHandler}>로그아웃</LogoutButton>
     </MyPageContainer>

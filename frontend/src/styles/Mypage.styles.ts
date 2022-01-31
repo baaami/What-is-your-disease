@@ -8,7 +8,7 @@ export const MyPageContainer = styled.div`
   }
 
   .myPageTitle {
-    font-size: 22px;
+    font-size: 28px;
     margin-bottom: 30px;
   }
 
@@ -87,7 +87,9 @@ export const UserInfoCard = styled.div`
     }
   }
 `
-export const MyPostsWrap = styled.div``
+export const MyPostsWrap = styled.div`
+  margin: 50px 0;
+`
 export const LogoutButton = styled.button`
   width: 100%;
   height: 60px;

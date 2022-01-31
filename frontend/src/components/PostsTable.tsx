@@ -6,12 +6,16 @@ import arrow from 'assets/img/arrow_right.png'
 const PostsTable = (props: any) => {
   return (
     <PostTableWrapper className="wrap">
-      {props.title && <div className="title">{props?.title}</div>}
-      {props.is_more_button && (
-        <Link to="/posts/lists" className="viewMoreBtn">
-          더보기 +
-        </Link>
-      )}
+      <section className="topSection">
+        {props.title && <div className="title">{props?.title}</div>}
+        {props.is_more_button && (
+          <div>
+            <Link to="/posts/lists" className="viewMoreBtn">
+              더보기 +
+            </Link>
+          </div>
+        )}
+      </section>
       <div className="latestPostContainer">
         {props.posts.map((item: any) => {
           return (
@@ -47,17 +51,20 @@ export const PostTableWrapper = styled.div`
     }
   }
 
-  .viewMoreBtn {
-    position: absolute;
-    top: 80px;
-    right: 0;
-    font-size: 20px;
-    color: #666;
+  .topSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .viewMoreBtn {
+      font-size: 20px;
+      color: #666;
 
-    &:hover {
-      color: #000;
+      &:hover {
+        color: #000;
+      }
     }
   }
+
   .latestPostContainer {
     .latestPost {
       display: flex;

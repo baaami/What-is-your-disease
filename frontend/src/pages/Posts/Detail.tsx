@@ -26,7 +26,8 @@ export default function PostsDetail(props: RouteComponentProps) {
     await API.post
       .getPost(postId)
       .then((res) => {
-        setPost(res.data)
+        console.log(res.data)
+        setPost(res.data.data.post)
       })
       .catch((e) => {
         console.log(e)
@@ -103,7 +104,7 @@ export default function PostsDetail(props: RouteComponentProps) {
       </section>
       <hr />
       <div className="createdAt">
-        작성일: {post?.publishedDate.split('T')[0]}
+        작성일: {post?.publishedDate?.split('T')[0]}
       </div>
       <section
         className="postContents"

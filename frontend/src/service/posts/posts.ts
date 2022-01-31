@@ -2,7 +2,7 @@ import Axios, { AxiosRequestConfig } from 'axios'
 import { BASE_URL, GET, JSON_HEADER } from 'shared/api_constant'
 
 export const posts = {
-  getLatestPosts: async () => {
+  getLatestPosts: async (page: number) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
@@ -10,6 +10,9 @@ export const posts = {
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,
+      },
+      params: {
+        page,
       },
     }
 
@@ -28,7 +31,7 @@ export const posts = {
 
     return Axios(config)
   },
-  getMyPosts: async (id: string) => {
+  getMyPosts: async (id: string, page: number) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
@@ -37,10 +40,13 @@ export const posts = {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,
       },
+      params: {
+        page,
+      },
     }
     return Axios(config)
   },
-  getFilterPosts: async (orderBy: string) => {
+  getFilterPosts: async (orderBy: string, page: number) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
@@ -49,10 +55,13 @@ export const posts = {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,
       },
+      params: {
+        page,
+      },
     }
     return Axios(config)
   },
-  getCategoryPosts: async (category: string) => {
+  getCategoryPosts: async (category: string, page: number) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
@@ -63,6 +72,7 @@ export const posts = {
       },
       params: {
         category,
+        page,
       },
     }
     return Axios(config)

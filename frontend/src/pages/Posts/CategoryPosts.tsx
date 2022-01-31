@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { PostListsContainer, PostListsWrap } from 'styles/CategoryPosts.styles'
 import Search from '../../components/Search'
-import arrow from '../../assets/img/arrow_right.png'
 import PostsTable from 'components/PostsTable'
-import DropDown from 'components/DropDown'
+import Pagination from 'components/Pagination'
 import API from 'service/api'
 import { PostModel } from 'model/postsModel'
 const categories = [
@@ -28,11 +27,15 @@ export default function PostsLists({
   const [now_category, setNowCategory] = useState<
     { id: string; imgUrl: string; name: string }[]
   >([])
-  const getFilterPosts = async (category: string) => {
+  const [total_cnt, setTotalCnt] = useState(0)
+  const [current_page, setCurrentPage] = useState(1)
+
+  const getFilterPosts = async (category: string, page: number) => {
     await API.posts
-      .getCategoryPosts(category)
+      .getCategoryPosts(category, page)
       .then((res) => {
-        setPostsList(res.data)
+        setTotalCnt(res.data.postTotalCnt)
+        setPostsList(res.data.data.post)
       })
       .catch((e) => {
         console.log(e)
@@ -45,8 +48,8 @@ export default function PostsLists({
   }, [])
 
   useEffect(() => {
-    getFilterPosts(match.params.type)
-  }, [match.params.type])
+    getFilterPosts(match.params.type, current_page)
+  }, [match.params.type, current_page])
 
   return (
     <PostListsContainer>
@@ -70,6 +73,13 @@ export default function PostsLists({
           <div className="noData">조회된 결과가 없습니다.</div>
         )}
         <PostsTable posts={postsList} />
+        <Pagination
+          total_count={total_cnt}
+          current_page={current_page}
+          per_page={10}
+          block={5}
+          onChange={setCurrentPage}
+        />
       </PostListsWrap>
     </PostListsContainer>
   )

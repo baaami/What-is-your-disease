@@ -14,6 +14,7 @@ import { Link, useHistory } from 'react-router-dom'
 import arrow from '../../assets/img/arrow_right.png'
 import API from 'service/api'
 import PostsTable from 'components/PostsTable'
+import Pagination from 'components/Pagination'
 
 interface IHomeProps {}
 
@@ -59,10 +60,14 @@ export default function Home(props: IHomeProps) {
   const history = useHistory()
   const [latest_posts, setLatestPosts] = useState([])
   const [hot_posts, setHotPosts] = useState([])
+  const [current_page, setCurrentPage] = useState(1)
+  const [total_cnt, setTotalCnt] = useState(0)
+
   const getLatestPosts = async () => {
     await API.posts
-      .getLatestPosts()
+      .getLatestPosts(current_page)
       .then((res) => {
+        setTotalCnt(res.data.postTotalCnt)
         setLatestPosts(res.data.data.post)
       })
       .catch((e) => {
@@ -82,10 +87,13 @@ export default function Home(props: IHomeProps) {
   }
 
   useEffect(() => {
-    getLatestPosts()
     getHotPosts()
     window.scrollTo({ top: 0 })
   }, [])
+
+  useEffect(() => {
+    getLatestPosts()
+  }, [current_page])
 
   return (
     <HomeContainer>
@@ -149,6 +157,13 @@ export default function Home(props: IHomeProps) {
           posts={latest_posts}
           title="최신 게시글"
           is_more_button={true}
+        />
+        <Pagination
+          current_page={current_page}
+          total_count={total_cnt}
+          per_page={10}
+          block={5}
+          onChange={setCurrentPage}
         />
       </LatestPostBanner>
     </HomeContainer>

@@ -13,7 +13,11 @@ export const searchAll = async (ctx) => {
 
   try {
     const posts = await Post.find({
-      $or: [{ body: { $regex: q } }, { title: { $regex: q } }],
+      $or: [
+        { body: { $regex: q } },
+        { title: { $regex: q } },
+        { tags: { $regex: q } },
+      ],
     });
     if (!posts) {
       console.log('Post not Exit in ', q);

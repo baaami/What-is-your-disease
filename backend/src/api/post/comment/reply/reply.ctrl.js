@@ -13,7 +13,7 @@ export const rpUpload = async (ctx) => {
   const { text } = ctx.request.body;
   const comment = new Comment();
 
-  const commentDoc = comment.replies.create({ text });
+  const commentDoc = comment.replies.create({ text, user: ctx.state.uesr });
   const newReply = [...curComment.replies].concat(commentDoc);
 
   try {

@@ -10,6 +10,11 @@ export const PostListsWrap = styled.div`
   .titleWrap {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 50px;
+    .listTitle {
+      font-size: 28px;
+      color: #111;
+    }
     .dropDown {
       position: relative;
       width: 195px;

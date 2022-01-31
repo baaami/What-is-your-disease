@@ -43,7 +43,7 @@ export default function PostsLists(props: IPostsListsProps) {
       <Search />
       <PostListsWrap className="wrap">
         <div className="titleWrap">
-          <div className="title">게시글</div>
+          <div className="listTitle">게시글</div>
           <DropDown
             now_value={filter}
             filter_data={dropdownOption}

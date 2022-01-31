@@ -24,10 +24,10 @@ export default function InfoForm(props: IInfoFormProps) {
   })
 
   const [validation_error, setValidationError] = useState({
-    name: false,
-    age: false,
-    gender: false,
-    nickname: false,
+    name: true,
+    age: true,
+    gender: true,
+    nickname: true,
   })
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +70,7 @@ export default function InfoForm(props: IInfoFormProps) {
     await API.auth
       .updateUserInfo(req_data)
       .then((res: any) => {
-        alert('회원정보 수정에 성공하였습니다.')
+        alert('회원정보 등록에 성공하였습니다.')
         history.push('/mypage')
       })
       .catch((e) => {
@@ -210,10 +210,9 @@ export default function InfoForm(props: IInfoFormProps) {
               value={form_value.nickname}
               onChange={handleFormChange}
               autoComplete="off"
-              placeholder="닉네임을 입력해주세요"
               error={
                 !validation_error.nickname
-                  ? '성별은 필수 입력사항 입니다'
+                  ? '닉네임은 필수 입력사항입니다'
                   : undefined
               }
             />

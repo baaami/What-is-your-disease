@@ -7,7 +7,7 @@ const PostsTable = (props: any) => {
   return (
     <PostTableWrapper className="wrap">
       <section className="topSection">
-        {props.title && <div className="title">{props?.title}</div>}
+        {props.title && <div className="postsTitle">{props?.title}</div>}
         {props.is_more_button && (
           <div>
             <Link to="/posts/lists" className="viewMoreBtn">
@@ -55,6 +55,11 @@ export const PostTableWrapper = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 50px;
+    .postsTitle {
+      font-size: 28px;
+      color: #111;
+    }
     .viewMoreBtn {
       font-size: 20px;
       color: #666;

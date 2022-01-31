@@ -6,12 +6,12 @@ import {
   MyPostsWrap,
   LogoutButton,
 } from 'styles/Mypage.styles'
-import { LatestPostBanner } from 'styles/Home.styles'
 import arrow from 'assets/img/arrow_right.png'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
 import { Link, useHistory } from 'react-router-dom'
 import API from 'service/api'
+import PostsTable from 'components/PostsTable'
 
 interface IMypageProps {}
 
@@ -55,7 +55,7 @@ export default function Mypage(props: IMypageProps) {
       await API.posts
         .getMyPosts(userInfo._id)
         .then((res) => {
-          setMyPosts(res.data)
+          setMyPosts(res.data.data.post)
         })
         .catch((e) => {
           console.log(e)
@@ -123,21 +123,7 @@ export default function Mypage(props: IMypageProps) {
         </section>
       </UserInfoWrap>
       <MyPostsWrap>
-        <LatestPostBanner>
-          <div className="myPageTitle">내 게시글</div>
-          <div className="latestPostContainer">
-            {myPosts.map((item: any) => {
-              return (
-                <>
-                  <Link to={`/posts/detail/${item._id}`} className="latestPost">
-                    <div className="postTitle">{item.title}</div>
-                    <img src={arrow} alt="화살표 아이콘" />
-                  </Link>
-                </>
-              )
-            })}
-          </div>
-        </LatestPostBanner>
+        <PostsTable posts={myPosts} title="내 게시글" is_more_button={false} />
       </MyPostsWrap>
       <LogoutButton onClick={logoutHandler}>로그아웃</LogoutButton>
     </MyPageContainer>

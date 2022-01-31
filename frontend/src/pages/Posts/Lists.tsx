@@ -20,7 +20,7 @@ export default function PostsLists(props: IPostsListsProps) {
     await API.posts
       .getFilterPosts(orderBy)
       .then((res) => {
-        setPostsList(res.data)
+        setPostsList(res.data.data.post)
       })
       .catch((e) => {
         console.log(e)
@@ -40,27 +40,12 @@ export default function PostsLists(props: IPostsListsProps) {
       <PostListsWrap className="wrap">
         <div className="titleWrap">
           <div className="title">게시글</div>
-
           <DropDown
             now_value={filter}
             filter_data={dropdownOption}
             setFilter={setFilter}
           />
         </div>
-        {/* <div className="postContainer">
-          <Link to="" className="post">
-            <div className="postTitle">제목들어갈 부분</div>
-            <img src={arrow} alt="화살표 아이콘" />
-          </Link>
-          <Link to="" className="post">
-            <div className="postTitle">제목들어갈 부분</div>
-            <img src={arrow} alt="화살표 아이콘" />
-          </Link>
-          <Link to="" className="post">
-            <div className="postTitle">제목들어갈 부분</div>
-            <img src={arrow} alt="화살표 아이콘" />
-          </Link>
-        </div> */}
         <PostsTable posts={postsList} />
       </PostListsWrap>
     </PostListsContainer>

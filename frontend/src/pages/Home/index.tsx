@@ -5,14 +5,15 @@ import {
   BlueBanner,
   BlueBannerWrapper,
   PopularPostBanner,
-  LatestPostBanner,
   DarkBg,
   BlueBannerBg,
+  LatestPostBanner,
 } from '../../styles/Home.styles'
 import Search from '../../components/Search'
 import { Link, useHistory } from 'react-router-dom'
 import arrow from '../../assets/img/arrow_right.png'
 import API from 'service/api'
+import PostsTable from 'components/PostsTable'
 
 interface IHomeProps {}
 
@@ -62,7 +63,7 @@ export default function Home(props: IHomeProps) {
     await API.posts
       .getLatestPosts()
       .then((res) => {
-        setLatestPosts(res.data)
+        setLatestPosts(res.data.data.post)
       })
       .catch((e) => {
         console.log(e)
@@ -73,7 +74,7 @@ export default function Home(props: IHomeProps) {
     await API.posts
       .getHotPosts()
       .then((res) => {
-        setHotPosts(res.data)
+        setHotPosts(res.data.data.post)
       })
       .catch((e) => {
         console.log(e)
@@ -144,25 +145,11 @@ export default function Home(props: IHomeProps) {
         </div>
       </PopularPostBanner>
       <LatestPostBanner className="wrap">
-        <div className="title">최신 게시글</div>
-        <Link to="/posts/lists" className="viewMoreBtn">
-          더보기 +
-        </Link>
-        <div className="latestPostContainer">
-          {hot_posts.length === 0 && (
-            <div className="noData">조회된 결과가 없습니다.</div>
-          )}
-          {latest_posts.map((item: any) => {
-            return (
-              <>
-                <Link to={`/posts/detail/${item._id}`} className="latestPost">
-                  <div className="postTitle">{item.title}</div>
-                  <img src={arrow} alt="화살표 아이콘" />
-                </Link>
-              </>
-            )
-          })}
-        </div>
+        <PostsTable
+          posts={latest_posts}
+          title="최신 게시글"
+          is_more_button={true}
+        />
       </LatestPostBanner>
     </HomeContainer>
   )

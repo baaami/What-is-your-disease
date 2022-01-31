@@ -5,7 +5,7 @@ import arrow from 'assets/img/arrow_right.png'
 
 const PostsTable = (props: any) => {
   return (
-    <LatestPostBanner className="wrap">
+    <PostTableWrapper className="wrap">
       {props.title && <div className="title">{props?.title}</div>}
       {props.is_more_button && (
         <Link to="/posts/lists" className="viewMoreBtn">
@@ -24,15 +24,14 @@ const PostsTable = (props: any) => {
           )
         })}
       </div>
-    </LatestPostBanner>
+    </PostTableWrapper>
   )
 }
 
 export default PostsTable
 
-export const LatestPostBanner = styled.div`
+export const PostTableWrapper = styled.div`
   position: relative;
-  /* padding: 70px 0 125px; */
 
   @keyframes arrowShaking {
     0% {

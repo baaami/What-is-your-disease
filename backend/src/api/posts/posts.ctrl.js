@@ -68,10 +68,15 @@ const getLatestPosts = async (ctx, query, page) => {
   return posts;
 };
 
-const getHotPosts = async (ctx, query) => {
+const getHotPosts = async (ctx, query, page) => {
   let posts;
   try {
-    posts = await Post.find(query).sort({ views: -1 }).limit(10).lean().exec();
+    posts = await Post.find(query)
+      .sort({ views: -1 })
+      .limit(10)
+      .skip((page - 1) * 10)
+      .lean()
+      .exec();
   } catch (err) {
     ctx.throw(500, e);
   }
@@ -201,7 +206,7 @@ export const user = async (ctx) => {
   };
 
   try {
-    posts = await getLatestPosts(ctx, query);
+    posts = await getLatestPosts(ctx, query, page);
   } catch (e) {
     ctx.throw(500, e);
   }
@@ -251,6 +256,7 @@ export const category = async (ctx) => {
     posts = await Post.find(query)
       .sort({ publishedDate: -1 })
       .limit(10)
+      .skip((page - 1) * 10)
       .lean()
       .exec();
   } catch (e) {
@@ -282,7 +288,7 @@ export const filter = async (ctx) => {
     case '최신순': {
       try {
         query = {};
-        posts = await getLatestPosts(ctx, query);
+        posts = await getLatestPosts(ctx, query, page);
       } catch (err) {
         ctx.throw(500, err);
       }
@@ -291,7 +297,7 @@ export const filter = async (ctx) => {
     case '오래된순': {
       try {
         query = {};
-        posts = await getOldestPosts(ctx, query);
+        posts = await getOldestPosts(ctx, query, page);
       } catch (err) {
         ctx.throw(500, err);
       }
@@ -301,7 +307,7 @@ export const filter = async (ctx) => {
       // 인기순
       try {
         query = {};
-        posts = await getHotPosts(ctx, query);
+        posts = await getHotPosts(ctx, query, page);
       } catch (err) {
         ctx.throw(500, err);
       }

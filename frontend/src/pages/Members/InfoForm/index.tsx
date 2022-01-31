@@ -103,17 +103,14 @@ export default function InfoForm(props: IInfoFormProps) {
       }
     }
 
-    console.log(validation_res)
     setValidationError({
       ...validation_error,
       ...validation_res,
     })
 
     if (!validation_trigger) {
-      console.log('폴스리턴')
       return false
     } else {
-      console.log('트루리턴')
       return true
     }
   }

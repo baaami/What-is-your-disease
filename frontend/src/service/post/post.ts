@@ -79,4 +79,34 @@ export const post = {
     }
     return Axios(config)
   },
+  createComment: async (post_id: string, contents: string) => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: POST,
+      url: `/api/post/comment/${post_id}`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+      data: {
+        text: contents,
+      },
+    }
+    return Axios(config)
+  },
+  createReply: async (comment_id: string, contents: string) => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: POST,
+      url: `/api/post/comment/reply/${comment_id}`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+      data: {
+        text: contents,
+      },
+    }
+    return Axios(config)
+  },
 }

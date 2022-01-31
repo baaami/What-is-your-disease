@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 /** Model: Button */
 interface ButtonModel {
+  id?: string
   children: ReactNode
   margin?: MarginModel
   type: 'button' | 'submit'
@@ -23,6 +24,7 @@ interface MarginModel {
  */
 const Button = (props: ButtonModel) => {
   const {
+    id, // Button id
     children, // Button children
     margin, // 버튼 기준 margin
     type, // 버튼 타입 button | submit ...

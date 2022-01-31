@@ -51,6 +51,25 @@ export const PostsDetailContainer = styled.div`
     color: white;
   }
 `
+
+export const CreateComment = styled.div`
+  margin-top: 30px;
+  display: flex;
+  gap: 10px;
+  textarea {
+    width: 100%;
+    height: 80px;
+    border-radius: 5px;
+    padding: 10px;
+    outline: none;
+    resize: none;
+  }
+
+  button {
+    height: 80px;
+  }
+`
+
 export const CommentsSection = styled.div`
   padding: 0 20px;
   margin: 15px 0 50px;

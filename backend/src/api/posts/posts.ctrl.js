@@ -264,6 +264,18 @@ export const category = async (ctx) => {
   }
 
   const postCount = await Post.countDocuments(query).exec();
+
+  const responseData = {
+    postTotalCnt: postCount,
+    data: {
+      post: posts.map((post) => ({
+        ...post,
+        body: removeHtmlAndShorten(post.body),
+      })),
+    },
+  };
+
+  ctx.body = responseData;
 };
 
 /**

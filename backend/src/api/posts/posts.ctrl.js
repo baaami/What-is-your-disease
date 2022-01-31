@@ -1,32 +1,32 @@
-import Post from "../../models/post";
-import mongoose from "mongoose";
-import sanitizeHtml from "sanitize-html";
-import User from "../../models/user";
+import Post from '../../models/post';
+import mongoose from 'mongoose';
+import sanitizeHtml from 'sanitize-html';
+import User from '../../models/user';
 
 const { ObjectId } = mongoose.Types;
 
 const sanitizeOption = {
   allowedTags: [
-    "h1",
-    "h2",
-    "b",
-    "i",
-    "u",
-    "s",
-    "p",
-    "ul",
-    "ol",
-    "li",
-    "blockquote",
-    "a",
-    "img",
+    'h1',
+    'h2',
+    'b',
+    'i',
+    'u',
+    's',
+    'p',
+    'ul',
+    'ol',
+    'li',
+    'blockquote',
+    'a',
+    'img',
   ],
   allowedAttributes: {
-    a: ["href", "name", "target"],
-    img: ["src"],
-    li: ["class"],
+    a: ['href', 'name', 'target'],
+    img: ['src'],
+    li: ['class'],
   },
-  allowedSchemes: ["data", "http"],
+  allowedSchemes: ['data', 'http'],
 };
 
 const removeHtmlAndShorten = (body) => {
@@ -36,12 +36,13 @@ const removeHtmlAndShorten = (body) => {
   return filtered;
 };
 
-const getOldestPosts = async (ctx, query) => {
+const getOldestPosts = async (ctx, query, page) => {
   let posts;
   try {
     posts = await Post.find(query)
       .sort({ publishedDate: 1 })
       .limit(10)
+      .skip((page - 1) * 10)
       .lean()
       .exec();
   } catch (err) {
@@ -51,16 +52,17 @@ const getOldestPosts = async (ctx, query) => {
   return posts;
 };
 
-const getLatestPosts = async (ctx, query) => {
+const getLatestPosts = async (ctx, query, page) => {
   let posts;
   try {
     posts = await Post.find(query)
       .sort({ publishedDate: -1 })
       .limit(10)
+      .skip((page - 1) * 10)
       .lean()
       .exec();
-  } catch (err) {
-    ctx.throw(500, err);
+  } catch (e) {
+    ctx.throw(500, e);
   }
 
   return posts;
@@ -77,7 +79,7 @@ const getHotPosts = async (ctx, query) => {
 };
 
 /**
- * GET /api/posts/latest?tag=
+ * GET /api/posts/latest?tag=&page=
  *
  * @brief     최신 포스트 리스트를 전달
  * @param {*} ctx
@@ -85,53 +87,109 @@ const getHotPosts = async (ctx, query) => {
 export const latest = async (ctx) => {
   let posts;
 
-  const query = ctx.state.query;
+  // 1. page query 처리
+  // query 는 문자열이기 때문에 숫자로 변환해주어야합니다.
+  // 값이 주어지지 않았다면 1 을 기본으로 사용합니다.
+  const page = parseInt(ctx.query.page || '1', 10);
+
+  if (page < 1) {
+    ctx.status = 400;
+    return;
+  }
+
+  // 2. tag query 처리
+  const { tag } = ctx.query;
+
+  // 2. Tag query 생성
+  const query = {
+    ...(tag ? { tags: tag } : {}),
+  };
 
   try {
-    posts = await getLatestPosts(ctx, query);
+    posts = await getLatestPosts(ctx, query, page);
   } catch (err) {
     ctx.throw(500, err);
   }
 
-  // response
-  ctx.body = posts.map((post) => ({
-    ...post,
-    body: removeHtmlAndShorten(post.body),
-  }));
+  const postCount = await Post.countDocuments(query).exec();
+
+  const responseData = {
+    postTotalCnt: postCount,
+    data: {
+      post: posts.map((post) => ({
+        ...post,
+        body: removeHtmlAndShorten(post.body),
+      })),
+    },
+  };
+
+  ctx.body = responseData;
 };
 
 /**
- * GET /api/posts/hot
+ * GET /api/posts/hot?tag=&page=
  *
  * @brief     인기 포스트 리스트를 전달
  * @param {*} ctx
  */
 export const hot = async (ctx) => {
   let posts;
-  const query = ctx.state.query;
+
+  // 1. page query 처리
+  // query 는 문자열이기 때문에 숫자로 변환해주어야합니다.
+  // 값이 주어지지 않았다면 1 을 기본으로 사용합니다.
+  const page = parseInt(ctx.query.page || '1', 10);
+
+  if (page < 1) {
+    ctx.status = 400;
+    return;
+  }
+
+  // 2. tag query 처리
+  const { tag } = ctx.query;
+
+  // 2. Tag query 생성
+  const query = {
+    ...(tag ? { tags: tag } : {}),
+  };
 
   try {
-    posts = await getHotPosts(ctx, query);
+    posts = await getHotPosts(ctx, query, page);
   } catch (err) {
     ctx.throw(500, err);
   }
 
-  ctx.body = posts.map((post) => ({
-    ...post,
-    body: removeHtmlAndShorten(post.body),
-  }));
+  const postCount = await Post.countDocuments(query).exec();
+
+  const responseData = {
+    postTotalCnt: postCount,
+    data: {
+      post: posts.map((post) => ({
+        ...post,
+        body: removeHtmlAndShorten(post.body),
+      })),
+    },
+  };
+
+  ctx.body = responseData;
 };
 
 /**
- * GET /api/posts/user?page=
+ * GET /api/posts/user/:id?page=
  *
  * @brief     로그인 회원 포스트 리스트를 전달
  * @param {*} ctx
  */
 export const user = async (ctx) => {
   const { id } = ctx.params;
+  const page = parseInt(ctx.query.page || '1', 10);
 
-  let user;
+  if (page < 1) {
+    ctx.status = 400;
+    return;
+  }
+
+  let user, posts;
   try {
     user = await User.findById(id);
   } catch (e) {
@@ -139,30 +197,47 @@ export const user = async (ctx) => {
   }
 
   const query = {
-    ...(user._id ? { "user._id": user._id } : {}),
+    ...(user._id ? { 'user._id': user._id } : {}),
   };
 
   try {
-    const posts = await getLatestPosts(ctx, query);
-
-    ctx.body = posts.map((post) => ({
-      ...post,
-      body: removeHtmlAndShorten(post.body),
-    }));
+    posts = await getLatestPosts(ctx, query);
   } catch (e) {
     ctx.throw(500, e);
   }
+
+  const postCount = await Post.countDocuments(query).exec();
+
+  const responseData = {
+    postTotalCnt: postCount,
+    data: {
+      post: posts.map((post) => ({
+        ...post,
+        body: removeHtmlAndShorten(post.body),
+      })),
+    },
+  };
+
+  ctx.body = responseData;
 };
 
 /**
- * GET /api/posts?category=
+ * GET /api/posts?category=&page=
  *
  * @brief     로그인 회원 포스트 리스트를 전달
  * @param {*} ctx
  */
 export const category = async (ctx) => {
+  let posts;
   const { category } = ctx.query;
   if (!category) {
+    ctx.status = 400;
+    return;
+  }
+
+  const page = parseInt(ctx.query.page || '1', 10);
+
+  if (page < 1) {
     ctx.status = 400;
     return;
   }
@@ -173,66 +248,80 @@ export const category = async (ctx) => {
   };
 
   try {
-    /**
-     * 2022-01-26 add 박지후
-     */
-    const posts = await Post.find(query)
+    posts = await Post.find(query)
       .sort({ publishedDate: -1 })
       .limit(10)
       .lean()
       .exec();
-
-    ctx.body = posts.map((post) => ({
-      ...post,
-      body: removeHtmlAndShorten(post.body),
-    }));
   } catch (e) {
     ctx.throw(500, e);
   }
+
+  const postCount = await Post.countDocuments(query).exec();
 };
 
 /**
- * GET /api/posts/filter
+ * GET /api/posts/filter/:orderBy?page=
  *
  * @brief     로그인 회원 포스트 리스트를 전달
  * @param {*} ctx
  */
 export const filter = async (ctx) => {
   const { orderBy } = ctx.params;
-  let posts;
+
+  const page = parseInt(ctx.query.page || '1', 10);
+
+  if (page < 1) {
+    x44;
+    ctx.status = 400;
+    return;
+  }
+
+  let posts, query;
   switch (orderBy) {
-    case "최신순": {
+    case '최신순': {
       try {
-        const query = {};
+        query = {};
         posts = await getLatestPosts(ctx, query);
       } catch (err) {
         ctx.throw(500, err);
       }
       break;
     }
-    case "오래된순": {
+    case '오래된순': {
       try {
-        const query = {};
+        query = {};
         posts = await getOldestPosts(ctx, query);
       } catch (err) {
         ctx.throw(500, err);
       }
       break;
     }
-    case "인기순": {
+    case '인기순': {
       // 인기순
       try {
-        const query = {};
+        query = {};
         posts = await getHotPosts(ctx, query);
       } catch (err) {
         ctx.throw(500, err);
       }
       break;
     }
+    default: {
+      query = {};
+    }
   }
-  console.log(posts);
-  ctx.body = posts.map((post) => ({
-    ...post,
-    body: removeHtmlAndShorten(post.body),
-  }));
+
+  const postCount = await Post.countDocuments(query).exec();
+  const responseData = {
+    postTotalCnt: postCount,
+    data: {
+      post: posts.map((post) => ({
+        ...post,
+        body: removeHtmlAndShorten(post.body),
+      })),
+    },
+  };
+
+  ctx.body = responseData;
 };

@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-const UserSchema = new Schema({
+export const UserSchema = new Schema({
   _id: mongoose.Types.ObjectId,
   providerId: String,
   provider: String,

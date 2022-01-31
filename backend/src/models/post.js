@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import User from './user';
+import { UserSchema } from './user';
 
 const { Schema } = mongoose;
 
@@ -15,21 +15,7 @@ const PostSchema = new Schema({
     type: Date,
     default: Date.now, // 현재 날짜를 기본값으로 지정
   },
-  // TODO : User Schema로 표현하도록 변경하기
-  user: {
-    _id: mongoose.Types.ObjectId,
-    providerId: String,
-    provider: String,
-    info: {
-      name: String,
-      age: Number,
-      gender: String,
-      nickname: String,
-      bloodtype: String,
-      allergy: Array,
-      medicines: Array,
-    },
-  },
+  user: UserSchema,
 });
 
 // 스태틱 메서드

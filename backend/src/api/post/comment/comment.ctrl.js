@@ -41,13 +41,15 @@ export const cmUpload = async (ctx) => {
   const curPost = ctx.state.post;
   const { text } = ctx.request.body;
   const comment = new Comment({
+    postId: curPost._id,
     text,
+    user: ctx.state.user,
   });
 
   // 2. 해당 Post에 추가되는 commentId 추가
   const nextPost = { ...curPost };
-  console.log('[TEST] nextPost.commentIds', nextPost.commentIds);
   nextPost.commentIds.push(comment._id);
+
   try {
     const _ = await Post.findByIdAndUpdate(
       curPost._id,
@@ -81,7 +83,7 @@ export const cmDelete = async (ctx) => {
   const { commentId } = ctx.params;
 
   // 해당 댓글 삭제 진행
-  // Type -> comment : new ObjectId
+  // Type -> Id : new ObjectId
   //         commenㅌtId : String
   const newId = curPost.commentIds.filter((Id) => Id != commentId);
 

@@ -1,4 +1,5 @@
 import Post from '../../models/post';
+import Comment from '../../models/comment';
 import mongoose from 'mongoose';
 import sanitizeHtml from 'sanitize-html';
 
@@ -16,6 +17,8 @@ const sanitizeOption = {
     'ul',
     'ol',
     'li',
+    'em',
+    'strong',
     'blockquote',
     'a',
     'img',
@@ -68,11 +71,18 @@ export const checkOwnPost = (ctx, next) => {
 
 /**
  * 특정 포스트 조회
- * GET /api/post/:id
+ * GET /api/post/:id?cpage=
  */
 export const read = async (ctx) => {
   const post = ctx.state.post;
 
+  const cpage = parseInt(ctx.query.cpage || '1', 10);
+  if (cpage < 1) {
+    ctx.status = 400;
+    return;
+  }
+
+  // 1. post data 획득
   try {
     // 조회 수 증가
     const result = await Post.findOneAndUpdate(
@@ -87,7 +97,32 @@ export const read = async (ctx) => {
   } catch (e) {
     ctx.throw(500, e);
   }
-  ctx.body = post;
+
+  // 2. Pagination된 post comment 획득
+  const query = {
+    ...{ postId: post._id },
+  };
+
+  const comments = await Comment.find(query)
+    .sort({ publishedDate: -1 })
+    .limit(10)
+    .skip((cpage - 1) * 10)
+    .lean()
+    .exec();
+
+  const commentCount = await Comment.countDocuments(query).exec();
+
+  // Responese
+  // { post: {},comments: {}}
+  const responseData = {
+    commentTotalCnt: commentCount,
+    data: {
+      post,
+      comments,
+    },
+  };
+
+  ctx.body = responseData;
 };
 
 /**

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import User from './user';
+import { UserSchema } from './user';
 
 const { Schema } = mongoose;
 
@@ -12,12 +12,14 @@ const ReplySchema = new Schema({
 });
 
 const CommentSchema = new Schema({
+  postId: mongoose.Types.ObjectId,
   text: String,
   replies: [ReplySchema],
   publishedDate: {
     type: Date,
     default: Date.now, // 현재 날짜를 기본값으로 지정
   },
+  user: UserSchema,
 });
 
 // 다음처럼 스키마 이름을 Post로 설정하면 실제 데이터베이스에서 만드는 컬렉션 이름은 posts가 됟다.

@@ -8,6 +8,7 @@ import {
 } from 'styles/PostsDetail.styles'
 import Search from 'components/Search'
 import Button from 'components/Button'
+import Pagination from 'components/Pagination'
 import API from 'service/api'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
@@ -27,13 +28,14 @@ export default function PostsDetail(props: RouteComponentProps) {
   const [comments_cnt, setCommentsCnt] = useState(0)
   const [is_write_comment, setIsWriteComment] = useState(false)
   const [is_reply, setIsReply] = useState({} as any)
+  const [current_page, setCurrentPage] = useState(1)
 
   const getPost = async () => {
     const urlParam = props.match.params as { postId: string }
     const postId = urlParam.postId
 
     await API.post
-      .getPost(postId)
+      .getPost(postId, current_page)
       .then((res) => {
         setCommentsList(res.data.data.comments?.reverse())
         setPost(res.data.data.post)
@@ -167,9 +169,12 @@ export default function PostsDetail(props: RouteComponentProps) {
   }
 
   useEffect(() => {
-    getPost()
     window.scrollTo({ top: 0 })
   }, [])
+
+  useEffect(() => {
+    getPost()
+  }, [current_page])
 
   const Comments = [
     { txt: '오 꿀팀 감사합니다.' },
@@ -302,6 +307,13 @@ export default function PostsDetail(props: RouteComponentProps) {
           )
         })}
       </CommentsSection>
+      <Pagination
+        total_count={comments_cnt}
+        current_page={current_page}
+        onChange={setCurrentPage}
+        block={5}
+        per_page={10}
+      />
       <Buttons className="buttonRow">
         {post.user?._id === userInfo?._id && (
           <>

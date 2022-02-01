@@ -94,6 +94,18 @@ export const post = {
     }
     return Axios(config)
   },
+  removeComment: async (post_id: string, comment_id: string) => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: DELETE,
+      url: `/api/post/comment/${post_id}/${comment_id}`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+    }
+    return Axios(config)
+  },
   createReply: async (comment_id: string, contents: string) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
@@ -105,6 +117,18 @@ export const post = {
       },
       data: {
         text: contents,
+      },
+    }
+    return Axios(config)
+  },
+  removeReply: async (comment_id: string, reply_id: string) => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: DELETE,
+      url: `/api/post/comment/reply/${comment_id}/${reply_id}`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
       },
     }
     return Axios(config)

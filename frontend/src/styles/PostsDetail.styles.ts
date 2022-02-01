@@ -34,12 +34,17 @@ export const PostsDetailContainer = styled.div`
     text-align: right;
   }
 
+  & .commentsCnt {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
   & .postContents {
     margin-bottom: 50px;
     padding: 30px 0;
     font-size: 20px;
     * img {
-      width: 100%;
+      max-width: 100%;
     }
   }
 
@@ -86,6 +91,11 @@ export const CommentsSection = styled.div`
 
     span {
       margin-right: 20px;
+    }
+
+    .removeComment,
+    .removeReply {
+      color: red;
     }
 
     .replyBtn {

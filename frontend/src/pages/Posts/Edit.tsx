@@ -51,6 +51,7 @@ export default function PostsEdit(props: IPostsEditProps) {
     input.setAttribute('name', 'file')
     input.setAttribute('type', 'file')
     input.setAttribute('accept', 'image/*')
+    input.setAttribute('style', 'display: none')
     document.body.appendChild(input)
 
     input.click()

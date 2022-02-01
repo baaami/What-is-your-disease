@@ -35,8 +35,9 @@ export default function PostsDetail(props: RouteComponentProps) {
     await API.post
       .getPost(postId)
       .then((res) => {
-        setCommentsList(res.data.data.comments)
+        setCommentsList(res.data.data.comments?.reverse())
         setPost(res.data.data.post)
+        setCommentsCnt(res.data.commentTotalCnt)
         setCommentValue('')
         setIsWriteComment(false)
         setReplyValue('')
@@ -133,6 +134,38 @@ export default function PostsDetail(props: RouteComponentProps) {
       })
   }
 
+  const handleRemoveComment = async (comment_id: string) => {
+    if (!window.confirm('댓글을 삭제하시겠습니까?')) {
+      return
+    }
+    const urlParam = props.match.params as { postId: string }
+    const postId = urlParam.postId
+    await API.post
+      .removeComment(postId, comment_id)
+      .then((_) => {
+        getPost()
+      })
+      .catch((e) => {
+        alert('댓글 삭제에 실패하였습니다.')
+        console.log(e)
+      })
+  }
+
+  const handleRemoveReply = async (comment_id: string, reply_id: string) => {
+    if (!window.confirm('답글을 삭제하시겠습니까?')) {
+      return
+    }
+    await API.post
+      .removeReply(comment_id, reply_id)
+      .then((_) => {
+        getPost()
+      })
+      .catch((e) => {
+        alert('답글 삭제에 실패하였습니다.')
+        console.log(e)
+      })
+  }
+
   useEffect(() => {
     getPost()
     window.scrollTo({ top: 0 })
@@ -171,6 +204,7 @@ export default function PostsDetail(props: RouteComponentProps) {
         className="postContents"
         dangerouslySetInnerHTML={{ __html: post?.body }}
       ></section>
+      <div className="commentsCnt">댓글 {comments_cnt}개</div>
       <Button
         type="button"
         className="commentsBtn"
@@ -211,6 +245,16 @@ export default function PostsDetail(props: RouteComponentProps) {
               >
                 <img src={reply} alt="답글 아이콘" />
               </Button>
+              {userInfo._id === comment.user._id && (
+                <div>
+                  <button
+                    className="removeComment"
+                    onClick={() => handleRemoveComment(comment._id)}
+                  >
+                    삭제
+                  </button>
+                </div>
+              )}
               {is_reply[comment._id] && (
                 <CreateComment>
                   <textarea
@@ -228,14 +272,30 @@ export default function PostsDetail(props: RouteComponentProps) {
               )}
               {comment.replies?.length !== 0 && (
                 <div className="replyWrap">
-                  {comment.replies?.map((reply: any, index: number) => {
-                    return (
-                      <div className="reply">
-                        <span>{reply?.user?.info?.nickname}</span>
-                        {reply?.text}
-                      </div>
-                    )
-                  })}
+                  {comment.replies
+                    ?.reverse()
+                    .map((reply: any, index: number) => {
+                      return (
+                        <>
+                          <div className="reply">
+                            <span>{reply?.user?.info?.nickname}</span>
+                            {reply?.text}
+                          </div>
+                          {userInfo._id === comment.user._id && (
+                            <div>
+                              <button
+                                className="removeComment"
+                                onClick={() =>
+                                  handleRemoveReply(comment._id, reply._id)
+                                }
+                              >
+                                삭제
+                              </button>
+                            </div>
+                          )}
+                        </>
+                      )
+                    })}
                 </div>
               )}
             </div>

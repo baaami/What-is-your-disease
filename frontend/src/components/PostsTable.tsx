@@ -22,6 +22,7 @@ const PostsTable = (props: any) => {
             <>
               <Link to={`/posts/detail/${item._id}`} className="latestPost">
                 <div className="postTitle">{item.title}</div>
+                <div className="commentsCnt">[{item.commentIds?.length}]</div>
                 <img src={arrow} alt="화살표 아이콘" />
               </Link>
             </>
@@ -73,18 +74,27 @@ export const PostTableWrapper = styled.div`
   .latestPostContainer {
     .latestPost {
       display: flex;
-      justify-content: space-between;
+      /* justify-content: space-between; */
       align-items: center;
       line-height: 80px;
       padding: 0 25px;
+      position: relative;
 
       .postTitle {
+        max-width: 90%;
         font-size: 22px;
         color: #333;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .commentsCnt {
+        font-size: 22px;
+        color: red;
       }
       img {
-        position: relative;
-        right: 10px;
+        position: absolute;
+        right: 20px;
         height: 18px;
         transition: all 0.3s ease-in;
       }

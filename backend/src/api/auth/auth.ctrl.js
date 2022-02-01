@@ -85,7 +85,6 @@ export const kakao = async (ctx) => {
     }
   } else {
     // 두번째 로그인일 경우
-    // TODO : { ...CheckedUser} 시에 원하지 않는 mongodb 객체가 생겨남, 얕은 복사(?)를 하여도 문제가 없는지 확인
     user = CheckedUser;
   }
 
@@ -98,7 +97,6 @@ export const kakao = async (ctx) => {
     user: user,
   };
 
-  console.log('[TEST] result : ', result);
   // access token을 JWT를 사용하여 서버만의 토큰으로 발급 후 front에 전달
   ctx.body = result;
 };
@@ -144,7 +142,6 @@ export const naver = async (ctx) => {
     is_new = false;
   const _id = mongoose.Types.ObjectId();
 
-  console.log('[TEST] RepUser.data : ', RepUser.data);
   const providerId = RepUser.data.response.id;
 
   // TODO : provider도 AND 연산으로 같이 찾도록 개선
@@ -174,8 +171,6 @@ export const naver = async (ctx) => {
     is_new: is_new,
     user: user,
   };
-
-  console.log('[TEST] result :', result);
 
   // access token을 JWT를 사용하여 서버만의 토큰으로 발급 후 front에 전달
   ctx.body = result;

@@ -21,6 +21,7 @@ const sanitizeOption = {
     'strong',
     'blockquote',
     'a',
+    'video',
     'img',
   ],
   allowedAttributes: {
@@ -150,10 +151,6 @@ export const write = async (ctx) => {
     user: ctx.state.user,
   });
   try {
-    // async/await 문법으로 데이터베이스 저장 요청을 완료할 때 까지 대기
-    // await를 사용하는 방법 다시 정리
-    // 1. await를 사용하려는 함수 앞에 async키워드를 넣어야함
-    // 2. await 는 try~catch 문을 사용해야함
     await post.save();
     ctx.body = post;
   } catch (e) {

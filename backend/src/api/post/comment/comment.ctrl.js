@@ -46,15 +46,11 @@ export const cmUpload = async (ctx) => {
     user: ctx.state.user,
   });
 
-  // 2. 해당 Post에 추가되는 commentId 추가
-  const nextPost = { ...curPost };
-  nextPost.commentIds.push(comment._id);
-
   try {
     const _ = await Post.findByIdAndUpdate(
       curPost._id,
       {
-        commentIds: nextPost.commentIds,
+        $push: { commentIds: comment._id },
       },
       {
         new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.

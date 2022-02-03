@@ -53,7 +53,6 @@ export const kakao = async (ctx) => {
 
   try {
     CheckedUser = await User.findByproviderId(providerId);
-    console.log('[TEST] CheckedUser : ', CheckedUser);
   } catch (err) {
     ctx.throw(err, 500);
   }

@@ -13,6 +13,8 @@ export const UserSchema = new Schema({
     allergy: [String],
     medicines: [String],
   },
+  follower: [mongoose.Types.ObjectId],
+  following: [mongoose.Types.ObjectId],
 });
 
 // 스태틱 메서드

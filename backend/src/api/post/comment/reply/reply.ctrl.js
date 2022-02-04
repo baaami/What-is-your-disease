@@ -4,7 +4,7 @@ import Comment from '../../../../models/comment';
 
 /**
  * 답글 등록
- * POSt /api/post/comment/reply/:commentId
+ * POSt /api/post/comment/:commentId/reply/
  */
 export const rpUpload = async (ctx) => {
   const { commentId } = ctx.params;

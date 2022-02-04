@@ -41,14 +41,14 @@ const sanitizeOption = {
  * @returns
  */
 export const checkPostById = async (ctx, next) => {
-  const { id } = ctx.params;
-  if (!ObjectId.isValid(id)) {
+  const { postId } = ctx.params;
+  if (!ObjectId.isValid(postId)) {
     ctx.status = 400;
     return;
   }
 
   try {
-    const post = await Post.findById(id);
+    const post = await Post.findById(postId);
 
     // 포스트가 존재하지 않을 때
     if (!post) {
@@ -73,7 +73,7 @@ export const checkOwnPost = (ctx, next) => {
 
 /**
  * 특정 포스트 조회
- * GET /api/post/:id?cpage=
+ * GET /api/post/:postId?cpage=
  */
 export const read = async (ctx) => {
   const post = ctx.state.post;
@@ -182,7 +182,7 @@ export const write = async (ctx) => {
 
 /**
  * 포스트 수정 (특정 필드 변경)
- * PATCH /api/posts/:id
+ * PATCH /api/posts/:postId
  * {
  *    title: '수정'
  *    body:  '수정 내용'
@@ -190,7 +190,7 @@ export const write = async (ctx) => {
  * }
  */
 export const update = async (ctx) => {
-  const id = ctx.state.post._id;
+  const { postId } = ctx.params;
 
   const nextData = { ...ctx.request.body }; // 객체를 복사하고
 
@@ -198,7 +198,7 @@ export const update = async (ctx) => {
     nextData.body = sanitizeHtml(nextData.body, sanitizeOption);
   }
   try {
-    const post = await Post.findByIdAndUpdate(id, nextData, {
+    const post = await Post.findByIdAndUpdate(postId, nextData, {
       new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
       // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
     }).exec();
@@ -215,7 +215,7 @@ export const update = async (ctx) => {
 
 /**
  * 특정 포스트 제거
- * DELETE /api/post/:id
+ * DELETE /api/post/:postId
  */
 export const remove = async (ctx) => {
   /**
@@ -225,9 +225,9 @@ export const remove = async (ctx) => {
    * findByIdAndRemove : id를 찾아서 지운다.
    * findOneAndRemove : 특정 조건을 만족하는 데이터 하나를 찾아서 제거한다.
    */
-  const id = ctx.state.post._id;
+  const { postId } = ctx.params;
   try {
-    await Post.findByIdAndRemove(id).exec();
+    await Post.findByIdAndRemove(postId).exec();
     ctx.status = 204; // No Content (성공하기는 했지만 응답할 데이터는 없음)
   } catch (e) {
     ctx.throw(500, e);
@@ -236,17 +236,17 @@ export const remove = async (ctx) => {
 
 /**
  * 포스트 좋아요
- * POST /api/post/:id/like
+ * POST /api/post/:postId/like
  */
 export const like = async (ctx) => {
-  const { id } = ctx.params;
+  const { postId } = ctx.params;
   const user = ctx.state.user;
 
   // TODO : id 포스트를 찾은 한번에 좋아요 수 증가와 User 정보 저장을 동시에 할 수 있도록 Query 개선
   // 1. 좋아요 증가
   try {
     const result = await Post.findOneAndUpdate(
-      { _id: id },
+      { _id: postId },
       { $inc: { likes: 1 } },
       { new: true },
     );
@@ -261,7 +261,7 @@ export const like = async (ctx) => {
   // 2. 좋아요 User 저장
   try {
     const result = await Post.findOneAndUpdate(
-      { _id: id },
+      { _id: postId },
       { $push: { likeMe: user._id } },
       { new: true },
     );

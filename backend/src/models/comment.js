@@ -8,8 +8,8 @@ const CommentSchema = new Schema({
   postId: mongoose.Types.ObjectId,
   text: String,
   likes: Number,
-  likeMe: [mongoose.Types.ObjectId], // user id
-  replyIds: [mongoose.Types.ObjectId], // repliy id
+  likeMe: [mongoose.Types.ObjectId], // user Id
+  replyIds: [mongoose.Types.ObjectId], // repliy Id
   replies: [ReplySchema],
   publishedDate: {
     type: Date,

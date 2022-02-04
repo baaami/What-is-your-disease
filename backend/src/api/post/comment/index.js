@@ -6,13 +6,13 @@ import reply from './reply';
 
 const comment = new Router();
 
-comment.use('/reply', reply.routes());
+comment.use('/:commentId/reply', reply.routes());
 
 /**
  * 댓글 등록 (특정 필드 변경)
  */
 comment.post(
-  '/:id',
+  '/write',
   checkLoggedIn,
   postCtrl.checkPostById,
   commentCtrl.cmUpload,
@@ -27,7 +27,7 @@ comment.post('/like/:commentId', checkLoggedIn, commentCtrl.cmLike);
  * 댓글 삭제 (특정 필드 변경)
  */
 comment.delete(
-  '/:id/:commentId',
+  '/delete/:commentId',
   checkLoggedIn,
   postCtrl.checkPostById,
   commentCtrl.cmDelete,

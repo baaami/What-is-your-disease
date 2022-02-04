@@ -34,7 +34,7 @@ export const checkCommentById = async (ctx, next) => {
 
 /**
  * 댓글 등록
- * POST /api/post/comment/:id
+ * POST /api/post/comment/:postId
  */
 export const cmUpload = async (ctx) => {
   // 1. 필요한 값 할당
@@ -73,7 +73,7 @@ export const cmUpload = async (ctx) => {
 
 /**
  * 댓글 삭제
- * DELETE /api/post/comment/:id/:commentId
+ * DELETE /api/post/comment/:postId/:commentId
  */
 export const cmDelete = async (ctx) => {
   const curPost = ctx.state.post;

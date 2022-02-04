@@ -180,13 +180,13 @@ export const hot = async (ctx) => {
 };
 
 /**
- * GET /api/posts/user/:id?page=
+ * GET /api/posts/user/:userId?page=
  *
  * @brief     로그인 회원 포스트 리스트를 전달
  * @param {*} ctx
  */
 export const user = async (ctx) => {
-  const { id } = ctx.params;
+  const { userId } = ctx.params;
   const page = parseInt(ctx.query.page || '1', 10);
 
   if (page < 1) {
@@ -196,7 +196,7 @@ export const user = async (ctx) => {
 
   let user, posts;
   try {
-    user = await User.findById(id);
+    user = await User.findById(userId);
   } catch (e) {
     ctx.throw(500, e);
   }

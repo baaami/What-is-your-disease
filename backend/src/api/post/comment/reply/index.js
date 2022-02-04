@@ -8,12 +8,12 @@ const reply = new Router();
 /**
  * 답글 등록
  */
-reply.post('/:commentId', checkLoggedIn, replyCtrl.rpUpload);
+reply.post('/write', checkLoggedIn, replyCtrl.rpUpload);
 
 /**
  * 답글 삭제
  */
-reply.delete('/:commentId/:replyId', checkLoggedIn, replyCtrl.rpDelete);
+reply.delete('/delete/:replyId', checkLoggedIn, replyCtrl.rpDelete);
 
 /**
  * 답글 좋아요

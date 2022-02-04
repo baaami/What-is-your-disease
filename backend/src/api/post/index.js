@@ -17,13 +17,13 @@ export const upload = multer({
   dest: __dirname + '/uploads/', // 이미지 업로드 경로
 });
 
-post.use('/comment', comment.routes());
+post.use('/:postId/comment', comment.routes());
 
 /**
  * 특정 포스트 조회
- * GET /api/post/:id
+ * GET /api/post/:postId
  */
-post.get('/:id', postCtrl.checkPostById, postCtrl.read);
+post.get('/read/:postId', postCtrl.checkPostById, postCtrl.read);
 
 /**
  * 포스트 작성
@@ -33,9 +33,9 @@ post.post('/write', checkLoggedIn, postCtrl.write);
 
 /**
  * 포스트 작성
- * POST /api/post/:id/like
+ * POST /api/post/:postId/like
  */
-post.post('/:id/like', checkLoggedIn, postCtrl.like);
+post.post('/like/:postId', checkLoggedIn, postCtrl.like);
 
 /**
  * 이미지 업로드
@@ -47,7 +47,7 @@ post.post('/upload', checkLoggedIn, upload.array('file'), postCtrl.upLoadImage);
  * 포스트 수정 (특정 필드 변경)
  */
 post.patch(
-  '/edit/:id',
+  '/edit/:postId',
   postCtrl.checkPostById,
   checkLoggedIn,
   postCtrl.checkOwnPost,
@@ -56,10 +56,10 @@ post.patch(
 
 /**
  * 특정 포스트 제거
- * DELETE /api/post/:id
+ * DELETE /api/post/:postId
  */
 post.delete(
-  '/delete/:id',
+  '/delete/:postId',
   postCtrl.checkPostById,
   checkLoggedIn,
   postCtrl.checkOwnPost,

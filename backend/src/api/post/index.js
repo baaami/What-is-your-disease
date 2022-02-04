@@ -32,6 +32,12 @@ post.get('/:id', postCtrl.checkPostById, postCtrl.read);
 post.post('/write', checkLoggedIn, postCtrl.write);
 
 /**
+ * 포스트 작성
+ * POST /api/post/:id/like
+ */
+post.post('/:id/like', checkLoggedIn, postCtrl.like);
+
+/**
  * 이미지 업로드
  * POST /api/post/upload
  */

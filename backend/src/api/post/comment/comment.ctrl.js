@@ -42,6 +42,7 @@ export const cmUpload = async (ctx) => {
   const { text } = ctx.request.body;
   const comment = new Comment({
     postId: curPost._id,
+    likes: 0,
     text,
     user: ctx.state.user,
   });
@@ -105,9 +106,52 @@ export const cmDelete = async (ctx) => {
 
   // 2. 댓글 컬렉션에서 해당 id 제거
   try {
-    const comment = await Comment.findByIdAndRemove(commentId).exec();
+    const _ = await Comment.findByIdAndRemove(commentId).exec();
     ctx.status = 204; // No Content (성공하기는 했지만 응답할 데이터는 없음)
   } catch (e) {
     ctx.throw(500, e);
   }
+};
+
+/**
+ * 댓글 좋아요
+ * POST /api/post/comment/like/:commentId
+ */
+export const cmLike = async (ctx) => {
+  const { commentId } = ctx.params;
+  const user = ctx.state.user;
+
+  // 1. 좋아요 증가
+  try {
+    const _ = await Comment.findByIdAndUpdate(
+      commentId,
+      {
+        $inc: { likes: 1 },
+      },
+      {
+        new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
+        // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
+      },
+    ).exec();
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  // 2. 좋아요 누른 유저 아이디 저장
+  try {
+    const _ = await Comment.findByIdAndUpdate(
+      commentId,
+      {
+        $push: { likeMe: user._id },
+      },
+      {
+        new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
+        // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
+      },
+    ).exec();
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  ctx.status = 204;
 };

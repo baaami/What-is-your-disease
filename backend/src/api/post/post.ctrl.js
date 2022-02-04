@@ -1,5 +1,6 @@
 import Post from '../../models/post';
 import Comment from '../../models/comment';
+import Reply from '../../models/reply';
 import mongoose from 'mongoose';
 import sanitizeHtml from 'sanitize-html';
 
@@ -104,7 +105,7 @@ export const read = async (ctx) => {
     ...{ postId: post._id },
   };
 
-  const comments = await Comment.find(query)
+  let comments = await Comment.find(query)
     .sort({ publishedDate: -1 })
     .limit(10)
     .skip((cpage - 1) * 10)
@@ -113,6 +114,27 @@ export const read = async (ctx) => {
 
   const commentCount = await Comment.countDocuments(query).exec();
 
+  try {
+    // TODO : Promise 해제하는 방식 확인
+    comments = await Promise.all(
+      comments.map(async (comment) => {
+        const ReplySchemas = await Promise.all(
+          comment.replyIds.map(async (replyId) => {
+            try {
+              const reply = await Reply.findById(replyId);
+              return reply;
+            } catch (e) {
+              ctx.throw(e, 500);
+            }
+          }),
+        );
+        comment.replies = ReplySchemas;
+        return comment;
+      }),
+    );
+  } catch (e) {
+    ctx.throw(e, 500);
+  }
   // Responese
   // { post: {},comments: {}}
   const responseData = {
@@ -146,7 +168,7 @@ export const write = async (ctx) => {
     body: sanitizeHtml(body, sanitizeOption),
     category,
     views: 1,
-    commentIds: [],
+    likes: 0,
     tags,
     user: ctx.state.user,
   });
@@ -210,6 +232,48 @@ export const remove = async (ctx) => {
   } catch (e) {
     ctx.throw(500, e);
   }
+};
+
+/**
+ * 포스트 좋아요
+ * POST /api/post/:id/like
+ */
+export const like = async (ctx) => {
+  const { id } = ctx.params;
+  const user = ctx.state.user;
+
+  // TODO : id 포스트를 찾은 한번에 좋아요 수 증가와 User 정보 저장을 동시에 할 수 있도록 Query 개선
+  // 1. 좋아요 증가
+  try {
+    const result = await Post.findOneAndUpdate(
+      { _id: id },
+      { $inc: { likes: 1 } },
+      { new: true },
+    );
+
+    if (!result) {
+      console.log('findOneAndUpdate Error');
+    }
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  // 2. 좋아요 User 저장
+  try {
+    const result = await Post.findOneAndUpdate(
+      { _id: id },
+      { $push: { likeMe: user._id } },
+      { new: true },
+    );
+
+    if (!result) {
+      console.log('findOneAndUpdate Error');
+    }
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  ctx.status = 204;
 };
 
 /**

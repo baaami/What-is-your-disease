@@ -6,24 +6,18 @@ import * as replyCtrl from './reply.ctrl';
 const reply = new Router();
 
 /**
- * 댓글 등록 (특정 필드 변경)
+ * 답글 등록
  */
-reply.post(
-  '/:commentId',
-  checkLoggedIn,
-  commentCtrl.checkCommentById,
-  replyCtrl.rpUpload,
-);
+reply.post('/:commentId', checkLoggedIn, replyCtrl.rpUpload);
 
 /**
- * 댓글 삭제 (특정 필드 변경)
+ * 답글 삭제
  */
-reply.delete(
-  '/:commentId/:replyId',
-  commentCtrl.checkCommentById,
-  checkLoggedIn,
+reply.delete('/:commentId/:replyId', checkLoggedIn, replyCtrl.rpDelete);
 
-  replyCtrl.rpDelete,
-);
+/**
+ * 답글 좋아요
+ */
+reply.post('/like/:replyId', checkLoggedIn, replyCtrl.rpLike);
 
 export default reply;

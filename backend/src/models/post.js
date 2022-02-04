@@ -10,6 +10,7 @@ const PostSchema = new Schema({
   category: String,
   views: Number,
   likes: Number,
+  likeMe: [mongoose.Types.ObjectId],
   commentIds: [mongoose.Types.ObjectId],
   tags: [String],
   publishedDate: {

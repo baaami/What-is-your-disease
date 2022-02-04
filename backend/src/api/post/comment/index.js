@@ -19,6 +19,11 @@ comment.post(
 );
 
 /**
+ * 댓글 좋아요
+ */
+comment.post('/like/:commentId', checkLoggedIn, commentCtrl.cmLike);
+
+/**
  * 댓글 삭제 (특정 필드 변경)
  */
 comment.delete(

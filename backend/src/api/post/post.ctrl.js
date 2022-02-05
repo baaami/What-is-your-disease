@@ -1,4 +1,5 @@
 import Post from '../../models/post';
+import User from '../../models/user';
 import Comment from '../../models/comment';
 import Reply from '../../models/reply';
 import mongoose from 'mongoose';
@@ -124,7 +125,7 @@ export const read = async (ctx) => {
               const reply = await Reply.findById(replyId);
               return reply;
             } catch (e) {
-              ctx.throw(e, 500);
+              ctx.throw(500, e);
             }
           }),
         );
@@ -133,7 +134,7 @@ export const read = async (ctx) => {
       }),
     );
   } catch (e) {
-    ctx.throw(e, 500);
+    ctx.throw(500, e);
   }
   // Responese
   // { post: {},comments: {}}
@@ -241,36 +242,81 @@ export const remove = async (ctx) => {
 export const like = async (ctx) => {
   const { postId } = ctx.params;
   const user = ctx.state.user;
+  let ExistUser;
 
-  // TODO : id 포스트를 찾은 한번에 좋아요 수 증가와 User 정보 저장을 동시에 할 수 있도록 Query 개선
-  // 1. 좋아요 증가
+  // 해당 post에 좋아요를 눌렀던 사람인지 확인
   try {
-    const result = await Post.findOneAndUpdate(
-      { _id: postId },
-      { $inc: { likes: 1 } },
-      { new: true },
-    );
-
-    if (!result) {
-      console.log('findOneAndUpdate Error');
-    }
+    [ExistUser] = await Post.find({
+      likeMe: { $all: [user._id] },
+    });
   } catch (e) {
     ctx.throw(500, e);
   }
 
-  // 2. 좋아요 User 저장
-  try {
-    const result = await Post.findOneAndUpdate(
-      { _id: postId },
-      { $push: { likeMe: user._id } },
-      { new: true },
-    );
+  console.log('[TEST] Existuser : ', ExistUser);
+  // 좋아요를 누르지 않았던 User일 경우
+  if (!ExistUser) {
+    // 좋아요 증가
+    // TODO : id 포스트를 찾은 한번에 좋아요 수 증가와 User 정보 저장을 동시에 할 수 있도록 Query 개선
+    // 1. 좋아요 증가
+    try {
+      const result = await Post.findOneAndUpdate(
+        { _id: postId },
+        { $inc: { likes: 1 } },
+        { new: true },
+      );
 
-    if (!result) {
-      console.log('findOneAndUpdate Error');
+      if (!result) {
+        console.log('findOneAndUpdate Error');
+      }
+    } catch (e) {
+      ctx.throw(500, e);
     }
-  } catch (e) {
-    ctx.throw(500, e);
+
+    // 2. 좋아요 User 저장
+    try {
+      const result = await Post.findOneAndUpdate(
+        { _id: postId },
+        { $push: { likeMe: user._id } },
+        { new: true },
+      );
+
+      if (!result) {
+        console.log('findOneAndUpdate Error');
+      }
+    } catch (e) {
+      ctx.throw(500, e);
+    }
+  } else {
+    // 좋아요를 눌렀던 User일 경우
+    try {
+      const result = await Post.findOneAndUpdate(
+        { _id: postId },
+        { $inc: { likes: -1 } },
+        { new: true },
+      );
+
+      if (!result) {
+        console.log('findOneAndUpdate Error');
+      }
+    } catch (e) {
+      ctx.throw(500, e);
+    }
+
+    // 2. 좋아요 User 저장
+    try {
+      const result = await Post.findOneAndUpdate(
+        { _id: postId },
+        { $pull: { likeMe: user._id } },
+        { new: true },
+      );
+
+      if (!result) {
+        console.log('findOneAndUpdate Error');
+      }
+    } catch (e) {
+      ctx.throw(500, e);
+    }
   }
 
   ctx.status = 204;

@@ -35,7 +35,7 @@ post.post('/write', checkLoggedIn, postCtrl.write);
  * 포스트 작성
  * POST /api/post/:postId/like
  */
-post.post('/like/:postId', checkLoggedIn, postCtrl.like);
+post.post('/:postId/like', checkLoggedIn, postCtrl.like);
 
 /**
  * 이미지 업로드

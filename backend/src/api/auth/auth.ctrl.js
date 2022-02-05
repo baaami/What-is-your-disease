@@ -54,7 +54,7 @@ export const kakao = async (ctx) => {
   try {
     CheckedUser = await User.findByproviderId(providerId);
   } catch (err) {
-    ctx.throw(err, 500);
+    ctx.throw(500, err);
   }
 
   if (!CheckedUser) {
@@ -226,7 +226,7 @@ export const google = async (ctx) => {
   try {
     CheckedUser = await User.findByproviderId(providerId);
   } catch (err) {
-    ctx.throw(err, 500);
+    ctx.throw(500, err);
   }
 
   if (!CheckedUser) {

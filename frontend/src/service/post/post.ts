@@ -28,7 +28,7 @@ export const post = {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
-      url: `/api/post/${post_id}`,
+      url: `/api/post/read/${post_id}`,
       headers: {
         ...JSON_HEADER,
         Authrization: `Bearer ${token}`,
@@ -40,6 +40,7 @@ export const post = {
 
     return Axios(config)
   },
+
   editPost: async (post_id: string, post_body: CreatePostModel) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
@@ -86,7 +87,7 @@ export const post = {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: POST,
-      url: `/api/post/comment/${post_id}`,
+      url: `/api/post/${post_id}/comment/write`,
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,
@@ -101,7 +102,7 @@ export const post = {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: DELETE,
-      url: `/api/post/comment/${post_id}/${comment_id}`,
+      url: `/api/post/${post_id}/comment/delete/${comment_id}`,
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,
@@ -109,11 +110,15 @@ export const post = {
     }
     return Axios(config)
   },
-  createReply: async (comment_id: string, contents: string) => {
+  createReply: async (
+    comment_id: string,
+    contents: string,
+    post_id: string,
+  ) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: POST,
-      url: `/api/post/comment/reply/${comment_id}`,
+      url: `/api/post/${post_id}/comment/${comment_id}/reply/write`,
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,
@@ -124,11 +129,15 @@ export const post = {
     }
     return Axios(config)
   },
-  removeReply: async (comment_id: string, reply_id: string) => {
+  removeReply: async (
+    comment_id: string,
+    reply_id: string,
+    post_id: string,
+  ) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: DELETE,
-      url: `/api/post/comment/reply/${comment_id}/${reply_id}`,
+      url: `/api/post/${post_id}/comment/${comment_id}/reply/delete/${reply_id}`,
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,

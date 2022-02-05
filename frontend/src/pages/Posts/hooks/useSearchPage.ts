@@ -24,7 +24,7 @@ const useSearchPage = (
     if (type === 'hashtag') {
       try {
         const content_res = await API.posts.getTagSearch(value)
-        setPostsList(content_res.data)
+        setPostsList(content_res.data.data.post)
       } catch (e) {
         if (nodata_callback) {
           nodata_callback()

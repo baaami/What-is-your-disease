@@ -122,12 +122,14 @@ export default function PostsDetail(props: RouteComponentProps) {
   }
 
   const handleSubmitReply = async (comment_id: string, contents: string) => {
+    const urlParam = props.match.params as { postId: string }
+    const postId = urlParam.postId
     if (reply_value === '') {
       return alert('답글을 입력해주세요')
     }
 
     await API.post
-      .createReply(comment_id, contents)
+      .createReply(comment_id, contents, postId)
       .then((res) => {
         getPost()
       })
@@ -154,11 +156,13 @@ export default function PostsDetail(props: RouteComponentProps) {
   }
 
   const handleRemoveReply = async (comment_id: string, reply_id: string) => {
+    const urlParam = props.match.params as { postId: string }
+    const postId = urlParam.postId
     if (!window.confirm('답글을 삭제하시겠습니까?')) {
       return
     }
     await API.post
-      .removeReply(comment_id, reply_id)
+      .removeReply(comment_id, reply_id, postId)
       .then((_) => {
         getPost()
       })

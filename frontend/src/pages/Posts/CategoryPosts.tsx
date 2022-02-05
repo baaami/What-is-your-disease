@@ -34,6 +34,7 @@ export default function PostsLists({
     await API.posts
       .getCategoryPosts(category, page)
       .then((res) => {
+        console.log(res.data)
         setTotalCnt(res.data.postTotalCnt)
         setPostsList(res.data.data.post)
       })

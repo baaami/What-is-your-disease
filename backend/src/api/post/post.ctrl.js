@@ -74,9 +74,10 @@ export const checkOwnPost = (ctx, next) => {
 
 /**
  * 특정 포스트 조회
- * GET /api/post/:postId?cpage=
+ * GET /api/post/read/:postId?cpage=
  */
 export const read = async (ctx) => {
+  const { postId } = ctx.params;
   const post = ctx.state.post;
 
   const cpage = parseInt(ctx.query.cpage || '1', 10);
@@ -101,41 +102,49 @@ export const read = async (ctx) => {
     ctx.throw(500, e);
   }
 
-  // 2. Pagination된 post comment 획득
-  const query = {
-    ...{ postId: post._id },
-  };
+  // match stage를 사용할 때 id 매칭 시 mongoose.Types.ObjectId를 사용해야함
+  const query = [
+    {
+      $match: { postId: mongoose.Types.ObjectId(postId) },
+    },
+    {
+      $unwind: '$replyIds',
+    },
+    {
+      $lookup: {
+        from: 'replies',
+        localField: 'replyIds',
+        foreignField: '_id',
+        as: 'replies',
+      },
+    },
+    {
+      $unwind: '$replies',
+    },
+    {
+      $group: {
+        _id: '$_id',
+        text: { $first: '$text' },
+        user: { $first: '$user' },
+        likeMe: { $push: '$likeMe' },
+        replyIds: { $push: '$replyIds' },
+        replies: { $push: '$replies' },
+        publishedDate: { $first: '$publishedDate' },
+      },
+    },
+  ];
 
-  let comments = await Comment.find(query)
-    .sort({ publishedDate: -1 })
-    .limit(10)
-    .skip((cpage - 1) * 10)
-    .lean()
-    .exec();
-
-  const commentCount = await Comment.countDocuments(query).exec();
-
+  let comments;
   try {
-    // TODO : Promise 해제하는 방식 확인
-    comments = await Promise.all(
-      comments.map(async (comment) => {
-        const ReplySchemas = await Promise.all(
-          comment.replyIds.map(async (replyId) => {
-            try {
-              const reply = await Reply.findById(replyId);
-              return reply;
-            } catch (e) {
-              ctx.throw(500, e);
-            }
-          }),
-        );
-        comment.replies = ReplySchemas;
-        return comment;
-      }),
-    );
+    comments = await Comment.aggregate(query).exec();
   } catch (e) {
     ctx.throw(500, e);
   }
+
+  const commentCount = await Comment.countDocuments({
+    ...{ postId: post._id },
+  }).exec();
+
   // Responese
   // { post: {},comments: {}}
   const responseData = {

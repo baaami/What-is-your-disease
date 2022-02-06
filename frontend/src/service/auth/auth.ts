@@ -6,7 +6,7 @@ export const auth = {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: PATCH,
-      url: '/api/userinfo/update',
+      url: '/api/user/update',
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,

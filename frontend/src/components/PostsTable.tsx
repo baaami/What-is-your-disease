@@ -5,7 +5,7 @@ import arrow from 'assets/img/arrow_right.png'
 
 const PostsTable = (props: any) => {
   return (
-    <PostTableWrapper className="wrap">
+    <PostTableWrapper>
       <section className="topSection">
         {props.title && <div className="postsTitle">{props?.title}</div>}
         {props.is_more_button && (

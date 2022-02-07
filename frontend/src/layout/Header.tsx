@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
-import { HeaderContainer } from '../styles/Layout.styles'
+import { HeaderContainer, ProfileContainer } from './styles'
 import { Link, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
-import logo from '../assets/img/hlogo.svg'
 import Home from '../pages/Home'
 import Signup from '../pages/Signup'
 import Category from '../pages/Category'
@@ -18,6 +17,9 @@ import Nauth from '../pages/Nauth'
 import Gauth from '../pages/Gauth'
 import API from 'service/api'
 import { currentUserInfo } from 'store/userInfo'
+import { Container } from 'common.styles'
+import logo from '../assets/img/hlogo.svg'
+import profile from '../assets/img/profile.svg'
 
 interface IHeaderProps {}
 
@@ -73,25 +75,25 @@ export default function Header(props: IHeaderProps) {
   return (
     <>
       <HeaderContainer>
-        <div className="wrap">
+        <Container className='flexWrap'>
           <Link to="/">
-            <img src={logo} alt="logo" />
+            <img className='logo' src={logo} alt="logo" />
           </Link>
-          <div className="rightArea">
+          <ProfileContainer>
             {userInfo._id !== '' ? (
               <button
                 className="headerTxt"
                 onClick={() => history.push('/mypage')}
               >
-                마이페이지
+                <img src={profile} alt="profile" />
               </button>
             ) : (
               <Link className="headerTxt" to="/login">
-                로그인 / 회원가입
+                <img src={profile} alt="profile" />
               </Link>
             )}
-          </div>
-        </div>
+          </ProfileContainer>
+        </Container>
       </HeaderContainer>
       <Switch>
         <Route path="/" exact component={Home} />

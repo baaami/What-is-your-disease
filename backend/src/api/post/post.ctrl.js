@@ -77,7 +77,6 @@ export const checkOwnPost = (ctx, next) => {
  * GET /api/post/read/:postId?cpage=
  */
 export const read = async (ctx) => {
-  const { postId } = ctx.params;
   const post = ctx.state.post;
 
   const cpage = parseInt(ctx.query.cpage || '1', 10);
@@ -102,49 +101,41 @@ export const read = async (ctx) => {
     ctx.throw(500, e);
   }
 
-  // match stage를 사용할 때 id 매칭 시 mongoose.Types.ObjectId를 사용해야함
-  const query = [
-    {
-      $match: { postId: mongoose.Types.ObjectId(postId) },
-    },
-    {
-      $unwind: '$replyIds',
-    },
-    {
-      $lookup: {
-        from: 'replies',
-        localField: 'replyIds',
-        foreignField: '_id',
-        as: 'replies',
-      },
-    },
-    {
-      $unwind: '$replies',
-    },
-    {
-      $group: {
-        _id: '$_id',
-        text: { $first: '$text' },
-        user: { $first: '$user' },
-        likeMe: { $push: '$likeMe' },
-        replyIds: { $push: '$replyIds' },
-        replies: { $push: '$replies' },
-        publishedDate: { $first: '$publishedDate' },
-      },
-    },
-  ];
+  // 2. Pagination된 post comment 획득
+  const query = {
+    ...{ postId: post._id },
+  };
 
-  let comments;
+  let comments = await Comment.find(query)
+    .sort({ publishedDate: -1 })
+    .limit(10)
+    .skip((cpage - 1) * 10)
+    .lean()
+    .exec();
+
+  const commentCount = await Comment.countDocuments(query).exec();
+
   try {
-    comments = await Comment.aggregate(query).exec();
+    // TODO : Promise 해제하는 방식 확인
+    comments = await Promise.all(
+      comments.map(async (comment) => {
+        const ReplySchemas = await Promise.all(
+          comment.replyIds.map(async (replyId) => {
+            try {
+              const reply = await Reply.findById(replyId);
+              return reply;
+            } catch (e) {
+              ctx.throw(500, e);
+            }
+          }),
+        );
+        comment.replies = ReplySchemas;
+        return comment;
+      }),
+    );
   } catch (e) {
     ctx.throw(500, e);
   }
-
-  const commentCount = await Comment.countDocuments({
-    ...{ postId: post._id },
-  }).exec();
-
   // Responese
   // { post: {},comments: {}}
   const responseData = {
@@ -265,28 +256,11 @@ export const like = async (ctx) => {
   console.log('[TEST] Existuser : ', ExistUser);
   // 좋아요를 누르지 않았던 User일 경우
   if (!ExistUser) {
-    // 좋아요 증가
-    // TODO : id 포스트를 찾은 한번에 좋아요 수 증가와 User 정보 저장을 동시에 할 수 있도록 Query 개선
-    // 1. 좋아요 증가
+    // 1. 좋아요 증가, User 저장
     try {
       const result = await Post.findOneAndUpdate(
         { _id: postId },
-        { $inc: { likes: 1 } },
-        { new: true },
-      );
-
-      if (!result) {
-        console.log('findOneAndUpdate Error');
-      }
-    } catch (e) {
-      ctx.throw(500, e);
-    }
-
-    // 2. 좋아요 User 저장
-    try {
-      const result = await Post.findOneAndUpdate(
-        { _id: postId },
-        { $push: { likeMe: user._id } },
+        { $push: { likeMe: user._id }, $inc: { likes: 1 } },
         { new: true },
       );
 
@@ -297,26 +271,11 @@ export const like = async (ctx) => {
       ctx.throw(500, e);
     }
   } else {
-    // 좋아요를 눌렀던 User일 경우
+    // 1. 좋아요 감소, User pull
     try {
       const result = await Post.findOneAndUpdate(
         { _id: postId },
-        { $inc: { likes: -1 } },
-        { new: true },
-      );
-
-      if (!result) {
-        console.log('findOneAndUpdate Error');
-      }
-    } catch (e) {
-      ctx.throw(500, e);
-    }
-
-    // 2. 좋아요 User 저장
-    try {
-      const result = await Post.findOneAndUpdate(
-        { _id: postId },
-        { $pull: { likeMe: user._id } },
+        { $pull: { likeMe: user._id }, $inc: { likes: -1 } },
         { new: true },
       );
 
@@ -345,5 +304,52 @@ export const upLoadImage = async (ctx, next) => {
     ctx.body = files;
   } catch (e) {
     console.log(e);
+  }
+};
+
+/**
+ * 특정 포스트 조회
+ * GET /api/post/test/:postId
+ */
+export const test = async (ctx) => {
+  const { postId } = ctx.params;
+
+  // match stage를 사용할 때 id 매칭 시 mongoose.Types.ObjectId를 사용해야함
+  const query = [
+    {
+      $match: { postId: mongoose.Types.ObjectId(postId) },
+    },
+    {
+      $unwind: '$replyIds',
+    },
+    {
+      $lookup: {
+        from: 'replies',
+        localField: 'replyIds',
+        foreignField: '_id',
+        as: 'replies',
+      },
+    },
+    {
+      $unwind: '$replies',
+    },
+    // {
+    //   $group: {
+    //     _id: '$_id',
+    //     text: { $first: '$text' },
+    //     user: { $first: '$user' },
+    //     likeMe: { $push: '$likeMe' },
+    //     replyIds: { $push: '$replyIds' },
+    //     replies: { $push: '$replies' },
+    //     publishedDate: { $first: '$publishedDate' },
+    //   },
+    // },
+  ];
+
+  try {
+    const result = await Comment.aggregate(query).exec();
+    ctx.body = result;
+  } catch (e) {
+    ctx.throw(500, e);
   }
 };

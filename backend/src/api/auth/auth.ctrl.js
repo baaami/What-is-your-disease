@@ -78,7 +78,6 @@ export const kakao = async (ctx) => {
 
     try {
       user = await User.findById(_id);
-      console.log('[TEST] user : ', user);
     } catch (err) {
       console.log(err);
     }

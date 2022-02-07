@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import {
-  CategoryBanner,
-  BlueBanner,
-  BlueBannerWrapper,
-  PopularPostBanner,
-  DarkBg,
-  BlueBannerBg,
-  LatestPostBanner,
-} from '../../styles/Home.styles'
-import {
   Category,
   HomeContainer,
   HotTopic,
@@ -16,11 +7,13 @@ import {
   Post,
 } from './styles'
 import { Link, useHistory } from 'react-router-dom'
-import arrow from '../../assets/img/arrow_right.png'
 import API from 'service/api'
 import PostsTable from 'components/PostsTable'
 import Pagination from 'components/Pagination'
+import { Swiper, SwiperSlide } from 'swiper/react';
 import { Container, NoData, Title } from 'common.styles'
+import thumbnail from '../../assets/img/thumbnail.svg'
+import SwiperCore, { Navigation } from 'swiper';
 
 interface IHomeProps {}
 
@@ -51,6 +44,8 @@ export default function Home(props: IHomeProps) {
   const [hot_posts, setHotPosts] = useState([])
   const [current_page, setCurrentPage] = useState(1)
   const [total_cnt, setTotalCnt] = useState(0)
+
+  SwiperCore.use([Navigation])
 
   const getLatestPosts = async () => {
     await API.posts
@@ -118,24 +113,31 @@ export default function Home(props: IHomeProps) {
       </Category>
       <HotTopic>
         <Container>
-          <Title>Hot 토픽🔥</Title>
-          <div className="popularPostContainer">
-            {hot_posts.length === 0 && (
-              <NoData>조회된 결과가 없습니다.</NoData>
-            )}
-            {hot_posts.slice(0, 3).map((item: any, idx) => (
-              <Link
-                to={`/posts/detail/${item._id}`}
-                className="popularPost"
-                key={idx}
-              >
-                <h2>#{item.category}</h2>
-                <h3>{item.title}</h3>
-                <p dangerouslySetInnerHTML={{ __html: item.body }}></p>
-                <h4>{item.user.info.nickname}</h4>
-              </Link>
+          <Title style={{marginBottom: 0}}>Hot 토픽🔥</Title>
+          {hot_posts.length === 0 && (
+            <NoData>조회된 결과가 없습니다.</NoData>
+          )}
+          <Swiper
+            navigation
+            spaceBetween={30}
+            slidesPerView={3.4}
+          >
+            {hot_posts.slice(0, 10).map((item: any, idx) => (
+              <SwiperSlide key={idx}>
+                <Link
+                  to={`/posts/detail/${item._id}`}
+                  className="popularPost"
+                >
+                  <img src={thumbnail} alt="기본 이미지" />
+                  <div className='descript'>
+                    <h2>#{item.category}</h2>
+                    <h3>{item.title}</h3>
+                    <h4>{item.user.info.nickname} <span>2022.2.8</span></h4>
+                  </div>
+                </Link>
+              </SwiperSlide>
             ))}
-          </div>
+          </Swiper>
         </Container>
       </HotTopic>
       <Post>

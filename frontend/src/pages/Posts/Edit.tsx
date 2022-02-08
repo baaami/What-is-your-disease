@@ -1,22 +1,20 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-
-import Input from 'components/Input'
+// import Input from 'components/Input'
 import Button from 'components/Button'
-import DropDown from 'components/DropDown'
-
 import API from 'service/api'
-
 import ReactQuill, { Quill } from 'react-quill'
+import { Select, Tag, Input  } from 'antd';
+import { TweenOneGroup } from 'rc-tween-one';
 import ImageResize from 'quill-image-resize-module'
 import 'react-quill/dist/quill.snow.css'
-
-import { PostEditContainer } from 'styles/PostsEdit.styles'
-
 import { PostModel } from 'model/postsModel'
 import { categoryList } from 'static/constant'
+import { Container, Title } from 'common.styles'
+import { PostEditContainer, HashTagSection } from './styles'
 
 interface IPostsEditProps {}
+
 const formats = [
   'header',
   'font',
@@ -33,17 +31,79 @@ const formats = [
   'image',
   'video',
 ]
-export default function PostsEdit(props: IPostsEditProps) {
+export default function PostsEdit(props: IPostsEditProps){
   const history = useHistory()
   const quill_ref = useRef<ReactQuill>()
+  const saveInputRef = useRef(null)
   const [pushState, setPushState] = useState<PostModel>({} as PostModel)
   const [posts_title, setPostsTitle] = useState('')
   const [edit_contents, setEditContents] = useState('')
   const [filter, setFilter] = useState(
     pushState.category ? pushState.category : categoryList[0],
   )
-  const [hashtag_value, setHashtagValue] = useState('')
-  const [hashtag_list, setHashtagList] = useState<Array<string>>([])
+  // const [hashtag_value, setHashtagValue] = useState('')
+  // const [hashtag_list, setHashtagList] = useState<Array<string>>([])
+
+  // 2022-02-08 지현
+  const { Option } = Select;
+
+  const [tagState, setTagState] = useState({
+    tags: ['DR.U'],
+    inputVisible: false,
+    inputValue: '',
+  })
+
+  const handleClose = (removedTag: any) => {
+    const tags = tagState.tags.filter(tag => tag !== removedTag)
+    console.log(tags)
+    setTagState({...tagState, tags})
+  }
+
+  const showInput = () => {
+    setTagState({...tagState, inputVisible: true })
+  }
+
+  const handleInputChange = (e: any) => {
+    setTagState({...tagState, inputValue: e.target.value })
+  }
+
+  const handleInputConfirm = () => {
+    const { inputValue } = tagState
+    let { tags } = tagState
+
+    if (inputValue && tags.indexOf(inputValue) === -1) {
+      tags = [...tags, inputValue];
+    }
+
+    console.log(tags)
+
+    setTagState({
+      tags,
+      inputVisible: false,
+      inputValue: '',
+    });
+  };
+
+  const forMap = (tag: any) => {
+    const tagElem = (
+      <Tag
+        closable
+        onClose={e => {
+          e.preventDefault();
+          handleClose(tag);
+        }}
+      >
+        # {tag}
+      </Tag>
+    );
+    return (
+      <span key={tag} style={{ display: 'inline-block' }}>
+        {tagElem}
+      </span>
+    );
+  };
+
+  const tagChild = tagState.tags.map(forMap);
 
   const imageHandler = (e: any) => {
     // 이미지를 업로드 할 input element 생성
@@ -114,7 +174,8 @@ export default function PostsEdit(props: IPostsEditProps) {
       title: posts_title,
       body: edit_contents,
       category: filter,
-      tags: [...hashtag_list],
+      // 2022-02-08 지현
+      tags: [...tagState.tags],
     }
 
     await API.post
@@ -169,50 +230,93 @@ export default function PostsEdit(props: IPostsEditProps) {
     }
   }
 
-  const addHashtag = () => {
-    const next_hashtag_list = [...hashtag_list, hashtag_value]
+  // const addHashtag = () => {
+  //   const next_hashtag_list = [...hashtag_list, hashtag_value]
 
-    setHashtagList(next_hashtag_list)
-    setHashtagValue('')
-  }
+  //   setHashtagList(next_hashtag_list)
+  //   setHashtagValue('')
+  // }
 
-  const removeHashtag = (target_tag: string) => {
-    const next_hashtag = hashtag_list.filter((item) => item !== target_tag)
+  // const removeHashtag = (target_tag: string) => {
+  //   const next_hashtag = hashtag_list.filter((item) => item !== target_tag)
 
-    setHashtagList(next_hashtag)
-  }
+  //   setHashtagList(next_hashtag)
+  // }
 
   useEffect(() => {
     const path_state = history.location.state as PostModel
     if (path_state) {
       setPostsTitle(path_state.title)
       setEditContents(path_state.body)
-      setHashtagList(path_state.tags)
+      // 2022-02-08 지현
+      setTagState({...tagState, tags: path_state.tags})
       setPushState(path_state)
     }
     window.scrollTo({ top: 0 })
   }, [])
 
   return (
-    <>
-      <PostEditContainer className="wrap">
-        <div className="topWrap">
-          <Input
-            id="posts_title"
-            type="text"
-            placeholder="제목을 입력해주세요"
-            value={posts_title}
-            onChange={(e) => setPostsTitle(e.target.value)}
-          />
-          <DropDown
-            filter_data={categoryList}
-            setFilter={setFilter}
-            now_value={filter}
-            style={{ fontSize: '16px' }}
-          />
-        </div>
-        <section className="hashtagArea">
-          <div className="hashtagForm">
+    <PostEditContainer>
+      <Title style={{marginBottom: 60, textAlign: 'center', fontWeight: 600, fontSize: 30}}>너의 건강상태도 알려줘~!</Title>
+      <Container className='wrap'>
+        <Select defaultValue="백신" style={{ width: 250 }}>
+          {categoryList.map((category, idx) => <Option key={idx} value={category}>{category}</Option>)}
+        </Select>
+        <Input
+          id="posts_title"
+          type="text"
+          placeholder="제목을 입력해주세요"
+          value={posts_title}
+          onChange={(e) => setPostsTitle(e.target.value)}
+        />
+        <ReactQuill
+          ref={(element) => {
+            if (element !== null) {
+              quill_ref.current = element
+            }
+          }}
+          formats={formats}
+          value={edit_contents}
+          onChange={setEditContents}
+          modules={modules}
+          theme="snow"
+          placeholder="내용을 입력해주세요."
+        />
+        <HashTagSection>
+          <>
+            <div className='hashWrap' style={{ marginBottom: 16 }}>
+              <TweenOneGroup
+                enter={{
+                  scale: 0.8,
+                  opacity: 0,
+                  type: 'from',
+                  duration: 100,
+                }}
+                onEnd={(e: any) => {
+                  if (e.type === 'appear' || e.type === 'enter') {
+                    e.target.style = 'display: inline-block'
+                  }
+                }}
+                leave={{ opacity: 0, width: 0, scale: 0, duration: 200 }}
+                appear={false}
+              >
+                {tagChild}
+              </TweenOneGroup>
+            </div>
+            <Input
+              className='hashInput'
+              placeholder='해시태그를 입력하세요.'
+              ref={saveInputRef}
+              type="text"
+              size="small"
+              style={{ width: 78 }}
+              value={tagState.inputValue}
+              onChange={handleInputChange}
+              onBlur={handleInputConfirm}
+              onPressEnter={handleInputConfirm}
+              />
+          </>
+          {/* <div className="hashtagForm">
             <div>
               <Input
                 id="hashtag"
@@ -233,26 +337,10 @@ export default function PostsEdit(props: IPostsEditProps) {
                 </div>
               )
             })}
-          </div>
-        </section>
-        <div>
-          <ReactQuill
-            ref={(element) => {
-              if (element !== null) {
-                quill_ref.current = element
-              }
-            }}
-            formats={formats}
-            value={edit_contents}
-            onChange={setEditContents}
-            modules={modules}
-            theme="snow"
-            // style={{ height: '200px' }}
-            placeholder="내용을 입력해주세요."
-          />
-        </div>
-        <div className="buttonRow">{isEditButton()}</div>
-      </PostEditContainer>
-    </>
+          </div> */}
+        </HashTagSection>
+        <div className='btnWrap'>{isEditButton()}</div>
+      </Container>
+    </PostEditContainer>
   )
 }

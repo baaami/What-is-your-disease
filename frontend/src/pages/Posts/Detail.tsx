@@ -298,7 +298,7 @@ export default function PostsDetail(props: RouteComponentProps) {
                             <span>{reply?.user?.info?.nickname}</span>
                             {reply?.text}
                           </div>
-                          {userInfo._id === comment.user._id && (
+                          {userInfo._id === reply.user._id && (
                             <div>
                               <button
                                 className="removeComment"

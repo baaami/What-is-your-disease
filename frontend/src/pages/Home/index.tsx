@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Category,
-  HomeContainer,
-  HotTopic,
-  MainBanner,
-  Post,
-} from './styles'
+import { Category, HomeContainer, HotTopic, MainBanner, Post } from './styles'
 import { Link, useHistory } from 'react-router-dom'
 import API from 'service/api'
 import PostsTable from 'components/PostsTable'
 import Pagination from 'components/Pagination'
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide } from 'swiper/react'
 import { Container, NoData, Title } from 'common.styles'
 import thumbnail from '../../assets/img/thumbnail.svg'
-import SwiperCore, { Navigation } from 'swiper';
+import SwiperCore, { Navigation } from 'swiper'
 
 interface IHomeProps {}
 
@@ -113,26 +107,20 @@ export default function Home(props: IHomeProps) {
       </Category>
       <HotTopic>
         <Container>
-          <Title style={{marginBottom: 0}}>Hot 토픽🔥</Title>
-          {hot_posts.length === 0 && (
-            <NoData>조회된 결과가 없습니다.</NoData>
-          )}
-          <Swiper
-            navigation
-            spaceBetween={30}
-            slidesPerView={3.4}
-          >
+          <Title style={{ marginBottom: 0 }}>Hot 토픽🔥</Title>
+          {hot_posts.length === 0 && <NoData>조회된 결과가 없습니다.</NoData>}
+          <Swiper navigation spaceBetween={30} slidesPerView={3.4}>
             {hot_posts.slice(0, 10).map((item: any, idx) => (
-              <SwiperSlide key={idx}>
-                <Link
-                  to={`/posts/detail/${item._id}`}
-                  className="popularPost"
-                >
+              <SwiperSlide key={item._id}>
+                <Link to={`/posts/detail/${item._id}`} className="popularPost">
                   <img src={thumbnail} alt="기본 이미지" />
-                  <div className='descript'>
+                  <div className="descript">
                     <h2>#{item.category}</h2>
                     <h3>{item.title}</h3>
-                    <h4>{item.user.info.nickname} <span>2022.2.8</span></h4>
+                    <h4>
+                      {item.user.info.nickname}{' '}
+                      <span>{item.publishedDate.split('T')[0]}</span>
+                    </h4>
                   </div>
                 </Link>
               </SwiperSlide>

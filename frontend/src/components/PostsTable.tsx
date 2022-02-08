@@ -17,15 +17,15 @@ const PostsTable = (props: any) => {
         )}
       </section>
       <div className="latestPostContainer">
-        {props.posts.map((item: any) => {
+        {props.posts.map((item: any, index: number) => {
           return (
-            <>
+            <React.Fragment key={index}>
               <Link to={`/posts/detail/${item._id}`} className="latestPost">
                 <div className="postTitle">{item.title}</div>
                 <div className="commentsCnt">[{item.commentIds?.length}]</div>
                 <img src={arrow} alt="화살표 아이콘" />
               </Link>
-            </>
+            </React.Fragment>
           )
         })}
       </div>

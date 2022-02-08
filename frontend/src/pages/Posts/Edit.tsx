@@ -4,8 +4,8 @@ import { useHistory } from 'react-router-dom'
 import Button from 'components/Button'
 import API from 'service/api'
 import ReactQuill, { Quill } from 'react-quill'
-import { Select, Tag, Input  } from 'antd';
-import { TweenOneGroup } from 'rc-tween-one';
+import { Select, Tag, Input } from 'antd'
+import { TweenOneGroup } from 'rc-tween-one'
 import ImageResize from 'quill-image-resize-module'
 import 'react-quill/dist/quill.snow.css'
 import { PostModel } from 'model/postsModel'
@@ -31,7 +31,7 @@ const formats = [
   'image',
   'video',
 ]
-export default function PostsEdit(props: IPostsEditProps){
+export default function PostsEdit(props: IPostsEditProps) {
   const history = useHistory()
   const quill_ref = useRef<ReactQuill>()
   const saveInputRef = useRef(null)
@@ -41,11 +41,9 @@ export default function PostsEdit(props: IPostsEditProps){
   const [filter, setFilter] = useState(
     pushState.category ? pushState.category : categoryList[0],
   )
-  // const [hashtag_value, setHashtagValue] = useState('')
-  // const [hashtag_list, setHashtagList] = useState<Array<string>>([])
 
   // 2022-02-08 지현
-  const { Option } = Select;
+  const { Option } = Select
 
   const [tagState, setTagState] = useState({
     tags: ['DR.U'],
@@ -54,17 +52,17 @@ export default function PostsEdit(props: IPostsEditProps){
   })
 
   const handleClose = (removedTag: any) => {
-    const tags = tagState.tags.filter(tag => tag !== removedTag)
+    const tags = tagState.tags.filter((tag) => tag !== removedTag)
     console.log(tags)
-    setTagState({...tagState, tags})
+    setTagState({ ...tagState, tags })
   }
 
   const showInput = () => {
-    setTagState({...tagState, inputVisible: true })
+    setTagState({ ...tagState, inputVisible: true })
   }
 
   const handleInputChange = (e: any) => {
-    setTagState({...tagState, inputValue: e.target.value })
+    setTagState({ ...tagState, inputValue: e.target.value })
   }
 
   const handleInputConfirm = () => {
@@ -72,7 +70,7 @@ export default function PostsEdit(props: IPostsEditProps){
     let { tags } = tagState
 
     if (inputValue && tags.indexOf(inputValue) === -1) {
-      tags = [...tags, inputValue];
+      tags = [...tags, inputValue]
     }
 
     console.log(tags)
@@ -81,29 +79,29 @@ export default function PostsEdit(props: IPostsEditProps){
       tags,
       inputVisible: false,
       inputValue: '',
-    });
-  };
+    })
+  }
 
   const forMap = (tag: any) => {
     const tagElem = (
       <Tag
         closable
-        onClose={e => {
-          e.preventDefault();
-          handleClose(tag);
+        onClose={(e) => {
+          e.preventDefault()
+          handleClose(tag)
         }}
       >
         # {tag}
       </Tag>
-    );
+    )
     return (
       <span key={tag} style={{ display: 'inline-block' }}>
         {tagElem}
       </span>
-    );
-  };
+    )
+  }
 
-  const tagChild = tagState.tags.map(forMap);
+  const tagChild = tagState.tags.map(forMap)
 
   const imageHandler = (e: any) => {
     // 이미지를 업로드 할 input element 생성
@@ -230,26 +228,13 @@ export default function PostsEdit(props: IPostsEditProps){
     }
   }
 
-  // const addHashtag = () => {
-  //   const next_hashtag_list = [...hashtag_list, hashtag_value]
-
-  //   setHashtagList(next_hashtag_list)
-  //   setHashtagValue('')
-  // }
-
-  // const removeHashtag = (target_tag: string) => {
-  //   const next_hashtag = hashtag_list.filter((item) => item !== target_tag)
-
-  //   setHashtagList(next_hashtag)
-  // }
-
   useEffect(() => {
     const path_state = history.location.state as PostModel
     if (path_state) {
       setPostsTitle(path_state.title)
       setEditContents(path_state.body)
       // 2022-02-08 지현
-      setTagState({...tagState, tags: path_state.tags})
+      setTagState({ ...tagState, tags: path_state.tags })
       setPushState(path_state)
     }
     window.scrollTo({ top: 0 })
@@ -257,10 +242,23 @@ export default function PostsEdit(props: IPostsEditProps){
 
   return (
     <PostEditContainer>
-      <Title style={{marginBottom: 60, textAlign: 'center', fontWeight: 600, fontSize: 30}}>너의 건강상태도 알려줘~!</Title>
-      <Container className='wrap'>
+      <Title
+        style={{
+          marginBottom: 60,
+          textAlign: 'center',
+          fontWeight: 600,
+          fontSize: 30,
+        }}
+      >
+        너의 건강상태도 알려줘~!
+      </Title>
+      <Container className="wrap">
         <Select defaultValue="백신" style={{ width: 250 }}>
-          {categoryList.map((category, idx) => <Option key={idx} value={category}>{category}</Option>)}
+          {categoryList.map((category, idx) => (
+            <Option key={idx} value={category}>
+              {category}
+            </Option>
+          ))}
         </Select>
         <Input
           id="posts_title"
@@ -284,7 +282,7 @@ export default function PostsEdit(props: IPostsEditProps){
         />
         <HashTagSection>
           <>
-            <div className='hashWrap' style={{ marginBottom: 16 }}>
+            <div className="hashWrap" style={{ marginBottom: 16 }}>
               <TweenOneGroup
                 enter={{
                   scale: 0.8,
@@ -303,43 +301,30 @@ export default function PostsEdit(props: IPostsEditProps){
                 {tagChild}
               </TweenOneGroup>
             </div>
-            <Input
-              className='hashInput'
-              placeholder='해시태그를 입력하세요.'
-              ref={saveInputRef}
-              type="text"
-              size="small"
-              style={{ width: 78 }}
-              value={tagState.inputValue}
-              onChange={handleInputChange}
-              onBlur={handleInputConfirm}
-              onPressEnter={handleInputConfirm}
-              />
-          </>
-          {/* <div className="hashtagForm">
-            <div>
+            <div className="hashWrap">
               <Input
-                id="hashtag"
+                className="hashInput"
+                placeholder="해시태그를 입력하세요."
+                ref={saveInputRef}
                 type="text"
-                placeholder="해쉬태그를 입력하세요."
-                value={hashtag_value}
-                onChange={(e) => setHashtagValue(e.target.value)}
-                onEnter={addHashtag}
+                size="small"
+                style={{ width: 78 }}
+                value={tagState.inputValue}
+                onChange={handleInputChange}
+                onBlur={handleInputConfirm}
+                onPressEnter={handleInputConfirm}
               />
-              <button onClick={addHashtag}>추가</button>
+              <Button
+                type="button"
+                className="addHashtag"
+                onClick={handleInputConfirm}
+              >
+                추가
+              </Button>
             </div>
-          </div>
-          <div className="hashtagList">
-            {hashtag_list.map((item) => {
-              return (
-                <div onClick={() => removeHashtag(item)}>
-                  #{item} <span>X</span>
-                </div>
-              )
-            })}
-          </div> */}
+          </>
         </HashTagSection>
-        <div className='btnWrap'>{isEditButton()}</div>
+        <div className="btnWrap">{isEditButton()}</div>
       </Container>
     </PostEditContainer>
   )

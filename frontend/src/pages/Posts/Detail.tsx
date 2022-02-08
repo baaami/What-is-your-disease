@@ -197,9 +197,17 @@ export default function PostsDetail(props: RouteComponentProps) {
           해쉬태그:{' '}
           {post?.tags?.map((item, index) => {
             if (index === post.tags.length - 1) {
-              return <span onClick={() => onClickHashtag(item)}>#{item}</span>
+              return (
+                <span key={index} onClick={() => onClickHashtag(item)}>
+                  #{item}
+                </span>
+              )
             } else {
-              return <span onClick={() => onClickHashtag(item)}>#{item}, </span>
+              return (
+                <span key={index} onClick={() => onClickHashtag(item)}>
+                  #{item},{' '}
+                </span>
+              )
             }
           })}
         </div>

@@ -67,7 +67,6 @@ export default function Header(props: IHeaderProps) {
       alert('회원정보 작성 후 이용 바랍니다.')
       history.push('/infoForm')
     } else {
-      console.log('유저정보가 있을때 실행')
       getUserInfo()
     }
   }, [location.pathname])
@@ -75,9 +74,9 @@ export default function Header(props: IHeaderProps) {
   return (
     <>
       <HeaderContainer>
-        <Container className='flexWrap'>
+        <Container className="flexWrap">
           <Link to="/">
-            <img className='logo' src={logo} alt="logo" />
+            <img className="logo" src={logo} alt="logo" />
           </Link>
           <ProfileContainer>
             {userInfo._id !== '' ? (

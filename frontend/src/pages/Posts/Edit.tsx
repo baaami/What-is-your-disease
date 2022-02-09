@@ -1,6 +1,5 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-// import Input from 'components/Input'
 import Button from 'components/Button'
 import API from 'service/api'
 import ReactQuill, { Quill } from 'react-quill'
@@ -237,13 +236,13 @@ export default function PostsEdit(props: IPostsEditProps) {
     <PostEditContainer>
       <Title
         style={{
-          marginBottom: 60,
+          marginBottom: 40,
           textAlign: 'center',
           fontWeight: 600,
           fontSize: 30,
         }}
       >
-        너의 건강상태도 알려줘~!
+        게시글 작성
       </Title>
       <Container className="wrap">
         <Select defaultValue="백신" style={{ width: 250 }}>

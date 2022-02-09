@@ -47,6 +47,7 @@ export const InfoCardContainer = styled.div`
 	}
 
 	.name {
+		margin-bottom: 0;
 		font-size: 18px;
 		font-weight: 500;
 

@@ -42,7 +42,6 @@ export default function PostsEdit(props: IPostsEditProps) {
     pushState.category ? pushState.category : categoryList[0],
   )
 
-  // 2022-02-08 지현
   const { Option } = Select
 
   const [tagState, setTagState] = useState({
@@ -55,10 +54,6 @@ export default function PostsEdit(props: IPostsEditProps) {
     const tags = tagState.tags.filter((tag) => tag !== removedTag)
     console.log(tags)
     setTagState({ ...tagState, tags })
-  }
-
-  const showInput = () => {
-    setTagState({ ...tagState, inputVisible: true })
   }
 
   const handleInputChange = (e: any) => {
@@ -172,7 +167,6 @@ export default function PostsEdit(props: IPostsEditProps) {
       title: posts_title,
       body: edit_contents,
       category: filter,
-      // 2022-02-08 지현
       tags: [...tagState.tags],
     }
 
@@ -233,7 +227,6 @@ export default function PostsEdit(props: IPostsEditProps) {
     if (path_state) {
       setPostsTitle(path_state.title)
       setEditContents(path_state.body)
-      // 2022-02-08 지현
       setTagState({ ...tagState, tags: path_state.tags })
       setPushState(path_state)
     }

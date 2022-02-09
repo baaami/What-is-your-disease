@@ -9,7 +9,7 @@ ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
       <BrowserRouter>
-        <App children={React.Children} />
+        <App />
       </BrowserRouter>
     </RecoilRoot>
   </React.StrictMode>,

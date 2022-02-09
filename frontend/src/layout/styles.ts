@@ -1,20 +1,27 @@
 import styled from 'styled-components'
 
 export const HeaderContainer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
 	width: 100%;
+	z-index: 10000;
+
+	&.sub{
+		background: #fff;
+		border-bottom: 1px solid #ccc;
+	}
 
 	.flexWrap{
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		height: 115px;
+		height: 95px;
 
 		.logo{
-				position: relative;
-				left: -40px;
+			position: relative;
+			left: -40px;
+			width: 160px;
 		}
 	}
 `;
@@ -24,6 +31,10 @@ export const ProfileContainer = styled.div`
 		
 		&:hover{
 			transform: translateY(-10%);
+		}
+
+		img{
+			width: 55px;
 		}
 	}
 `;

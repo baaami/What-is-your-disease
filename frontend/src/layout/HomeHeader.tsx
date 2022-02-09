@@ -1,33 +1,31 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { HeaderContainer, ProfileContainer } from './styles'
-import { Link, Route, Switch, useHistory, useLocation } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
-import Home from '../pages/Home'
-import Signup from '../pages/Signup'
-import Category from '../pages/Category'
-import Mypage from '../pages/Members/Mypage'
-import PostsLists from '../pages/Posts/Lists'
-import CategoryPosts from 'pages/Posts/CategoryPosts'
-import InfoForm from '../pages/Members/InfoForm'
-import PostsEdit from '../pages/Posts/Edit'
-import PostsDetail from '../pages/Posts/Detail'
-import SearchPosts from 'pages/Posts/SearchPosts'
-import Kauth from '../pages/Kauth'
-import Nauth from '../pages/Nauth'
-import Gauth from '../pages/Gauth'
 import API from 'service/api'
 import { currentUserInfo } from 'store/userInfo'
 import { Container } from 'common.styles'
 import logo from '../assets/img/hlogo.svg'
 import profile from '../assets/img/profile.svg'
+import Routes from './Routes'
 
-interface IHeaderProps {}
-
-export default function Header(props: IHeaderProps) {
+export default function HomeHeader() {
   const location = useLocation()
   const history = useHistory()
 
   const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
+  const [border, setBorder] = useState("rgba(255,255,255,0)")
+  const [background, setBackground] = useState("transparent")
+
+  const scrollHandler = () => {
+    if (window.scrollY < 40) {
+      setBackground("transparent")
+      setBorder("rgba(255,255,255,0)")
+    } else {
+      setBackground("#fff")
+      setBorder("#ccc")
+    }
+  };
 
   const getUserInfo = async () => {
     await API.auth
@@ -69,11 +67,20 @@ export default function Header(props: IHeaderProps) {
     } else {
       getUserInfo()
     }
+
+    window.addEventListener("scroll", scrollHandler);    
   }, [location.pathname])
 
   return (
     <>
-      <HeaderContainer>
+      <HeaderContainer 
+        style={{
+          background: background,
+          borderBottomWidth: "1px",
+          borderBottomStyle: "solid",
+          borderColor: border,
+        }}
+      >
         <Container className="flexWrap">
           <Link to="/">
             <img className="logo" src={logo} alt="logo" />
@@ -94,24 +101,7 @@ export default function Header(props: IHeaderProps) {
           </ProfileContainer>
         </Container>
       </HeaderContainer>
-      <Switch>
-        <Route path="/" exact component={Home} />
-        <Route path="/login" component={Signup} />
-        <Route path="/category" component={Category} />
-        <Route path="/mypage" component={Mypage} />
-        <Route path="/infoForm" component={InfoForm} />
-        <Route path="/posts/lists" exact component={PostsLists} />
-        <Route path="/posts/category/lists/:type" component={CategoryPosts} />
-        <Route
-          path="/posts/lists/search/:type/:value"
-          component={SearchPosts}
-        />
-        <Route path="/posts/edit" component={PostsEdit} />
-        <Route path="/posts/detail/:postId" component={PostsDetail} />
-        <Route path="/api/auth/callback/kakao" component={Kauth} />
-        <Route path="/api/auth/callback/naver" component={Nauth} />
-        <Route path="/api/auth/callback/google" component={Gauth} />
-      </Switch>
+      <Routes/>
     </>
   )
 }

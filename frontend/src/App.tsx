@@ -1,19 +1,25 @@
 import * as React from 'react'
-import Header from './layout/Header'
+import { useLocation } from 'react-router-dom'
 import Footer from './layout/Footer'
 import 'antd/dist/antd.css';
 import 'swiper/css';
+import HomeHeader from './layout/HomeHeader'
+import SubHeader from './layout/SubHeader'
 
-export default class App extends React.Component {
-  children: any
 
-  public render() {
-    return (
-      <>
-        <Header />
-        {this.children}
-        <Footer />
-      </>
-    )
-  }
+type Props = {
+  children?: React.ReactNode;
+};
+
+export default function App({children}: Props) { 
+  const location = useLocation()
+
+  return (
+    <>
+      {location.pathname === "/" ? <HomeHeader/> : <SubHeader/>}
+      {children}
+      <Footer/>
+    </>
+  )
+  
 }

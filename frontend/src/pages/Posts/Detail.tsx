@@ -37,13 +37,13 @@ export default function PostsDetail(props: RouteComponentProps) {
     await API.post
       .getPost(postId, current_page)
       .then((res) => {
-        setCommentsList(res.data.data.comments?.reverse())
+        setCommentsList(res.data.data.post.comments?.reverse())
         setPost(res.data.data.post)
         setCommentsCnt(res.data.commentTotalCnt)
         setCommentValue('')
         setIsWriteComment(false)
         setReplyValue('')
-        let nextReplyState = res.data.data.comments.map((item: any) => {
+        let nextReplyState = res.data.data.post.comments.map((item: any) => {
           return {
             [item._id]: false,
           }

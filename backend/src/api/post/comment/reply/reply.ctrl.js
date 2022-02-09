@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
+import Post from '../../../../models/post';
 import Reply from '../../../../models/reply';
 import Comment from '../../../../models/comment';
 
 /**
  * 답글 등록
- * POSt /api/post/comment/:commentId/reply/
+ * POST /api/post/:postId/comment/:commentId/reply/write
  */
 export const rpUpload = async (ctx) => {
   const { commentId } = ctx.params;
@@ -19,24 +20,20 @@ export const rpUpload = async (ctx) => {
 
   // 1. 답글 id 해당 comment에 저장 생성
   try {
-    const _ = await Comment.findByIdAndUpdate(
-      commentId,
+    const result = await Post.findOneAndUpdate(
       {
-        $push: { replyIds: reply._id },
+        'comments._id': commentId,
+      },
+      {
+        $push: { 'comments.$.replies': reply },
       },
       {
         new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
         // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
       },
     ).exec();
-  } catch (e) {
-    ctx.throw(500, e);
-  }
 
-  // 3. comment 생성
-  try {
-    await reply.save();
-    ctx.body = reply;
+    ctx.body = result;
   } catch (e) {
     ctx.throw(500, e);
   }
@@ -44,35 +41,26 @@ export const rpUpload = async (ctx) => {
 
 /**
  * 답글 삭제
- * DELETE /api/post/comment/reply/:commentId/:replyId
+ * DELETE /api/post/:postId/comment/:commentId/reply/delete/:replyId
  */
 export const rpDelete = async (ctx) => {
   const { commentId, replyId } = ctx.params;
 
-  // 1. Comment에서 답글 삭제
+  // 1. 답글 id 해당 comment에 저장 생성
   try {
-    const comment = await Comment.findByIdAndUpdate(
-      commentId,
+    const result = await Post.findOneAndUpdate(
       {
-        $pull: { replyIds: replyId },
+        'comments._id': commentId,
       },
       {
-        new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
-        // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
+        $pull: { 'comments.$.replies': { _id: replyId } },
+      },
+      {
+        new: true,
       },
     ).exec();
-    if (!comment) {
-      ctx.status = 404;
-      return;
-    }
-  } catch (e) {
-    ctx.throw(500, e);
-  }
 
-  // 2. 답글 컬렉션에서 삭제
-  try {
-    const _ = await Reply.findByIdAndRemove(replyId).exec();
-    ctx.status = 204;
+    ctx.body = result;
   } catch (e) {
     ctx.throw(500, e);
   }
@@ -80,45 +68,42 @@ export const rpDelete = async (ctx) => {
 
 /**
  * 답글 좋아요
- * POST /api/post/comment/reply/like/:replyId
+ * POST /api/post/:postId/comment/:commentId/reply/like/:replyId
  */
 export const rpLike = async (ctx) => {
-  const { replyId } = ctx.params;
+  const { postId, commentId, replyId } = ctx.params;
   const user = ctx.state.user;
 
   // 1. 좋아요 증가
   try {
-    const _ = await Reply.findByIdAndUpdate(
-      replyId,
+    const result = await Post.findOneAndUpdate(
+      // TODO : query 변수에 담도록 변경하기
       {
+        'comments._id': commentId,
+      },
+      {
+        $addToSet: {
+          'comments.$[comment].replies.$[reply].likeMe': user._id,
+        },
         $inc: {
-          likes: 1,
+          'comments.$[comment].replies.$[reply].likes': 1,
         },
       },
       {
-        new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
-        // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
+        arrayFilters: [
+          {
+            'comment.replies': {
+              $exists: true,
+            },
+          },
+          {
+            'reply._id': replyId,
+          },
+        ],
       },
     ).exec();
+    ctx.body = result;
   } catch (e) {
     ctx.throw(500, e);
   }
-
-  // 2. 좋아요 누른 유저 아이디 저장
-  try {
-    const _ = await Reply.findByIdAndUpdate(
-      replyId,
-      {
-        $push: { likeMe: user._id },
-      },
-      {
-        new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
-        // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
-      },
-    ).exec();
-  } catch (e) {
-    ctx.throw(500, e);
-  }
-
-  ctx.status = 204;
 };

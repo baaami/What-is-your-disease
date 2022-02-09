@@ -60,11 +60,11 @@ const Button = (props: ButtonModel) => {
 export default Button
 
 const StyledButton = styled.button`
-  width: 120px;
-  height: 50px;
+  width: 110px;
+  height: 45px;
   background-color: #3c6d2e;
   color: white;
-  font-size: 22px;
+  font-size: 18px;
   border-radius: 5px;
   font-weight: 900;
 `

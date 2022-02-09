@@ -14,18 +14,18 @@ export default function HomeHeader() {
   const history = useHistory()
 
   const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
-  const [border, setBorder] = useState("rgba(255,255,255,0)")
-  const [background, setBackground] = useState("transparent")
+  const [border, setBorder] = useState('rgba(255,255,255,0)')
+  const [background, setBackground] = useState('transparent')
 
   const scrollHandler = () => {
     if (window.scrollY < 40) {
-      setBackground("transparent")
-      setBorder("rgba(255,255,255,0)")
+      setBackground('transparent')
+      setBorder('rgba(255,255,255,0)')
     } else {
-      setBackground("#fff")
-      setBorder("#ccc")
+      setBackground('#fff')
+      setBorder('#ccc')
     }
-  };
+  }
 
   const getUserInfo = async () => {
     await API.auth
@@ -68,17 +68,18 @@ export default function HomeHeader() {
       getUserInfo()
     }
 
-    window.addEventListener("scroll", scrollHandler);    
+    window.addEventListener('scroll', scrollHandler)
   }, [location.pathname])
 
   return (
     <>
-      <HeaderContainer 
+      <HeaderContainer
         style={{
           background: background,
-          borderBottomWidth: "1px",
-          borderBottomStyle: "solid",
+          borderBottomWidth: '1px',
+          borderBottomStyle: 'solid',
           borderColor: border,
+          transition: '0.21s',
         }}
       >
         <Container className="flexWrap">
@@ -101,7 +102,7 @@ export default function HomeHeader() {
           </ProfileContainer>
         </Container>
       </HeaderContainer>
-      <Routes/>
+      <Routes />
     </>
   )
 }

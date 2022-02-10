@@ -150,14 +150,8 @@ export const unfollow = async (ctx) => {
  * 유저 정보 전달
  */
 export const accounts = async (ctx) => {
-  let currentUser = await ctx.request.headers.authorization
-    .replace('Bearer', '')
-    .trim();
-  await jwt.verify(currentUser).then((res) => {
-    currentUser = res._id;
-  });
   try {
-    const user = await User.findById(currentUser);
+    const user = await User.findById(ctx.state.user._id);
     ctx.status = 200;
     ctx.body = user;
   } catch (e) {

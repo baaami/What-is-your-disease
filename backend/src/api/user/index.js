@@ -8,7 +8,7 @@ const user = new Router();
 user.patch('/update', checkLoggedIn, userCtrl.update);
 
 // 유저 정보 조회
-user.get('/accounts', userCtrl.accounts);
+user.get('/accounts', checkLoggedIn, userCtrl.accounts);
 
 // 유저 팔로우
 user.post('/follow', checkLoggedIn, userCtrl.follow);

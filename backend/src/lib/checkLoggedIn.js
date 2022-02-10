@@ -4,7 +4,7 @@ import User from '../models/user';
 
 const checkLoggedIn = async (ctx, next) => {
   const { authorization } = ctx.request.header;
-  const token = authorization.slice(7);
+  const token = authorization.replace('Bearer', '').trim();
   if (!token) {
     ctx.status = 401;
     console.log('token not exit');

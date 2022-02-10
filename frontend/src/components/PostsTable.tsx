@@ -54,13 +54,20 @@ const PostsTable = (props: any) => {
               </div>
               <div className="right">
                 <div className="count">
-                  좋아요 <span>29</span>
+                  좋아요 <span>{item.likes}</span>
                 </div>
                 <div className="count">
                   조회수 <span>{item.views}</span>
                 </div>
                 <div className="count">
-                  댓글 <span>{item.commentIds?.length}</span>
+                  댓글{' '}
+                  <span>
+                    {item.commentIds
+                      ? item.commentIds.length
+                      : item.comments
+                      ? item.comments.length
+                      : 0}
+                  </span>
                 </div>
               </div>
             </div>

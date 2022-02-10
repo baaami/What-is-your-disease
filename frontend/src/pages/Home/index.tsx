@@ -11,6 +11,8 @@ import thumbnail from '../../assets/img/thumbnail.svg'
 import like_out from '../../assets/img/like_out.svg'
 import like_active from '../../assets/img/like_active.svg'
 import Search from 'components/Search'
+import { useRecoilState } from 'recoil'
+import { currentUserInfo } from 'store/userInfo'
 
 interface IHomeProps {}
 
@@ -41,6 +43,7 @@ export default function Home(props: IHomeProps) {
   const [hot_posts, setHotPosts] = useState([])
   const [current_page, setCurrentPage] = useState(1)
   const [total_cnt, setTotalCnt] = useState(0)
+  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
 
   SwiperCore.use([Navigation])
 
@@ -129,6 +132,16 @@ export default function Home(props: IHomeProps) {
                         <img src={like_out} alt="like out icon" />
                         <span style={{ color: '#ebebeb' }}>{item.likes}</span>
                       </div>
+                    ) : !item.likeMe.includes(userInfo._id) ? (
+                      <>
+                        <div
+                          className="likeBox"
+                          onClick={(e) => e.isPropagationStopped()}
+                        >
+                          <img src={like_out} alt="like out icon" />
+                          <span style={{ color: '#ebebeb' }}>{item.likes}</span>
+                        </div>
+                      </>
                     ) : (
                       <div
                         className="likeBox"

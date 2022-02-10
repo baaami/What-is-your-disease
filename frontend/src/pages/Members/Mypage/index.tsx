@@ -55,7 +55,7 @@ export default function Mypage(props: IMypageProps) {
   const getMyPosts = async () => {
     if (userInfo._id) {
       await API.posts
-        .getMyPosts(userInfo._id, current_page)
+        .getMyPosts(userInfo._id, current_page, 10)
         .then((res) => {
           setTotalCnt(res.data.postTotalCnt)
           setMyPosts(res.data.data.post)

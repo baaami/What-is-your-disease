@@ -11,6 +11,8 @@ import thumbnail from '../../assets/img/thumbnail.svg'
 import like_out from '../../assets/img/like_out.svg'
 import like_active from '../../assets/img/like_active.svg'
 import Search from 'components/Search'
+import { useRecoilState } from 'recoil'
+import { currentUserInfo } from 'store/userInfo'
 
 interface IHomeProps {}
 
@@ -41,12 +43,13 @@ export default function Home(props: IHomeProps) {
   const [hot_posts, setHotPosts] = useState([])
   const [current_page, setCurrentPage] = useState(1)
   const [total_cnt, setTotalCnt] = useState(0)
+  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
 
   SwiperCore.use([Navigation])
 
-  const getLatestPosts = async () => {
+  const getLatestPosts = async (order_by: string) => {
     await API.posts
-      .getLatestPosts(current_page)
+      .getFilterPosts(order_by, current_page, 10)
       .then((res) => {
         setTotalCnt(res.data.postTotalCnt)
         setLatestPosts(res.data.data.post)
@@ -73,7 +76,7 @@ export default function Home(props: IHomeProps) {
   }, [])
 
   useEffect(() => {
-    getLatestPosts()
+    getLatestPosts('latest')
   }, [current_page])
 
   return (
@@ -111,22 +114,41 @@ export default function Home(props: IHomeProps) {
       <HotTopic>
         <Container>
           <Title style={{ marginBottom: 0 }}>Hot 토픽🔥</Title>
-          {hot_posts.length === 0 ? 
-            <NoData>조회된 결과가 없습니다.</NoData> :
+          {hot_posts.length === 0 ? (
+            <NoData>조회된 결과가 없습니다.</NoData>
+          ) : (
             <Swiper navigation spaceBetween={30} slidesPerView={3.4}>
               {hot_posts.slice(0, 10).map((item: any) => (
                 <SwiperSlide key={item._id}>
-                  <Link to={`/posts/detail/${item._id}`} className="popularPost">
-                    {item.like === 0 ? (
-                      <div className="likeBox">
+                  <Link
+                    to={`/posts/detail/${item._id}`}
+                    className="popularPost"
+                  >
+                    {item.likes === 0 ? (
+                      <div
+                        className="likeBox"
+                        onClick={(e) => e.isPropagationStopped()}
+                      >
                         <img src={like_out} alt="like out icon" />
-                        <span style={{color: '#ebebeb'}}>{item.like}</span>
+                        <span style={{ color: '#ebebeb' }}>{item.likes}</span>
                       </div>
+                    ) : !item.likeMe.includes(userInfo._id) ? (
+                      <>
+                        <div
+                          className="likeBox"
+                          onClick={(e) => e.isPropagationStopped()}
+                        >
+                          <img src={like_out} alt="like out icon" />
+                          <span style={{ color: '#ebebeb' }}>{item.likes}</span>
+                        </div>
+                      </>
                     ) : (
-                      <div className="likeBox">
+                      <div
+                        className="likeBox"
+                        onClick={(e) => e.isPropagationStopped()}
+                      >
                         <img src={like_active} alt="like active icon" />
-                        {/* <span style={{color: "#EA1F1C"}}>{item.like}</span> */}
-                        <span style={{color: "#EA1F1C"}}>53</span>
+                        <span style={{ color: '#EA1F1C' }}>{item.likes}</span>
                       </div>
                     )}
                     <img src={thumbnail} alt="기본 이미지" />
@@ -142,16 +164,14 @@ export default function Home(props: IHomeProps) {
                 </SwiperSlide>
               ))}
             </Swiper>
-          }
+          )}
         </Container>
       </HotTopic>
       <Post>
         <Container>
           <Title>전체 게시물</Title>
           <Search />
-          <PostsTable
-            posts={latest_posts}
-          />
+          <PostsTable posts={latest_posts} getPosts={getLatestPosts} />
           <Pagination
             current_page={current_page}
             total_count={total_cnt}

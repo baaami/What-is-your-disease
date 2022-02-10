@@ -12,7 +12,7 @@ const useSearchPage = (
   const getContentInfo = async () => {
     if (type === 'hashtag') {
       try {
-        const content_res = await API.posts.getTagSearch(value)
+        const content_res = await API.posts.getTagSearch(value, 10)
         setPostsList(content_res.data.data.post)
       } catch (e) {
         if (nodata_callback) {
@@ -21,7 +21,7 @@ const useSearchPage = (
       }
     } else {
       try {
-        const content_res = await API.posts.getSearchPosts(value)
+        const content_res = await API.posts.getSearchPosts(value, 10)
         setPostsList(content_res.data)
       } catch (e) {
         if (nodata_callback) {

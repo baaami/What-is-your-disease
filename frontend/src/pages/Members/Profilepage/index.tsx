@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { InfoSection, PostSection, ProfilepageContainer, TopSection } from './styles'
+import {
+  InfoSection,
+  PostSection,
+  ProfilepageContainer,
+  TopSection,
+} from './styles'
 import { Container, Title } from 'common.styles'
 import ProfileCard from 'components/ProfileCard'
 import FollowerTab from 'components/FollowerTab'
@@ -19,7 +24,7 @@ export default function Profilepage() {
   const getMyPosts = async () => {
     if (userInfo._id) {
       await API.posts
-        .getMyPosts(userInfo._id, current_page)
+        .getMyPosts(userInfo._id, current_page, 10)
         .then((res) => {
           setTotalCnt(res.data.postTotalCnt)
           setMyPosts(res.data.data.post)
@@ -38,16 +43,16 @@ export default function Profilepage() {
     <ProfilepageContainer>
       <Container>
         <TopSection>
-          <ProfileCard/>
-          <FollowerTab/>
+          <ProfileCard />
+          <FollowerTab />
         </TopSection>
         <InfoSection>
           <Title>{'Maria'} 정보</Title>
-          <InfoCard/>
+          <InfoCard />
         </InfoSection>
         <PostSection>
           <Title>{'Maria'} 게시글</Title>
-          <PostsTable  posts={myPosts}/>
+          <PostsTable posts={myPosts} />
           <Pagination
             total_count={total_cnt}
             current_page={current_page}

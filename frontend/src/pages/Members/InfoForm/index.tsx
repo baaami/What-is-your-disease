@@ -5,6 +5,7 @@ import API from 'service/api'
 import { useHistory } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
+import { Radio, RadioChangeEvent } from 'antd'
 interface IInfoFormProps {}
 
 export default function InfoForm(props: IInfoFormProps) {
@@ -29,6 +30,20 @@ export default function InfoForm(props: IInfoFormProps) {
     gender: true,
     nickname: true,
   })
+
+  const onChangeGender = (e: RadioChangeEvent) => {
+    setFormValue({
+      ...form_value,
+      gender: e.target.value,
+    })
+  }
+
+  const onChangeBloodTyle = (e: RadioChangeEvent) => {
+    setFormValue({
+      ...form_value,
+      bloodtype: e.target.value,
+    })
+  }
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const nextForm = {
@@ -182,7 +197,7 @@ export default function InfoForm(props: IInfoFormProps) {
         <FormRow className="formRow">
           <div className="label">성별</div>
           <div>
-            <Input
+            {/* <Input
               id="gender"
               type="text"
               name="gender"
@@ -194,7 +209,16 @@ export default function InfoForm(props: IInfoFormProps) {
                   ? '성별은 필수 입력사항입니다.'
                   : undefined
               }
-            />
+            /> */}
+            <Radio.Group
+              onChange={(e) => {
+                onChangeGender(e)
+              }}
+              value={form_value.gender === '' ? '남자' : form_value.gender}
+            >
+              <Radio value={'남자'}>남자</Radio>
+              <Radio value={'여자'}>여자</Radio>
+            </Radio.Group>
           </div>
         </FormRow>
         <FormRow className="formRow">
@@ -222,14 +246,25 @@ export default function InfoForm(props: IInfoFormProps) {
         <FormRow className="formRow">
           <div className="label">혈액형</div>
           <div>
-            <Input
+            {/* <Input
               id="bloodtype"
               type="text"
               name="bloodtype"
               value={form_value.bloodtype}
               onChange={handleFormChange}
               autoComplete="off"
-            />
+            /> */}
+            <Radio.Group
+              onChange={(e) => {
+                onChangeBloodTyle(e)
+              }}
+              value={form_value.bloodtype === '' ? 'A' : form_value.bloodtype}
+            >
+              <Radio value={'A'}>A</Radio>
+              <Radio value={'B'}>B</Radio>
+              <Radio value={'O'}>O</Radio>
+              <Radio value={'AB'}>AB</Radio>
+            </Radio.Group>
           </div>
         </FormRow>
         <FormRow className="formRow">

@@ -32,7 +32,7 @@ export default function PostsLists({
 
   const getFilterPosts = async (category: string, page: number) => {
     await API.posts
-      .getCategoryPosts(category, page)
+      .getCategoryPosts(category, page, 10)
       .then((res) => {
         console.log(res.data)
         setTotalCnt(res.data.postTotalCnt)

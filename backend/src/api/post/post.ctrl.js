@@ -232,7 +232,6 @@ export const like = async (ctx) => {
     ctx.throw(500, e);
   }
 
-  console.log('[TEST] Existuser : ', ExistUser);
   // 좋아요를 누르지 않았던 User일 경우
   if (!ExistUser) {
     // 1. 좋아요 증가, User 저장

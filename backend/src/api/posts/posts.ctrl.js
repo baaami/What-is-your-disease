@@ -36,7 +36,7 @@ const removeHtmlAndShorten = (body) => {
   return filtered;
 };
 
-const getOldestPosts = async (ctx, query, page, postNum) => {
+export const getOldestPosts = async (ctx, query, page, postNum) => {
   let posts;
   try {
     posts = await Post.find(query)
@@ -52,7 +52,7 @@ const getOldestPosts = async (ctx, query, page, postNum) => {
   return posts;
 };
 
-const getLatestPosts = async (ctx, query, page, postNum) => {
+export const getLatestPosts = async (ctx, query, page, postNum) => {
   let posts;
   try {
     posts = await Post.find(query)
@@ -68,7 +68,7 @@ const getLatestPosts = async (ctx, query, page, postNum) => {
   return posts;
 };
 
-const getHotPosts = async (ctx, query, page, postNum) => {
+export const getHotPosts = async (ctx, query, page, postNum) => {
   let posts;
   try {
     posts = await Post.find(query)

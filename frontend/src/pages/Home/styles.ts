@@ -66,7 +66,7 @@ export const Category = styled.div`
         margin-bottom: 0;
         text-align: center;
         font-size: 20px;
-        font-weight: 600;
+        font-weight: 700;
       }
     }
   }
@@ -82,6 +82,24 @@ export const HotTopic = styled.div`
 
   .swiper{
     padding-top: 60px;
+
+    .swiper-slide{
+      position: relative;
+
+      .likeBox{
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+
+        span{
+          margin-left: 5px;
+          font-size: 18px;
+          font-weight: 500;
+        }
+      }
+    }
 
     .swiper-button-prev{
       position: absolute;
@@ -122,7 +140,7 @@ export const HotTopic = styled.div`
 
     h2{
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 700;
       color: #fff; 
     }
     h3{

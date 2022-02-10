@@ -3,6 +3,7 @@ import checkLoggedIn from '../../../../lib/checkLoggedIn';
 import * as commentCtrl from '../comment.ctrl';
 import * as replyCtrl from './reply.ctrl';
 
+// /api/post/:postId/comment/:commentId/reply
 const reply = new Router();
 
 /**

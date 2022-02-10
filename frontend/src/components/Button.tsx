@@ -62,7 +62,7 @@ export default Button
 const StyledButton = styled.button`
   width: 110px;
   height: 45px;
-  background-color: #3c6d2e;
+  background-color: #1850A3;
   color: white;
   font-size: 18px;
   border-radius: 5px;

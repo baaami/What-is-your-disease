@@ -15,6 +15,7 @@ import { currentUserInfo } from 'store/userInfo'
 import { PostModel } from 'model/postsModel'
 import reply from '../../assets/img/reply.svg'
 import { setConstantValue } from 'typescript'
+import { POST } from 'shared/api_constant'
 
 interface IPostsDetailProps {}
 
@@ -172,6 +173,20 @@ export default function PostsDetail(props: RouteComponentProps) {
       })
   }
 
+  const onClickLike = async () => {
+    const urlParam = props.match.params as { postId: string }
+    const postId = urlParam.postId
+
+    await API.post
+      .addLike(postId)
+      .then((res) => {
+        getPost()
+      })
+      .catch((e) => {
+        alert('좋아요실패')
+      })
+  }
+
   useEffect(() => {
     window.scrollTo({ top: 0 })
   }, [])
@@ -214,6 +229,9 @@ export default function PostsDetail(props: RouteComponentProps) {
         <div>조회수: {post?.views}</div>
       </section>
       <hr />
+      <div style={{ cursor: 'pointer' }} onClick={onClickLike}>
+        좋아용{post.likes}
+      </div>
       <div className="createdAt">
         작성일: {post?.publishedDate?.split('T')[0]}
       </div>

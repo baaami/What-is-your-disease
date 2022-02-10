@@ -2,7 +2,7 @@ import Axios, { AxiosRequestConfig } from 'axios'
 import { BASE_URL, GET, JSON_HEADER } from 'shared/api_constant'
 
 export const posts = {
-  getLatestPosts: async (page: number) => {
+  getLatestPosts: async (page: number, per_page: number) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
@@ -13,6 +13,7 @@ export const posts = {
       },
       params: {
         page,
+        pageNum: per_page,
       },
     }
 
@@ -31,7 +32,7 @@ export const posts = {
 
     return Axios(config)
   },
-  getMyPosts: async (id: string, page: number) => {
+  getMyPosts: async (id: string, page: number, per_page: number) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
@@ -42,11 +43,12 @@ export const posts = {
       },
       params: {
         page,
+        pageNum: per_page,
       },
     }
     return Axios(config)
   },
-  getFilterPosts: async (orderBy: string, page: number) => {
+  getFilterPosts: async (orderBy: string, page: number, per_page: number) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
@@ -57,11 +59,16 @@ export const posts = {
       },
       params: {
         page,
+        pageNum: per_page,
       },
     }
     return Axios(config)
   },
-  getCategoryPosts: async (category: string, page: number) => {
+  getCategoryPosts: async (
+    category: string,
+    page: number,
+    per_page: number,
+  ) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
@@ -73,11 +80,12 @@ export const posts = {
       params: {
         category,
         page,
+        pageNum: per_page,
       },
     }
     return Axios(config)
   },
-  getTagSearch: async (hashtag: string) => {
+  getTagSearch: async (hashtag: string, per_page: number) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
@@ -88,11 +96,12 @@ export const posts = {
       },
       params: {
         tag: hashtag,
+        pageNum: per_page,
       },
     }
     return Axios(config)
   },
-  getSearchPosts: async (value: string) => {
+  getSearchPosts: async (value: string, per_page: number) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
@@ -103,6 +112,7 @@ export const posts = {
       },
       params: {
         q: value,
+        pageNum: per_page,
       },
     }
     return Axios(config)

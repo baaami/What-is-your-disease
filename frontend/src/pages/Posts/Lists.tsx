@@ -20,7 +20,7 @@ export default function PostsLists(props: IPostsListsProps) {
   const [current_page, setCurrentPage] = useState(1)
   const getFilterPosts = async (orderBy: string, page: number) => {
     await API.posts
-      .getFilterPosts(orderBy, page)
+      .getFilterPosts(orderBy, page, 10)
       .then((res) => {
         setTotalCnt(res.data.postTotalCnt)
         setPostsList(res.data.data.post)

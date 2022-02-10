@@ -108,26 +108,60 @@ export const cmLike = async (ctx) => {
   const { postId, commentId } = ctx.params;
   const user = ctx.state.user;
 
-  // TODO: 중복된 사용자에게는 좋아요, 아이디 저장 동작을 막는다
+  // 해당 post에 좋아요를 눌렀던 사람인지 확인
+  let ExistUser;
   try {
-    const result = await Post.findOneAndUpdate(
-      {
-        _id: postId,
-        'comments._id': commentId,
-      },
-      {
-        // 1. 좋아요 누른 유저 아이디 저장
-        $addToSet: { 'comments.$.likeMe': user._id },
-        // 2. 좋아요 수 증가
-        $inc: { 'comments.$.likes': 1 },
-      },
-      {
-        new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
-        // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
-      },
-    ).exec();
-    ctx.body = result;
+    [ExistUser] = await Post.find({
+      likeMe: { $all: [user._id] },
+    });
   } catch (e) {
     ctx.throw(500, e);
+  }
+
+  // 좋아요를 누르지 않았던 User일 경우
+  if (!ExistUser) {
+    try {
+      const result = await Post.findOneAndUpdate(
+        {
+          _id: postId,
+          'comments._id': commentId,
+        },
+        {
+          // 1. 좋아요 누른 유저 아이디 저장
+          $addToSet: { 'comments.$.likeMe': user._id },
+          // 2. 좋아요 수 증가
+          $inc: { 'comments.$.likes': 1 },
+        },
+        {
+          new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
+          // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
+        },
+      ).exec();
+      ctx.body = result;
+    } catch (e) {
+      ctx.throw(500, e);
+    }
+  } else {
+    try {
+      const result = await Post.findOneAndUpdate(
+        {
+          _id: postId,
+          'comments._id': commentId,
+        },
+        {
+          // 1. 좋아요 취소
+          $pull: { 'comments.$.likeMe': user._id },
+          // 2. 게시물 좋아요 수 감소
+          $inc: { 'comments.$.likes': -1 },
+        },
+        {
+          new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
+          // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
+        },
+      ).exec();
+      ctx.body = result;
+    } catch (e) {
+      ctx.throw(500, e);
+    }
   }
 };

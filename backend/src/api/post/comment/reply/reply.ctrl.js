@@ -112,19 +112,59 @@ export const rpLike = async (ctx) => {
   const { postId, commentId, replyId } = ctx.params;
   const user = ctx.state.user;
 
-  // 1. 좋아요 증가
+  let ExistUser;
   try {
+    [ExistUser] = await Post.find({
+      likeMe: { $all: [user._id] },
+    });
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  // 1. 좋아요 증가
+  if (ExistUser) {
+    try {
+      const result = await Post.findOneAndUpdate(
+        // TODO : query 변수에 담도록 변경하기
+        {
+          'comments._id': commentId,
+        },
+        {
+          $addToSet: {
+            'comments.$[comment].replies.$[reply].likeMe': user._id,
+          },
+          $inc: {
+            'comments.$[comment].replies.$[reply].likes': 1,
+          },
+        },
+        {
+          arrayFilters: [
+            {
+              'comment.replies': {
+                $exists: true,
+              },
+            },
+            {
+              'reply._id': replyId,
+            },
+          ],
+        },
+      ).exec();
+      ctx.body = result;
+    } catch (e) {
+      ctx.throw(500, e);
+    }
+  } else {
     const result = await Post.findOneAndUpdate(
-      // TODO : query 변수에 담도록 변경하기
       {
         'comments._id': commentId,
       },
       {
-        $addToSet: {
+        $pull: {
           'comments.$[comment].replies.$[reply].likeMe': user._id,
         },
         $inc: {
-          'comments.$[comment].replies.$[reply].likes': 1,
+          'comments.$[comment].replies.$[reply].likes': -1,
         },
       },
       {
@@ -141,7 +181,5 @@ export const rpLike = async (ctx) => {
       },
     ).exec();
     ctx.body = result;
-  } catch (e) {
-    ctx.throw(500, e);
   }
 };

@@ -83,6 +83,24 @@ export const HotTopic = styled.div`
   .swiper{
     padding-top: 60px;
 
+    .swiper-slide{
+      position: relative;
+
+      .likeBox{
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        align-items: center;
+
+        span{
+          margin-left: 5px;
+          font-size: 18px;
+          font-weight: 500;
+        }
+      }
+    }
+
     .swiper-button-prev{
       position: absolute;
       top: 0;

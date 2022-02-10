@@ -1,111 +1,149 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import arrow from 'assets/img/arrow_right.png'
+import { Container } from 'common.styles'
+import profileDefault from 'assets/img/profile.svg'
 
 const PostsTable = (props: any) => {
   return (
-    <PostTableWrapper>
-      <section className="topSection">
-        {props.title && <div className="postsTitle">{props?.title}</div>}
-        {props.is_more_button && (
-          <div>
-            <Link to="/posts/lists" className="viewMoreBtn">
-              더보기 +
-            </Link>
-          </div>
-        )}
-      </section>
-      <div className="latestPostContainer">
-        {props.posts.map((item: any, index: number) => {
-          return (
-            <React.Fragment key={index}>
-              <Link to={`/posts/detail/${item._id}`} className="latestPost">
+    <Container>
+      <PostTableHeader>
+        <div className="headerTitle">전체</div>
+        <div className="filterTab">
+          <div className="tab active">최신순</div>
+          <div className="tab">인기순</div>
+        </div>
+      </PostTableHeader>
+      {props.posts.map((item: any, index: number) => {
+        return (
+          <PostTableBody key={index}>
+            <div className="top">
+              <div className="left">
+                <Link to={""} className="latestPost">
+                  <div className="profileImg">
+                    <img src={profileDefault} alt="프로필 기본 이미지" />
+                  </div>
+                </Link>
+                <div className="profileDescript">
+                  <div className="name">초코송이</div>
+                  <div className="date">2021.2.2 16:30</div>
+                </div>
+              </div>
+              <div className="right">
+                <div className="count">좋아요 <span>29</span></div>
+                <div className="count">조회수 <span>380</span></div>
+                <div className="count">댓글 <span>{item.commentIds?.length}</span></div>
+              </div>
+            </div>
+            <Link to={`/posts/detail/${item._id}`} className="latestPost">
+              <div className="bottom">
                 <div className="postTitle">{item.title}</div>
-                <div className="commentsCnt">[{item.commentIds?.length}]</div>
-                <img src={arrow} alt="화살표 아이콘" />
-              </Link>
-            </React.Fragment>
-          )
-        })}
-      </div>
-    </PostTableWrapper>
+                <div className="postContent">본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문 내용본</div>
+              </div>
+            </Link>
+          </PostTableBody>
+        )
+      })}
+    </Container>
   )
 }
 
 export default PostsTable
 
-export const PostTableWrapper = styled.div`
-  position: relative;
+export const PostTableHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid #333333;
+  border-bottom: 1px solid #333333;
 
-  @keyframes arrowShaking {
-    0% {
-      transform: translateX(0);
-    }
-
-    50% {
-      transform: translateX(8px);
-    }
-
-    100% {
-      transform: translateX(0);
-    }
+  .headerTitle{
+    font-size: 20px;
+    font-weight: 600;
   }
 
-  .topSection {
+  .filterTab{
+    display: flex;
+    align-items: center;
+
+    .tab{
+      margin-left: 40px;
+      font-size: 18px;
+      font-weight: 500;
+      cursor: pointer;
+
+      &.active{
+        font-weight: 600;
+        color: #1850A3;
+      }
+    }
+  }
+`
+export const PostTableBody = styled.div`
+  padding: 30px 15px;
+  border-bottom: 1px solid #CCCCCC;
+
+  .top{
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 50px;
-    .postsTitle {
-      font-size: 28px;
-      color: #111;
-    }
-    .viewMoreBtn {
-      font-size: 20px;
-      color: #666;
+    margin-bottom: 25px;
 
-      &:hover {
-        color: #000;
+    .left{
+      display: flex;
+      align-items: center;
+
+      .profileImg{  
+        margin-right: 10px;
+      
+        img{
+          width: 70px;
+        }
+      }
+
+      .profileDescript{
+        .name{
+          font-size: 20px;
+          color: #000;
+        }
+        
+        .date{
+          font-size: 16px;
+          color: #989898;
+        }
+      }
+    }
+    
+    .right{
+      display: flex;
+      align-items: center;
+
+      .count{
+        margin-left: 35px;
+        font-size: 15px;
+        color: #989898;
       }
     }
   }
 
-  .latestPostContainer {
-    .latestPost {
-      display: flex;
-      /* justify-content: space-between; */
-      align-items: center;
-      line-height: 80px;
-      padding: 0 25px;
-      position: relative;
+  .bottom{
+    .postTitle{
+      margin-bottom: 13px;
+      font-size: 17px;
+      color: #000;
+    }
 
-      .postTitle {
-        max-width: 90%;
-        font-size: 22px;
-        color: #333;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .commentsCnt {
-        font-size: 22px;
-        color: red;
-      }
-      img {
-        position: absolute;
-        right: 20px;
-        height: 18px;
-        transition: all 0.3s ease-in;
-      }
-
-      &:nth-of-type(2n + 1) {
-        background: #f4f4f4;
-      }
-
-      &:hover img {
-        animation: arrowShaking 1.5s infinite;
-      }
+    .postContent{
+      display:-webkit-box; 
+      word-wrap:break-word; 
+      -webkit-line-clamp:3; 
+      -webkit-box-orient:vertical; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+      height: 57px; 
+      line-height: 20px; 
+      color:#666; 
+      font-size: 14px;
     }
   }
 `

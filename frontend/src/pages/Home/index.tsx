@@ -6,8 +6,11 @@ import PostsTable from 'components/PostsTable'
 import Pagination from 'components/Pagination'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Container, NoData, Title } from 'common.styles'
-import thumbnail from '../../assets/img/thumbnail.svg'
 import SwiperCore, { Navigation } from 'swiper'
+import thumbnail from '../../assets/img/thumbnail.svg'
+import like_out from '../../assets/img/like_out.svg'
+import like_active from '../../assets/img/like_active.svg'
+import Search from 'components/Search'
 
 interface IHomeProps {}
 
@@ -108,32 +111,46 @@ export default function Home(props: IHomeProps) {
       <HotTopic>
         <Container>
           <Title style={{ marginBottom: 0 }}>Hot 토픽🔥</Title>
-          {hot_posts.length === 0 && <NoData>조회된 결과가 없습니다.</NoData>}
-          <Swiper navigation spaceBetween={30} slidesPerView={3.4}>
-            {hot_posts.slice(0, 10).map((item: any, idx) => (
-              <SwiperSlide key={item._id}>
-                <Link to={`/posts/detail/${item._id}`} className="popularPost">
-                  <img src={thumbnail} alt="기본 이미지" />
-                  <div className="descript">
-                    <h2>#{item.category}</h2>
-                    <h3>{item.title}</h3>
-                    <h4>
-                      {item.user.info.nickname}{' '}
-                      <span>{item.publishedDate.split('T')[0]}</span>
-                    </h4>
-                  </div>
-                </Link>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          {hot_posts.length === 0 ? 
+            <NoData>조회된 결과가 없습니다.</NoData> :
+            <Swiper navigation spaceBetween={30} slidesPerView={3.4}>
+              {hot_posts.slice(0, 10).map((item: any) => (
+                <SwiperSlide key={item._id}>
+                  <Link to={`/posts/detail/${item._id}`} className="popularPost">
+                    {item.like === 0 ? (
+                      <div className="likeBox">
+                        <img src={like_out} alt="like out icon" />
+                        <span style={{color: '#ebebeb'}}>{item.like}</span>
+                      </div>
+                    ) : (
+                      <div className="likeBox">
+                        <img src={like_active} alt="like active icon" />
+                        {/* <span style={{color: "#EA1F1C"}}>{item.like}</span> */}
+                        <span style={{color: "#EA1F1C"}}>53</span>
+                      </div>
+                    )}
+                    <img src={thumbnail} alt="기본 이미지" />
+                    <div className="descript">
+                      <h2>#{item.category}</h2>
+                      <h3>{item.title}</h3>
+                      <h4>
+                        {item.user.info.nickname}{' '}
+                        <span>{item.publishedDate.split('T')[0]}</span>
+                      </h4>
+                    </div>
+                  </Link>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          }
         </Container>
       </HotTopic>
       <Post>
         <Container>
+          <Title>전체 게시물</Title>
+          <Search />
           <PostsTable
             posts={latest_posts}
-            title="최신 게시글"
-            is_more_button={true}
           />
           <Pagination
             current_page={current_page}

@@ -1,7 +1,5 @@
-// import al from '../static/img/icons/arrow_left.png'
-// import ar from '../static/img/icons/arrow_right.png'
-import al from 'assets/img/arrow_left.png'
-import ar from 'assets/img/arrow_right.png'
+import al from '../assets/img/arrow_left.svg'
+import ar from '../assets/img/arrow_right.svg'
 import styled from 'styled-components'
 
 /** 테이블 페이지네이션 */
@@ -63,9 +61,7 @@ const Pagination = (props: PaginationModel) => {
         disabled={!_prev_active}
         className="arrow-btn prev-btn rel"
       >
-        <div className="img-holder">
-          <img className="abs" src={al} alt="아이콘" />
-        </div>
+        <img className="abs" src={al} alt="아이콘" />
       </button>
       <span className="page-num-wrap ta-c">
         {1 < _start_page ? (
@@ -120,9 +116,7 @@ const Pagination = (props: PaginationModel) => {
         disabled={!_next_active}
         className="arrow-btn next-btn rel"
       >
-        <div className="img-holder">
-          <img className="abs" src={ar} alt="아이콘" />
-        </div>
+        <img className="abs" src={ar} alt="아이콘" />
       </button>
     </PaginationWrap>
   )
@@ -144,28 +138,20 @@ const PaginationWrap = styled.div`
       margin-left: 10px;
     }
     .arrow-btn {
-      padding-top: 3px;
       margin: 0 5px;
-      .img-holder {
-        background-size: 6px 11px;
-        background-position: 50%;
-      }
     }
     .page-num-wrap {
       margin: 0 10px;
       button {
         width: 30px;
         height: 30px;
-        border-radius: 4px;
-        border: 1px solid #666;
-        color: #666;
-        font-size: 18px;
-        font-family: 'Montserrat';
+        border: 1px solid #C4C4C4;
+        color: #C4C4C4;
+        font-size: 16px;
 
         &.current-page {
-          color: white;
-          border-color: $color-modify;
-          background-color: #3c6d2e;
+          color: #1850A3;
+          border-color: #1850A3;
         }
         &:first-child {
           &.ml-5 {

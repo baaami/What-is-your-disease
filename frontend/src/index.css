@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Roboto', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -50,15 +50,4 @@ li {
   text-align: center;
   font-size: 24px;
   margin-top: 20px;
-}
-
-@media (max-width: 1080px) {
-  .wrap {
-    padding-left: 20px !important;
-    padding-right: 20px !important;
-  }
-
-  .title {
-    font-size: 23px;
-  }
 }

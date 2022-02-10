@@ -19,7 +19,7 @@ const PostsTable = (props: any) => {
           <PostTableBody key={index}>
             <div className="top">
               <div className="left">
-                <Link to={""} className="latestPost">
+                <Link to={"/profilepage"} className="latestPost">
                   <div className="profileImg">
                     <img src={profileDefault} alt="프로필 기본 이미지" />
                   </div>
@@ -60,7 +60,7 @@ export const PostTableHeader = styled.div`
 
   .headerTitle{
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .filterTab{
@@ -74,7 +74,7 @@ export const PostTableHeader = styled.div`
       cursor: pointer;
 
       &.active{
-        font-weight: 600;
+        font-weight: 700;
         color: #1850A3;
       }
     }
@@ -104,6 +104,7 @@ export const PostTableBody = styled.div`
       .profileDescript{
         .name{
           font-size: 20px;
+          font-weight: 500;
           color: #000;
         }
         
@@ -130,6 +131,7 @@ export const PostTableBody = styled.div`
     .postTitle{
       margin-bottom: 13px;
       font-size: 17px;
+      font-weight: 500;
       color: #000;
     }
 

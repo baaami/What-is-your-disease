@@ -66,7 +66,7 @@ export const Category = styled.div`
         margin-bottom: 0;
         text-align: center;
         font-size: 20px;
-        font-weight: 600;
+        font-weight: 700;
       }
     }
   }
@@ -140,7 +140,7 @@ export const HotTopic = styled.div`
 
     h2{
       font-size: 16px;
-      font-weight: 600;
+      font-weight: 700;
       color: #fff; 
     }
     h3{

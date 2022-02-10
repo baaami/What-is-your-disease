@@ -6,10 +6,9 @@ import {
   MyPostsWrap,
   LogoutButton,
 } from 'styles/Mypage.styles'
-import arrow from 'assets/img/arrow_right.png'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
-import { Link, useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import API from 'service/api'
 import PostsTable from 'components/PostsTable'
 import Pagination from 'components/Pagination'
@@ -127,7 +126,7 @@ export default function Mypage(props: IMypageProps) {
         </section>
       </UserInfoWrap>
       <MyPostsWrap>
-        <PostsTable posts={myPosts} title="내 게시글" is_more_button={false} />
+        <PostsTable posts={myPosts} />
         <Pagination
           total_count={total_cnt}
           current_page={current_page}

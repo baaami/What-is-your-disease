@@ -15,13 +15,18 @@ comment.post(
   '/write',
   checkLoggedIn,
   postCtrl.checkPostById,
-  commentCtrl.cmUpload,
+  commentCtrl.cmWrite,
 );
 
 /**
- * 댓글 좋아요
+ * 댓글 수정 (특정 필드 변경)
  */
-comment.post('/like/:commentId', checkLoggedIn, commentCtrl.cmLike);
+comment.patch(
+  '/update/:commentId',
+  checkLoggedIn,
+  postCtrl.checkPostById,
+  commentCtrl.cmUpdate,
+);
 
 /**
  * 댓글 삭제 (특정 필드 변경)
@@ -32,5 +37,10 @@ comment.delete(
   postCtrl.checkPostById,
   commentCtrl.cmDelete,
 );
+
+/**
+ * 댓글 좋아요
+ */
+comment.post('/like/:commentId', checkLoggedIn, commentCtrl.cmLike);
 
 export default comment;

@@ -7,7 +7,7 @@ import Comment from '../../../../models/comment';
  * 답글 등록
  * POST /api/post/:postId/comment/:commentId/reply/write
  */
-export const rpUpload = async (ctx) => {
+export const rpWrite = async (ctx) => {
   const { commentId } = ctx.params;
   const { text } = ctx.request.body;
 
@@ -34,6 +34,44 @@ export const rpUpload = async (ctx) => {
     ).exec();
 
     ctx.body = result;
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};
+
+/**
+ * 답글 업데이트
+ * PATCH /api/post/:postId/comment/:commentId/reply/update/:replyId
+ */
+export const rpUpdate = async (ctx) => {
+  const { commentId, replyId } = ctx.params;
+  const { text } = ctx.request.body;
+
+  // 1. 답글 id 해당 comment에 저장 생성
+  try {
+    const result = await Post.findOneAndUpdate(
+      {
+        'comments._id': commentId,
+      },
+      {
+        $set: {
+          'comments.$[comment].replies.$[reply].text': text,
+        },
+      },
+      {
+        arrayFilters: [
+          {
+            'comment.replies': {
+              $exists: true,
+            },
+          },
+          {
+            'reply._id': replyId,
+          },
+        ],
+      },
+    ).exec();
+    ctx.body = text;
   } catch (e) {
     ctx.throw(500, e);
   }

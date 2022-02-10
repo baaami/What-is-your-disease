@@ -10,7 +10,7 @@ const { ObjectId } = mongoose.Types;
  * 댓글 등록
  * POST /api/post/:postId/comment/write
  */
-export const cmUpload = async (ctx) => {
+export const cmWrite = async (ctx) => {
   const curPost = ctx.state.post;
   const { text } = ctx.request.body;
   const comment = new Comment({
@@ -26,6 +26,35 @@ export const cmUpload = async (ctx) => {
       curPost._id,
       {
         $push: { comments: comment },
+      },
+      {
+        new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
+        // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
+      },
+    ).exec();
+
+    ctx.body = result;
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};
+
+/**
+ * 댓글 등록
+ * POST /api/post/:postId/comment/update/:commentId
+ */
+export const cmUpdate = async (ctx) => {
+  const { text } = ctx.request.body;
+  const { commentId } = ctx.params;
+
+  // 해당 포스트 댓글 배열에 추가
+  try {
+    const result = await Post.findOneAndUpdate(
+      {
+        'comments._id': commentId,
+      },
+      {
+        $set: { 'comments.$.text': text },
       },
       {
         new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.

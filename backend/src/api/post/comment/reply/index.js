@@ -9,7 +9,12 @@ const reply = new Router();
 /**
  * 답글 등록
  */
-reply.post('/write', checkLoggedIn, replyCtrl.rpUpload);
+reply.post('/write', checkLoggedIn, replyCtrl.rpWrite);
+
+/**
+ * 답글 업데이트
+ */
+reply.patch('/update/:replyId', checkLoggedIn, replyCtrl.rpUpdate);
 
 /**
  * 답글 삭제

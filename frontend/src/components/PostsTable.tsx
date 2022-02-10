@@ -48,7 +48,7 @@ const PostsTable = (props: any) => {
                   </div>
                 </Link>
                 <div className="profileDescript">
-                  <div className="name">초코송이</div>
+                  <div className="name">{item.user.info.nickname}</div>
                   <div className="date">{item.publishedDate.split('T')[0]}</div>
                 </div>
               </div>

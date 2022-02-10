@@ -112,7 +112,14 @@ export const cmLike = async (ctx) => {
   let ExistUser;
   try {
     [ExistUser] = await Post.find({
-      likeMe: { $all: [user._id] },
+      comments: {
+        $elemMatch: {
+          _id: { $eq: commentId },
+          likeMe: {
+            $eq: user._id,
+          },
+        },
+      },
     });
   } catch (e) {
     ctx.throw(500, e);

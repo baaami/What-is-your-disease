@@ -146,11 +146,24 @@ export const post = {
     return Axios(config)
   },
 
-  addLike: async (post_id: string) => {
+  addPostLike: async (post_id: string) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: POST,
       url: `/api/post/${post_id}/like/`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+    }
+    return Axios(config)
+  },
+
+  addCommentLike: async (post_id: string, comment_id: string) => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: POST,
+      url: `/api/post/${post_id}/comment/like/${comment_id}`,
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,

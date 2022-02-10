@@ -173,17 +173,30 @@ export default function PostsDetail(props: RouteComponentProps) {
       })
   }
 
-  const onClickLike = async () => {
+  const onClickPostLike = async () => {
     const urlParam = props.match.params as { postId: string }
     const postId = urlParam.postId
 
     await API.post
-      .addLike(postId)
+      .addPostLike(postId)
       .then((res) => {
         getPost()
       })
       .catch((e) => {
         alert('좋아요실패')
+      })
+  }
+
+  const onClickCommentLike = async (comment_id: string) => {
+    const urlParam = props.match.params as { postId: string }
+    const postId = urlParam.postId
+
+    await API.post
+      .addCommentLike(postId, comment_id)
+      .then(() => getPost())
+      .catch((e) => {
+        console.log(e)
+        alert('댓글좋아요 실패')
       })
   }
 
@@ -229,7 +242,7 @@ export default function PostsDetail(props: RouteComponentProps) {
         <div>조회수: {post?.views}</div>
       </section>
       <hr />
-      <div style={{ cursor: 'pointer' }} onClick={onClickLike}>
+      <div style={{ cursor: 'pointer' }} onClick={onClickPostLike}>
         좋아용{post.likes}
       </div>
       <div className="createdAt">
@@ -290,6 +303,12 @@ export default function PostsDetail(props: RouteComponentProps) {
                   </button>
                 </div>
               )}
+              <div
+                style={{ cursor: 'pointer' }}
+                onClick={() => onClickCommentLike(comment._id)}
+              >
+                좋아용{comment.likes}
+              </div>
               {is_reply[comment._id] && (
                 <CreateComment>
                   <textarea

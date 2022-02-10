@@ -116,12 +116,9 @@ export default function SubHeader() {
           <Link to="/">
             <img className="logo" src={logo} alt="logo" />
           </Link>
-          <ProfileContainer onClick={() => clickProfileIcon()}>
+          <ProfileContainer>
             {userInfo._id !== '' ? (
-              <button
-                className="headerTxt"
-                onClick={() => history.push('/mypage')}
-              >
+              <button className="headerTxt" onClick={() => clickProfileIcon()}>
                 <img src={profile} alt="profile" />
               </button>
             ) : (

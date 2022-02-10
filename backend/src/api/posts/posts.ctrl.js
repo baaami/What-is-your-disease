@@ -297,7 +297,7 @@ export const filter = async (ctx) => {
 
   let posts, query;
   switch (orderBy) {
-    case '최신순': {
+    case 'latest': {
       try {
         query = {};
         posts = await getLatestPosts(ctx, query, page);
@@ -306,7 +306,7 @@ export const filter = async (ctx) => {
       }
       break;
     }
-    case '오래된순': {
+    case 'oldest': {
       try {
         query = {};
         posts = await getOldestPosts(ctx, query, page);
@@ -315,7 +315,7 @@ export const filter = async (ctx) => {
       }
       break;
     }
-    case '인기순': {
+    case 'hotest': {
       // 인기순
       try {
         query = {};

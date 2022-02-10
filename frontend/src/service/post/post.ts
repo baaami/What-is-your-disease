@@ -171,4 +171,21 @@ export const post = {
     }
     return Axios(config)
   },
+
+  addReplyLike: async (
+    post_id: string,
+    comment_id: string,
+    reply_id: string,
+  ) => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: POST,
+      url: `/api/post/${post_id}/comment/${comment_id}/reply/like/${reply_id}`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+    }
+    return Axios(config)
+  },
 }

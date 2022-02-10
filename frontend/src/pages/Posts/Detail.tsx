@@ -200,6 +200,21 @@ export default function PostsDetail(props: RouteComponentProps) {
       })
   }
 
+  const onClickReplyLike = async (comment_id: string, reply_id: string) => {
+    const urlParam = props.match.params as { postId: string }
+    const postId = urlParam.postId
+
+    await API.post
+      .addReplyLike(postId, comment_id, reply_id)
+      .then(() => {
+        getPost()
+      })
+      .catch((e) => {
+        console.log(e)
+        alert('답글 좋아요 실패')
+      })
+  }
+
   useEffect(() => {
     window.scrollTo({ top: 0 })
   }, [])
@@ -347,6 +362,14 @@ export default function PostsDetail(props: RouteComponentProps) {
                               </button>
                             </div>
                           )}
+                          <div
+                            style={{ cursor: 'pointer' }}
+                            onClick={() =>
+                              onClickReplyLike(comment._id, reply._id)
+                            }
+                          >
+                            좋아용{reply.likes}
+                          </div>
                         </>
                       )
                     })}

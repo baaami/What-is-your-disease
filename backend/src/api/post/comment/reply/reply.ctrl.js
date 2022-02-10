@@ -115,14 +115,26 @@ export const rpLike = async (ctx) => {
   let ExistUser;
   try {
     [ExistUser] = await Post.find({
-      likeMe: { $all: [user._id] },
+      // likeMe: { $all: [user._id] },
+      comments: {
+        $elemMatch: {
+          replies: {
+            $elemMatch: {
+              _id: { $eq: replyId },
+              likeMe: {
+                $eq: [user._id],
+              },
+            },
+          },
+        },
+      },
     });
   } catch (e) {
     ctx.throw(500, e);
   }
 
   // 1. 좋아요 증가
-  if (ExistUser) {
+  if (!ExistUser) {
     try {
       const result = await Post.findOneAndUpdate(
         // TODO : query 변수에 담도록 변경하기

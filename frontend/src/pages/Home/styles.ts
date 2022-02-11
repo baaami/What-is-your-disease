@@ -135,13 +135,17 @@ export const HotTopic = styled.div`
 
   .descript{
     width: 321px;
-    padding: 10px 15px;
+    padding: 15px;
     background: #1850A3;
 
     h2{
-      font-size: 16px;
+      width: fit-content;
+      padding: 2px 14px;
+      background: #fff;
+      border-radius: 50px;
+      font-size: 14px;
       font-weight: 700;
-      color: #fff; 
+      color: #333; 
     }
     h3{
       width: 280px;
@@ -152,6 +156,7 @@ export const HotTopic = styled.div`
       color: #fff;
     }
     h4{
+      margin-bottom: 0;
       text-align: end;
       font-size: 16px;
       color: #fff;

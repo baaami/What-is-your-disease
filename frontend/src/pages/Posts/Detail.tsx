@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { RouteComponentProps, useHistory } from 'react-router-dom'
-import {
-  PostsDetailContainer,
-  CommentsSection,
-  CreateComment,
-  Buttons,
-} from 'styles/PostsDetail.styles'
 import Search from 'components/Search'
 import Button from 'components/Button'
 import Pagination from 'components/Pagination'
@@ -16,6 +10,10 @@ import { PostModel } from 'model/postsModel'
 import reply from '../../assets/img/reply.svg'
 import { setConstantValue } from 'typescript'
 import { POST } from 'shared/api_constant'
+import { Container } from 'common.styles'
+import { PostsDetailContainer, PostInfo, TopSection, CommentsSection, CreateComment, Buttons } from './styles'
+import like_out from 'assets/img/like_out.svg'
+import like_active from 'assets/img/like_active.svg'
 
 interface IPostsDetailProps {}
 
@@ -223,188 +221,189 @@ export default function PostsDetail(props: RouteComponentProps) {
     getPost()
   }, [current_page])
 
-  const Comments = [
-    { txt: '오 꿀팀 감사합니다.' },
-    { txt: '좋은 하루 되세요~' },
-    { txt: '감사합니다:)' },
-  ]
-
   return (
-    <PostsDetailContainer className="wrap">
-      <Search />
-      <section className="postTitle">{post.title}</section>
-      <section className="postInfo">
-        <div>작성자: {post?.user?.info.nickname}</div>
-        <div>카테고리: {post?.category}</div>
-        <div className="hashtag">
-          해쉬태그:{' '}
-          {post?.tags?.map((item, index) => {
-            if (index === post.tags.length - 1) {
-              return (
-                <span key={index} onClick={() => onClickHashtag(item)}>
-                  #{item}
-                </span>
-              )
-            } else {
-              return (
-                <span key={index} onClick={() => onClickHashtag(item)}>
-                  #{item},{' '}
-                </span>
-              )
-            }
-          })}
-        </div>
-        <div>조회수: {post?.views}</div>
-      </section>
-      <hr />
-      <div style={{ cursor: 'pointer' }} onClick={onClickPostLike}>
-        좋아용{post.likes}
-      </div>
-      <div className="createdAt">
-        작성일: {post?.publishedDate?.split('T')[0]}
-      </div>
-      <section
-        className="postContents"
-        dangerouslySetInnerHTML={{ __html: post?.body }}
-      ></section>
-      <div className="commentsCnt">댓글 {comments_cnt}개</div>
-      <Button
-        type="button"
-        className="commentsBtn"
-        onClick={() => setIsWriteComment(!is_write_comment)}
-      >
-        {is_write_comment ? '취소' : '+ 댓글 작성하기'}
-      </Button>
-      {is_write_comment && (
-        <CreateComment>
-          <textarea
-            value={comment_value}
-            onChange={(e) => setCommentValue(e.target.value)}
-          ></textarea>
-          <Button
-            id="submitComment"
-            type="button"
-            onClick={handleSubmitComment}
-          >
-            등록
-          </Button>
-        </CreateComment>
-      )}
-      <CommentsSection className="wrap">
-        {comments_list.map((comment: any, idx) => {
-          return (
-            <div className="comment" key={idx}>
-              <span>{comment.user.info.nickname}</span>
-              {comment.text}
+    <PostsDetailContainer>
+      <Container>
+        <TopSection>
+          <div className='category'>{post?.category}</div>
+          <div className="hashtag">
+            {post?.tags?.map((item, index) => (
+              <span key={index} onClick={() => onClickHashtag(item)}>
+                #{item}
+              </span>
+            ))}
+          </div>
+        </TopSection>
+        <PostInfo>
+          <div className='postTitle'>
+            {post.title}
+          </div>
+          <div className='postInfo'>
+            <span>{post?.user?.info.nickname}</span>
+            <span className="createdAt">
+              {post?.publishedDate?.split('T')[0]}
+            </span>
+            <span>조회수 {post?.views}</span>
+            <span>
+              <button onClick={() => onClickPostLike()}>
+                <img src={like_out} alt="like out icon" />
+                {/* <img src={like_active} alt="like active icon" /> */}
+              </button>
+              {post.likes}
+            </span>
+          </div>
+        </PostInfo>
+        <hr />
+        <section
+          className="postContents"
+          dangerouslySetInnerHTML={{ __html: post?.body }}
+        ></section>
+         <hr />
+        <Buttons className="buttonRow">
+          {post.user?._id === userInfo?._id && (
+            <>
               <Button
                 type="button"
-                className="replyBtn"
-                onClick={() =>
-                  setIsReply({
-                    ...is_reply,
-                    [comment._id]: !is_reply[comment._id],
-                  })
-                }
+                className="editBtn"
+                onClick={() => onClickEdit(post)}
               >
-                <img src={reply} alt="답글 아이콘" />
+                수정
               </Button>
-              {userInfo._id === comment.user._id && (
-                <div>
-                  <button
-                    className="removeComment"
-                    onClick={() => handleRemoveComment(comment._id)}
+              <Button type="button" className="delBtn" onClick={onClickDelete}>
+                삭제
+              </Button>
+            </>
+          )}
+          <Button type="button" onClick={() => onClickListsLink()}>
+            목록
+          </Button>
+        </Buttons>
+        <Button
+          type="button"
+          className="commentsBtn"
+          onClick={() => setIsWriteComment(!is_write_comment)}
+        >
+          {is_write_comment ? '취소' : '+ 댓글 작성하기'}
+        </Button>
+        {is_write_comment && (
+          <CreateComment>
+            <textarea
+              value={comment_value}
+              onChange={(e) => setCommentValue(e.target.value)}
+            ></textarea>
+            <Button
+              id="submitComment"
+              type="button"
+              onClick={handleSubmitComment}
+            >
+              등록
+            </Button>
+          </CreateComment>
+        )}
+        <CommentsSection>
+          <div className="commentsCnt">댓글 {comments_cnt}개</div>
+          {comments_list.map((comment: any, idx) => {
+            return (
+              <div className="comment" key={idx}>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                  <div>
+                    <span>{comment.user.info.nickname}</span>
+                    {comment.text}
+                    <Button
+                      type="button"
+                      className="replyBtn"
+                      onClick={() =>
+                        setIsReply({
+                          ...is_reply,
+                          [comment._id]: !is_reply[comment._id],
+                        })
+                      }
+                    >
+                      <img src={reply} alt="답글 아이콘" />
+                    </Button>
+                  </div>
+                  <div
+                    style={{ cursor: 'pointer', width: 'fit-content' }}
+                    onClick={() => onClickCommentLike(comment._id)}
                   >
-                    삭제
-                  </button>
+                    <img width="30" src={like_out} alt="like out icon" /> {comment.likes}
+                  </div>
                 </div>
-              )}
-              <div
-                style={{ cursor: 'pointer' }}
-                onClick={() => onClickCommentLike(comment._id)}
-              >
-                좋아용{comment.likes}
-              </div>
-              {is_reply[comment._id] && (
-                <CreateComment>
-                  <textarea
-                    value={reply_value}
-                    onChange={(e) => setReplyValue(e.target.value)}
-                  ></textarea>
-                  <Button
-                    id="submitComment"
-                    type="button"
-                    onClick={() => handleSubmitReply(comment._id, reply_value)}
-                  >
-                    등록
-                  </Button>
-                </CreateComment>
-              )}
-              {comment.replies?.length !== 0 && (
-                <div className="replyWrap">
-                  {comment.replies
-                    ?.reverse()
-                    .map((reply: any, index: number) => {
-                      return (
-                        <>
-                          <div className="reply">
-                            <span>{reply?.user?.info?.nickname}</span>
-                            {reply?.text}
-                          </div>
-                          {userInfo._id === reply.user._id && (
-                            <div>
-                              <button
-                                className="removeComment"
+                {userInfo._id === comment.user._id && (
+                  <div>
+                    <button
+                      className="removeComment"
+                      onClick={() => handleRemoveComment(comment._id)}
+                    >
+                      삭제
+                    </button>
+                  </div>
+                )}
+                {is_reply[comment._id] && (
+                  <CreateComment>
+                    <textarea
+                      value={reply_value}
+                      onChange={(e) => setReplyValue(e.target.value)}
+                    ></textarea>
+                    <Button
+                      id="submitComment"
+                      type="button"
+                      onClick={() => handleSubmitReply(comment._id, reply_value)}
+                    >
+                      등록
+                    </Button>
+                  </CreateComment>
+                )}
+                {comment.replies?.length !== 0 && (
+                  <div className="replyWrap">
+                    {comment.replies
+                      ?.reverse()
+                      .map((reply: any, index: number) => {
+                        return (
+                          <>
+                            <div className="reply">
+                              <div>
+                                <span>{reply?.user?.info?.nickname}</span>
+                                {reply?.text}
+                              </div>
+                              <div
+                                style={{ cursor: 'pointer', width: 'fit-content' }}
                                 onClick={() =>
-                                  handleRemoveReply(comment._id, reply._id)
+                                  onClickReplyLike(comment._id, reply._id)
                                 }
                               >
-                                삭제
-                              </button>
+                                <img src={like_out} alt="like out icon" /> {reply.likes}
+                              </div>
                             </div>
-                          )}
-                          <div
-                            style={{ cursor: 'pointer' }}
-                            onClick={() =>
-                              onClickReplyLike(comment._id, reply._id)
-                            }
-                          >
-                            좋아용{reply.likes}
-                          </div>
-                        </>
-                      )
-                    })}
-                </div>
-              )}
-            </div>
-          )
-        })}
-      </CommentsSection>
-      <Pagination
-        total_count={comments_cnt}
-        current_page={current_page}
-        onChange={setCurrentPage}
-        block={5}
-        per_page={10}
-      />
-      <Buttons className="buttonRow">
-        {post.user?._id === userInfo?._id && (
-          <>
-            <Button
-              type="button"
-              className="editBtn"
-              onClick={() => onClickEdit(post)}
-            >
-              수정
-            </Button>
-            <Button type="button" className="delBtn" onClick={onClickDelete}>
-              삭제
-            </Button>
-          </>
-        )}
-        <Button type="button" onClick={() => onClickListsLink()}>
-          목록
-        </Button>
-      </Buttons>
+                            {userInfo._id === reply.user._id && (
+                              <div>
+                                <button
+                                  className="removeComment"
+                                  onClick={() =>
+                                    handleRemoveReply(comment._id, reply._id)
+                                  }
+                                >
+                                  삭제
+                                </button>
+                              </div>
+                            )}
+                          </>
+                        )
+                      })}
+                  </div>
+                )}
+              </div>
+            )
+          })}
+          <Pagination
+            total_count={comments_cnt}
+            current_page={current_page}
+            onChange={setCurrentPage}
+            block={5}
+            per_page={10}
+          />
+        </CommentsSection>
+      </Container>
     </PostsDetailContainer>
   )
 }

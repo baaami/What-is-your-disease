@@ -148,7 +148,6 @@ export default function HomeHeader() {
             {userInfo._id !== '' ? (
               <button
                 className="headerTxt"
-                // onClick={() => history.push('/mypage')}
               >
                 <img src={profile} alt="profile" />
               </button>

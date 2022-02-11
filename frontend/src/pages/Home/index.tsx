@@ -153,7 +153,7 @@ export default function Home(props: IHomeProps) {
                     )}
                     <img src={thumbnail} alt="기본 이미지" />
                     <div className="descript">
-                      <h2>#{item.category}</h2>
+                      <h2>{item.category}</h2>
                       <h3>{item.title}</h3>
                       <h4>
                         {item.user.info.nickname}{' '}

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { Container } from 'common.styles'
 import profileDefault from 'assets/img/profile.svg'
+import thumbnail from 'assets/img/thumbnail.svg'
 
 const PostsTable = (props: any) => {
   const [filter, setFilter] = useState({ text: '최신순', key: 'latest' })
@@ -73,26 +74,38 @@ const PostsTable = (props: any) => {
             </div>
             <Link to={`/posts/detail/${item._id}`} className="latestPost">
               <div className="bottom">
-                <div className="postTitle">{item.title}</div>
-                <div className="postContent">
-                  본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문
-                  내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문
-                  내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문
-                  내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문
-                  내용본문 내용본문 내용본문 내용본문 내용본문 내용본문
-                  내용용본문 내용본문 내용본문 내용본문 내용본문 내용본문
-                  내용본문 내용본문 내용본문 내용본문 내용본문 내용본본문
-                  내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문
-                  내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문
-                  내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문
-                  내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문
-                  내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문
-                  내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문
-                  내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문
-                  내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문
-                  내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문
-                  내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문
-                  내용본문 내용본문 내용본문 내용본문 내용본
+                <div className="left">
+                  <div className="postTitle">{item.title}</div>
+                  <div className="postContent">
+                    본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문
+                    내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문
+                    내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문
+                    내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문
+                    내용본문 내용본문 내용본문 내용본문 내용본문 내용본문
+                    내용용본문 내용본문 내용본문 내용본문 내용본문 내용본문
+                    내용본문 내용본문 내용본문 내용본문 내용본문 내용본본문
+                    내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문
+                    내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문
+                    내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문
+                    내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문
+                    내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문
+                    내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문
+                    내용본문 내용본문 내용본문 내용본본문 내용본문 내용본문
+                    내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문
+                    내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문
+                    내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문
+                    내용본문 내용본문 내용본문 내용본문 내용본
+                  </div>
+                  <div>
+                    <span className="category">{item.category}</span>
+                    {item.tags.map((el: any, idx: any) => {
+                      return(
+                        <span className="hashtag" key={idx}>
+                          #{el}{' '}
+                        </span>
+                      )
+                    })}
+                  </div>
                 </div>
               </div>
             </Link>
@@ -141,6 +154,7 @@ export const PostTableBody = styled.div`
 
   .top {
     display: flex;
+    align-items: flex-start;
     justify-content: space-between;
     margin-bottom: 25px;
 
@@ -149,7 +163,7 @@ export const PostTableBody = styled.div`
       align-items: center;
 
       .profileImg {
-        margin-right: 10px;
+        margin-right: 15px;
 
         img {
           width: 70px;
@@ -175,7 +189,7 @@ export const PostTableBody = styled.div`
       align-items: center;
 
       .count {
-        margin-left: 35px;
+        margin-left: 15px;
         font-size: 15px;
         color: #989898;
       }
@@ -183,24 +197,49 @@ export const PostTableBody = styled.div`
   }
 
   .bottom {
-    .postTitle {
-      margin-bottom: 13px;
-      font-size: 17px;
-      font-weight: 500;
-      color: #000;
-    }
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
 
-    .postContent {
-      display: -webkit-box;
-      word-wrap: break-word;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      height: 57px;
-      line-height: 20px;
-      color: #666;
-      font-size: 14px;
+    .left{
+      margin-right: 25px;
+
+      .postTitle {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        margin-bottom: 13px;
+        font-size: 17px;
+        font-weight: 500;
+        color: #000;
+      }
+
+      .postContent {
+        display: -webkit-box;
+        word-wrap: break-word;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 57px;
+        margin-bottom: 15px;
+        line-height: 20px;
+        color: #666;
+        font-size: 14px;
+      }
+
+      .category{
+        padding: 2px 15px;
+        margin-right: 10px;
+        background: #1850a3;
+        color: #fff;
+        border-radius: 50px;
+      }
+
+      .hashtag{
+        color: #1850a3;
+        font-size: 15px;
+      }
     }
   }
 `

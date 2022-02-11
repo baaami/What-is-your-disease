@@ -226,6 +226,7 @@ export const like = async (ctx) => {
   // 해당 post에 좋아요를 눌렀던 사람인지 확인
   try {
     [ExistUser] = await Post.find({
+      _id: postId,
       likeMe: { $all: [user._id] },
     });
   } catch (e) {
@@ -257,6 +258,7 @@ export const like = async (ctx) => {
         { new: true },
       );
 
+      console.log('[TEST] result:', result);
       if (!result) {
         console.log('findOneAndUpdate Error');
       }
@@ -282,52 +284,5 @@ export const upLoadImage = async (ctx, next) => {
     ctx.body = files;
   } catch (e) {
     console.log(e);
-  }
-};
-
-/**
- * 특정 포스트 조회
- * GET /api/post/test/:postId
- */
-export const test = async (ctx) => {
-  const { postId } = ctx.params;
-
-  // match stage를 사용할 때 id 매칭 시 mongoose.Types.ObjectId를 사용해야함
-  const query = [
-    {
-      $match: { postId: mongoose.Types.ObjectId(postId) },
-    },
-    {
-      $unwind: '$replyIds',
-    },
-    {
-      $lookup: {
-        from: 'replies',
-        localField: 'replyIds',
-        foreignField: '_id',
-        as: 'replies',
-      },
-    },
-    {
-      $unwind: '$replies',
-    },
-    // {
-    //   $group: {
-    //     _id: '$_id',
-    //     text: { $first: '$text' },
-    //     user: { $first: '$user' },
-    //     likeMe: { $push: '$likeMe' },
-    //     replyIds: { $push: '$replyIds' },
-    //     replies: { $push: '$replies' },
-    //     publishedDate: { $first: '$publishedDate' },
-    //   },
-    // },
-  ];
-
-  try {
-    const result = await Comment.aggregate(query).exec();
-    ctx.body = result;
-  } catch (e) {
-    ctx.throw(500, e);
   }
 };

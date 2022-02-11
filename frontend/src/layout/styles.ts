@@ -90,8 +90,8 @@ export const HeaderModal = styled.div`
   right: -20px;
   color: white;
   padding: 30px;
-  width: 400px;
-  height: 250px;
+  width: 380px;
+  height: 240px;
   background-color: rgba(85, 85, 85);
   border-radius: 4px;
   transition: all 0.21s;
@@ -109,13 +109,13 @@ export const HeaderModal = styled.div`
     gap: 18px;
 
     .nickname {
-      font-size: 30px;
+      font-size: 24px;
       font-weight: 900;
     }
 
     .buttonWrap {
       button {
-        font-size: 18px;
+        font-size: 15px;
         text-decoration: underline !important;
       }
     }
@@ -123,8 +123,8 @@ export const HeaderModal = styled.div`
   .modalLink {
     button {
       display: inline-block;
-      margin-top: 20px;
-      font-size: 22px;
+      margin-top: 25px;
+      font-size: 18px;
       cursor: pointer;
     }
   }

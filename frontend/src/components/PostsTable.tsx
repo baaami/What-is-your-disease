@@ -202,7 +202,6 @@ export const PostTableBody = styled.div`
     justify-content: space-between;
 
     .left{
-      margin-right: 25px;
 
       .postTitle {
         overflow: hidden;

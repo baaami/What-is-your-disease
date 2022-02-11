@@ -234,17 +234,7 @@ export default function PostsEdit(props: IPostsEditProps) {
 
   return (
     <PostEditContainer>
-      <Title
-        style={{
-          marginBottom: 40,
-          textAlign: 'center',
-          fontWeight: 600,
-          fontSize: 30,
-        }}
-      >
-        게시글 작성
-      </Title>
-      <Container className="wrap">
+      <Container>
         <Select defaultValue="백신" style={{ width: 250 }}>
           {categoryList.map((category, idx) => (
             <Option key={idx} value={category}>

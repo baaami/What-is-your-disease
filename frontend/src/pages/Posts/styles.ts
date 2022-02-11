@@ -3,44 +3,39 @@ import styled from 'styled-components'
 export const PostEditContainer = styled.div`
   padding: 200px 0;
 
-  .wrap {
-    padding: 30px;
-    background: #f6f6f6;
-    border-radius: 4px;
+  .ant-select-selector {
+    height: 46px !important;
 
-    .ant-select-selector {
-      height: 46px;
-
-      span {
-        line-height: 45px;
-        font-size: 18px;
-      }
+    span {
+      line-height: 46px !important;
+      font-size: 18px;
+      font-weight: 700;
     }
-    .ant-select-arrow {
-      color: #333;
-    }
+  }
+  .ant-select-arrow {
+    color: #333;
+  }
 
-    #posts_title {
-      margin-top: 20px;
-      height: 60px;
-    }
+  #posts_title {
+    margin-top: 20px;
+    height: 60px;
+  }
 
-    .quill {
-      height: 600px;
-      margin-bottom: 70px;
+  .quill {
+    height: 600px;
+    margin-bottom: 70px;
+    background: #fff;
+
+    & * {
       background: #fff;
-
-      & * {
-        background: #fff;
-      }
     }
+  }
 
-    .btnWrap {
-      text-align: end;
+  .btnWrap {
+    text-align: end;
 
-      button {
-        background: #1850a3;
-      }
+    button {
+      background: #1850a3;
     }
   }
 `

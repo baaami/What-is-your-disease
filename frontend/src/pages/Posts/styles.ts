@@ -78,26 +78,26 @@ export const HashTagSection = styled.div`
 export const PostsDetailContainer = styled.div`
   padding: 200px 0;
 
-  .commentsBtn{
+  .commentsBtn {
     width: 180px;
     border: 1px solid #989898;
     background: #fff;
     font-size: 16px;
     color: #555;
 
-    &:hover{
+    &:hover {
       background: #989898;
       color: #fff;
     }
   }
 
-  .postContents{
+  .postContents {
     min-height: 350px;
     padding: 20px 0;
     font-size: 18px;
   }
 
-  .buttonRow{
+  .buttonRow {
     margin: 30px 0 50px;
   }
 `
@@ -106,7 +106,7 @@ export const TopSection = styled.div`
   align-items: center;
   margin-bottom: 30px;
 
-  .category{
+  .category {
     padding: 4px 25px;
     margin-right: 15px;
     border-radius: 50px;
@@ -115,10 +115,15 @@ export const TopSection = styled.div`
     font-size: 18px;
   }
 
-  .hashtag{
-    span{
+  .hashtag {
+    span {
       font-size: 18px;
       margin-right: 10px;
+      cursor: pointer;
+
+      &:hover {
+        color: #1850a3;
+      }
     }
   }
 `
@@ -127,13 +132,13 @@ export const PostInfo = styled.div`
   justify-content: space-between;
   padding: 10px 0;
 
-  .postTitle{
+  .postTitle {
     font-size: 24px;
     font-weight: 500;
   }
 
-  .postInfo{
-    span{
+  .postInfo {
+    span {
       font-size: 15px;
       margin-left: 15px;
     }
@@ -164,7 +169,7 @@ export const CommentsSection = styled.div`
   border: 1px solid #c4c4c4;
   border-radius: 8px;
 
-  .commentsCnt{
+  .commentsCnt {
     padding-top: 20px;
   }
 
@@ -206,7 +211,7 @@ export const CommentsSection = styled.div`
         justify-content: space-between;
         margin-top: 20px;
 
-        img{
+        img {
           width: 30px;
         }
       }

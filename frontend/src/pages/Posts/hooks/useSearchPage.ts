@@ -22,7 +22,7 @@ const useSearchPage = (
     } else {
       try {
         const content_res = await API.posts.getSearchPosts(value, 10)
-        setPostsList(content_res.data)
+        setPostsList(content_res.data.data.post)
       } catch (e) {
         if (nodata_callback) {
           nodata_callback()

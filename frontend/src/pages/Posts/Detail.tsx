@@ -11,7 +11,14 @@ import reply from '../../assets/img/reply.svg'
 import { setConstantValue } from 'typescript'
 import { POST } from 'shared/api_constant'
 import { Container } from 'common.styles'
-import { PostsDetailContainer, PostInfo, TopSection, CommentsSection, CreateComment, Buttons } from './styles'
+import {
+  PostsDetailContainer,
+  PostInfo,
+  TopSection,
+  CommentsSection,
+  CreateComment,
+  Buttons,
+} from './styles'
 import like_out from 'assets/img/like_out.svg'
 import like_active from 'assets/img/like_active.svg'
 
@@ -225,7 +232,7 @@ export default function PostsDetail(props: RouteComponentProps) {
     <PostsDetailContainer>
       <Container>
         <TopSection>
-          <div className='category'>{post?.category}</div>
+          <div className="category">{post?.category}</div>
           <div className="hashtag">
             {post?.tags?.map((item, index) => (
               <span key={index} onClick={() => onClickHashtag(item)}>
@@ -235,10 +242,8 @@ export default function PostsDetail(props: RouteComponentProps) {
           </div>
         </TopSection>
         <PostInfo>
-          <div className='postTitle'>
-            {post.title}
-          </div>
-          <div className='postInfo'>
+          <div className="postTitle">{post.title}</div>
+          <div className="postInfo">
             <span>{post?.user?.info.nickname}</span>
             <span className="createdAt">
               {post?.publishedDate?.split('T')[0]}
@@ -246,7 +251,14 @@ export default function PostsDetail(props: RouteComponentProps) {
             <span>조회수 {post?.views}</span>
             <span>
               <button onClick={() => onClickPostLike()}>
-                <img src={like_out} alt="like out icon" />
+                <img
+                  src={
+                    post?.likeMe?.includes(userInfo._id)
+                      ? like_active
+                      : like_out
+                  }
+                  alt="like out icon"
+                />
                 {/* <img src={like_active} alt="like active icon" /> */}
               </button>
               {post.likes}
@@ -258,7 +270,7 @@ export default function PostsDetail(props: RouteComponentProps) {
           className="postContents"
           dangerouslySetInnerHTML={{ __html: post?.body }}
         ></section>
-         <hr />
+        <hr />
         <Buttons className="buttonRow">
           {post.user?._id === userInfo?._id && (
             <>
@@ -305,7 +317,9 @@ export default function PostsDetail(props: RouteComponentProps) {
           {comments_list.map((comment: any, idx) => {
             return (
               <div className="comment" key={idx}>
-                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
                   <div>
                     <span>{comment.user.info.nickname}</span>
                     {comment.text}
@@ -326,7 +340,16 @@ export default function PostsDetail(props: RouteComponentProps) {
                     style={{ cursor: 'pointer', width: 'fit-content' }}
                     onClick={() => onClickCommentLike(comment._id)}
                   >
-                    <img width="30" src={like_out} alt="like out icon" /> {comment.likes}
+                    <img
+                      width="30"
+                      src={
+                        comment?.likeMe?.includes(userInfo._id)
+                          ? like_active
+                          : like_out
+                      }
+                      alt="like out icon"
+                    />{' '}
+                    {comment.likes}
                   </div>
                 </div>
                 {userInfo._id === comment.user._id && (
@@ -348,7 +371,9 @@ export default function PostsDetail(props: RouteComponentProps) {
                     <Button
                       id="submitComment"
                       type="button"
-                      onClick={() => handleSubmitReply(comment._id, reply_value)}
+                      onClick={() =>
+                        handleSubmitReply(comment._id, reply_value)
+                      }
                     >
                       등록
                     </Button>
@@ -367,12 +392,23 @@ export default function PostsDetail(props: RouteComponentProps) {
                                 {reply?.text}
                               </div>
                               <div
-                                style={{ cursor: 'pointer', width: 'fit-content' }}
+                                style={{
+                                  cursor: 'pointer',
+                                  width: 'fit-content',
+                                }}
                                 onClick={() =>
                                   onClickReplyLike(comment._id, reply._id)
                                 }
                               >
-                                <img src={like_out} alt="like out icon" /> {reply.likes}
+                                <img
+                                  src={
+                                    reply?.likeMe?.includes(userInfo._id)
+                                      ? like_active
+                                      : like_out
+                                  }
+                                  alt="like out icon"
+                                />{' '}
+                                {reply.likes}
                               </div>
                             </div>
                             {userInfo._id === reply.user._id && (

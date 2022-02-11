@@ -76,8 +76,11 @@ const PostsTable = (props: any) => {
               <div className="bottom">
                 <div className="left">
                   <div className="postTitle">{item.title}</div>
-                  <div className="postContent">
-                    본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문
+                  <div
+                    className="postContent"
+                    dangerouslySetInnerHTML={{ __html: item.body }}
+                  >
+                    {/* 본문 내용본문 내용본문 내용본문 내용본문 내용본본문 내용본문
                     내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문
                     내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문
                     내용본문 내용본문 내용본문 내용본문 내용본문 내용본문 내용본문
@@ -94,12 +97,12 @@ const PostsTable = (props: any) => {
                     내용본문 내용본문 내용본본문 내용본문 내용본문 내용본문
                     내용본문 내용본본문 내용본문 내용본문 내용본문 내용본문
                     내용본본문 내용본문 내용본문 내용본문 내용본문 내용본본문
-                    내용본문 내용본문 내용본문 내용본문 내용본
+                    내용본문 내용본문 내용본문 내용본문 내용본 */}
                   </div>
                   <div>
                     <span className="category">{item.category}</span>
                     {item.tags.map((el: any, idx: any) => {
-                      return(
+                      return (
                         <span className="hashtag" key={idx}>
                           #{el}{' '}
                         </span>
@@ -201,8 +204,7 @@ export const PostTableBody = styled.div`
     align-items: flex-start;
     justify-content: space-between;
 
-    .left{
-
+    .left {
       .postTitle {
         overflow: hidden;
         text-overflow: ellipsis;
@@ -227,7 +229,7 @@ export const PostTableBody = styled.div`
         font-size: 14px;
       }
 
-      .category{
+      .category {
         padding: 2px 15px;
         margin-right: 10px;
         background: #1850a3;
@@ -235,7 +237,7 @@ export const PostTableBody = styled.div`
         border-radius: 50px;
       }
 
-      .hashtag{
+      .hashtag {
         color: #1850a3;
         font-size: 15px;
       }

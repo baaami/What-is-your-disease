@@ -92,9 +92,14 @@ export const PostsDetailContainer = styled.div`
   }
 
   .postContents {
+    max-width: 100%;
     min-height: 350px;
     padding: 20px 0;
     font-size: 18px;
+
+    img {
+      max-width: 100%;
+    }
   }
 
   .buttonRow {

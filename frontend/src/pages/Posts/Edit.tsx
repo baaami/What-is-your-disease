@@ -51,7 +51,6 @@ export default function PostsEdit(props: IPostsEditProps) {
 
   const handleClose = (removedTag: any) => {
     const tags = tagState.tags.filter((tag) => tag !== removedTag)
-    console.log(tags)
     setTagState({ ...tagState, tags })
   }
 
@@ -66,8 +65,6 @@ export default function PostsEdit(props: IPostsEditProps) {
     if (inputValue && tags.indexOf(inputValue) === -1) {
       tags = [...tags, inputValue]
     }
-
-    console.log(tags)
 
     setTagState({
       tags,
@@ -110,7 +107,6 @@ export default function PostsEdit(props: IPostsEditProps) {
 
     input.onchange = async () => {
       const file = input.files?.[0]
-      console.log(file)
 
       // 백엔드 서버 경로에 이미지를 저장하고 이미지 경로를 받아오기
       const res = await API.post.uploadImage(file as File)
@@ -127,7 +123,6 @@ export default function PostsEdit(props: IPostsEditProps) {
         })
       }
     }
-    console.log(e)
   }
 
   // useMemo를 사용하지 않으면, 키를 입력할 때마다, imageHandler 때문에 focus가 계속 풀리게 됨.
@@ -241,7 +236,6 @@ export default function PostsEdit(props: IPostsEditProps) {
           value={filter}
           style={{ width: 250 }}
         >
-          {console.log(pushState.category)}
           {categoryList.map((category, idx) => (
             <Option key={idx} value={category}>
               {category}

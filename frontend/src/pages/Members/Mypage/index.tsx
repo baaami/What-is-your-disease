@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import {
-  MyPageContainer,
-  UserInfoWrap,
-  UserInfoCard,
-  MyPostsWrap,
-  LogoutButton,
-} from 'styles/Mypage.styles'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
 import { useHistory } from 'react-router-dom'
 import API from 'service/api'
-import PostsTable from 'components/PostsTable'
+import MyPostsTable from 'components/MyPostsTable'
 import Pagination from 'components/Pagination'
+import { Container, Title } from 'common.styles'
+import {
+  FollowPostsSection,
+  InfoSection,
+  MyPageContainer,
+  MyPostSection,
+  TopSection,
+} from './styles'
+import ProfileCard from 'components/ProfileCard'
+import FollowerTab from 'components/FollowerTab'
+import InfoCard from 'components/InfoCard'
 
 interface IMypageProps {}
 
@@ -29,27 +33,6 @@ export default function Mypage(props: IMypageProps) {
         return <span>{item}, </span>
       }
     })
-  }
-
-  const logoutHandler = async () => {
-    localStorage.removeItem('jwttoken')
-    localStorage.removeItem('userInfo')
-    setUserInfo({
-      ...userInfo,
-      provider: '',
-      providerId: '',
-      _id: '',
-      info: {
-        name: '',
-        age: '',
-        gender: '',
-        nickname: '',
-        bloodtype: '',
-        allergy: [],
-        medicines: [],
-      },
-    })
-    history.replace('/')
   }
 
   const getMyPosts = async () => {
@@ -79,63 +62,39 @@ export default function Mypage(props: IMypageProps) {
   }, [])
 
   return (
-    <MyPageContainer className="wrap">
-      <UserInfoWrap>
-        <div className="greeting">
-          안녕하세요 <span>"{userInfo.info.name}"</span> 님
-        </div>
-        <section className="myPageTitle userInfoTitle">
-          <div>내 정보</div>
-          <div>
-            <button onClick={onClickEditButton}>수정하기</button>
-          </div>
-        </section>
-        <section className="cardWrap">
-          <UserInfoCard>
-            <section className="cardRow">
-              <div className="rightCol">이름</div>
-              <div>{userInfo.info.name}</div>
-            </section>
-            <section className="cardRow">
-              <div className="rightCol">나이</div>
-              <div>{userInfo.info.age}</div>
-            </section>
-            <section className="cardRow">
-              <div className="rightCol">성별</div>
-              <div>{userInfo.info.gender}</div>
-            </section>
-            <section className="cardRow">
-              <div className="rightCol">닉네임</div>
-              <div>{userInfo.info.nickname}</div>
-            </section>
-          </UserInfoCard>
-          <UserInfoCard>
-            <section className="cardRow">
-              <div className="leftCol">혈액형</div>
-              <div>{userInfo.info.bloodtype}</div>
-            </section>
-            <section className="cardRow">
-              <div className="leftCol">알러지</div>
-              <div>{getArrayToJsx(userInfo.info.allergy)}</div>
-            </section>
-            <section className="cardRow">
-              <div className="leftCol">복용중인 약</div>
-              <div>{getArrayToJsx(userInfo.info.medicines)}</div>
-            </section>
-          </UserInfoCard>
-        </section>
-      </UserInfoWrap>
-      <MyPostsWrap>
-        <PostsTable posts={myPosts} />
-        <Pagination
-          total_count={total_cnt}
-          current_page={current_page}
-          per_page={10}
-          onChange={setCurrentPage}
-          block={5}
-        />
-      </MyPostsWrap>
-      <LogoutButton onClick={logoutHandler}>로그아웃</LogoutButton>
+    <MyPageContainer>
+      <Container>
+        <TopSection>
+          <ProfileCard />
+          <FollowerTab />
+        </TopSection>
+        <InfoSection>
+          <Title>내 정보</Title>
+          <InfoCard />
+        </InfoSection>
+        <MyPostSection>
+          <Title>내 게시글</Title>
+          <MyPostsTable posts={myPosts} />
+          <Pagination
+            total_count={total_cnt}
+            current_page={current_page}
+            per_page={10}
+            onChange={setCurrentPage}
+            block={5}
+          />
+        </MyPostSection>
+        <FollowPostsSection>
+          <Title>팔로우 게시글</Title>
+          <MyPostsTable posts={myPosts} />
+          <Pagination
+            total_count={total_cnt}
+            current_page={current_page}
+            per_page={10}
+            onChange={setCurrentPage}
+            block={5}
+          />
+        </FollowPostsSection>
+      </Container>
     </MyPageContainer>
   )
 }

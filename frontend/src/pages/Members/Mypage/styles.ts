@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const ProfilepageContainer = styled.div`
+export const MyPageContainer = styled.div`
   padding: 200px 0;
 `
 export const TopSection = styled.div`
@@ -12,4 +12,7 @@ export const TopSection = styled.div`
 export const InfoSection = styled.div`
   margin-bottom: 120px;
 `
-export const PostSection = styled.div``
+export const MyPostSection = styled.div`
+  margin-bottom: 120px;
+`
+export const FollowPostsSection = styled.div``

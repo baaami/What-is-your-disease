@@ -1,24 +1,24 @@
 import React from 'react'
 import styled from 'styled-components'
 import profileDefault from 'assets/img/profile.svg'
-import { Tabs } from 'antd';
+import { Tabs } from 'antd'
 
 const followers = [
   { name: '오렌지좋아' },
+  { name: '하이' },
+  { name: '구름' },
+  { name: '송아지' },
+  { name: '초코송이' },
+  { name: '초코송이' },
   { name: '오렌지좋아' },
   { name: '오렌지좋아' },
-  { name: '오렌지좋아' },
-  { name: '오렌지좋아' },
-  { name: '오렌지좋아' },
-  { name: '오렌지좋아' },
-  { name: '오렌지좋아' },
-  { name: '오렌지좋아' },
+  { name: '초코송이' },
   { name: '오렌지좋아' },
   { name: '오렌지좋아' },
   { name: '오렌지좋아' },
 ]
 
-const { TabPane } = Tabs;
+const { TabPane } = Tabs
 
 const FollowerTab = (props: any) => {
   return (
@@ -52,8 +52,29 @@ const FollowerTab = (props: any) => {
 export default FollowerTab
 
 export const FollowerTabWrapper = styled.div`
-  .profileWrap{
+  width: 580px;
+
+  .profileWrap {
     display: flex;
     flex-wrap: wrap;
+    text-align: center;
+
+    img {
+      width: 35px;
+    }
+
+    p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 70px;
+      margin: 5px 25px 20px;
+      text-align: center;
+      font-size: 15px;
+
+      &:nth-of-type(6n + 1) {
+        margin-left: 0;
+      }
+    }
   }
 `

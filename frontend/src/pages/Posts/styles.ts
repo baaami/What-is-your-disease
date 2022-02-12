@@ -119,10 +119,12 @@ export const TopSection = styled.div`
     span {
       font-size: 18px;
       margin-right: 10px;
+      color: #999;
       cursor: pointer;
 
       &:hover {
         color: #1850a3;
+        font-weight: 700;
       }
     }
   }

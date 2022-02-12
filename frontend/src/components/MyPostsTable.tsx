@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { Container } from 'common.styles'
-import profileDefault from 'assets/img/profile.svg'
 
-const PostsTable = (props: any) => {
+const MyPostsTable = (props: any) => {
   const [filter, setFilter] = useState({ text: '최신순', key: 'latest' })
 
   useEffect(() => {
@@ -42,15 +41,7 @@ const PostsTable = (props: any) => {
           <PostTableBody key={index}>
             <div className="top">
               <div className="left">
-                <Link to={'/profilepage'} className="latestPost">
-                  <div className="profileImg">
-                    <img src={profileDefault} alt="프로필 기본 이미지" />
-                  </div>
-                </Link>
-                <div className="profileDescript">
-                  <div className="name">{item.user.info.nickname}</div>
-                  <div className="date">{item.publishedDate.split('T')[0]}</div>
-                </div>
+                <div className="date">{item.publishedDate.split('T')[0]}</div>
               </div>
               <div className="right">
                 <div className="count">
@@ -99,7 +90,7 @@ const PostsTable = (props: any) => {
   )
 }
 
-export default PostsTable
+export default MyPostsTable
 
 export const PostTableHeader = styled.div`
   display: flex;
@@ -132,38 +123,22 @@ export const PostTableHeader = styled.div`
   }
 `
 export const PostTableBody = styled.div`
-  padding: 30px 15px;
+  padding: 20px 15px;
   border-bottom: 1px solid #cccccc;
 
   .top {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 
     .left {
       display: flex;
       align-items: center;
 
-      .profileImg {
-        margin-right: 15px;
-
-        img {
-          width: 70px;
-        }
-      }
-
-      .profileDescript {
-        .name {
-          font-size: 20px;
-          font-weight: 500;
-          color: #000;
-        }
-
-        .date {
-          font-size: 16px;
-          color: #989898;
-        }
+      .date {
+        font-size: 16px;
+        color: #989898;
       }
     }
 

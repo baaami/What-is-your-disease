@@ -9,7 +9,7 @@ import { Container, Title } from 'common.styles'
 import ProfileCard from 'components/ProfileCard'
 import FollowerTab from 'components/FollowerTab'
 import InfoCard from 'components/InfoCard'
-import PostsTable from 'components/PostsTable'
+import MyPostsTable from 'components/MyPostsTable'
 import Pagination from 'components/Pagination'
 import API from 'service/api'
 import { useRecoilState } from 'recoil'
@@ -52,7 +52,7 @@ export default function Profilepage() {
         </InfoSection>
         <PostSection>
           <Title>{'Maria'} 게시글</Title>
-          <PostsTable posts={myPosts} />
+          <MyPostsTable posts={myPosts} />
           <Pagination
             total_count={total_cnt}
             current_page={current_page}

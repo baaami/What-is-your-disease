@@ -66,8 +66,8 @@ export const update = async (ctx) => {
 export const follow = async (ctx) => {
   const { followId } = ctx.query;
   const ownId = ctx.state.user._id;
-  console.log('in');
-  // 1. 자신의 following에 해당 Id 추가
+
+  // 1. 자신의 followingId에 해당 Id 추가
   try {
     const _ = await User.findByIdAndUpdate(
       {
@@ -75,7 +75,7 @@ export const follow = async (ctx) => {
       },
       {
         $addToSet: {
-          following: followId,
+          followingIds: followId,
         },
       },
     );
@@ -83,7 +83,7 @@ export const follow = async (ctx) => {
     ctx.throw(500, e);
   }
 
-  // 2. 자신의 following에 해당 Id 추가
+  // 2. 대상 유저의 follower에 내 Id 추가
   try {
     const user = await User.findByIdAndUpdate(
       {
@@ -91,8 +91,11 @@ export const follow = async (ctx) => {
       },
       {
         $addToSet: {
-          follower: ownId,
+          followerIds: ownId,
         },
+      },
+      {
+        new: true,
       },
     );
 
@@ -110,7 +113,7 @@ export const unfollow = async (ctx) => {
   const { unfollowId } = ctx.query;
   const ownId = ctx.state.user._id;
 
-  // 1. 자신의 following에 해당 Id 추가
+  // 1. 자신의 followingId에 해당 Id 추가
   try {
     const _ = await User.findByIdAndUpdate(
       {
@@ -118,7 +121,7 @@ export const unfollow = async (ctx) => {
       },
       {
         $pull: {
-          following: unfollowId,
+          followingIds: unfollowId,
         },
       },
     );
@@ -134,7 +137,7 @@ export const unfollow = async (ctx) => {
       },
       {
         $pull: {
-          follower: ownId,
+          followerIds: ownId,
         },
       },
     );
@@ -146,13 +149,77 @@ export const unfollow = async (ctx) => {
 };
 
 /**
+ * POST /api/user/profile
+ * 유저 정보 전달
+ */
+export const profile = async (ctx) => {
+  // 팔로잉, 팔로워 id 값들을 전부 찾아서 보냄
+  const query = [
+    {
+      $match: { _id: ctx.state.user._id },
+    },
+    {
+      $unwind: '$followingIds',
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'followingIds',
+        foreignField: '_id',
+        as: 'followings',
+      },
+    },
+    {
+      $unwind: '$followings',
+    },
+    {
+      $group: {
+        _id: '$_id',
+        info: { $first: '$info' },
+        followerIds: { $first: '$followerIds' },
+        followings: { $push: '$followings' },
+      },
+    },
+    {
+      $unwind: '$followerIds',
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'followerIds',
+        foreignField: '_id',
+        as: 'followers',
+      },
+    },
+    {
+      $unwind: '$followers',
+    },
+    {
+      $group: {
+        _id: '$_id',
+        info: { $first: '$info' },
+        followers: { $push: '$followers' },
+        followings: { $first: '$followings' },
+      },
+    },
+  ];
+
+  try {
+    const user = await User.aggregate(query).exec();
+    ctx.body = user;
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};
+
+/**
  * GET /api/user/accounts
  * 유저 정보 전달
  */
 export const accounts = async (ctx) => {
   try {
     const user = await User.findById(ctx.state.user._id);
-    ctx.status = 200;
+
     ctx.body = user;
   } catch (e) {
     ctx.throw(500, e);

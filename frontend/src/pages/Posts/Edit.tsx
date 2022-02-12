@@ -9,7 +9,7 @@ import ImageResize from 'quill-image-resize-module'
 import 'react-quill/dist/quill.snow.css'
 import { PostModel } from 'model/postsModel'
 import { categoryList } from 'static/constant'
-import { Container, Title } from 'common.styles'
+import { Container } from 'common.styles'
 import { PostEditContainer, HashTagSection } from './styles'
 
 interface IPostsEditProps {}
@@ -228,6 +228,7 @@ export default function PostsEdit(props: IPostsEditProps) {
       setEditContents(path_state.body)
       setTagState({ ...tagState, tags: path_state.tags })
       setPushState(path_state)
+      setFilter(path_state.category)
     }
     window.scrollTo({ top: 0 })
   }, [])
@@ -235,7 +236,12 @@ export default function PostsEdit(props: IPostsEditProps) {
   return (
     <PostEditContainer>
       <Container>
-        <Select defaultValue="백신" style={{ width: 250 }}>
+        <Select
+          onChange={(value) => setFilter(value)}
+          value={filter}
+          style={{ width: 250 }}
+        >
+          {console.log(pushState.category)}
           {categoryList.map((category, idx) => (
             <Option key={idx} value={category}>
               {category}

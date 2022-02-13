@@ -41,14 +41,16 @@ export default function Mypage(props: IMypageProps) {
   }
 
   const getUserProfile = async () => {
-    await API.user
-      .getUserProfile(userInfo._id)
-      .then((res) => {
-        console.log(res.data)
-      })
-      .catch((e) => {
-        console.log(e)
-      })
+    if (userInfo._id) {
+      await API.user
+        .getUserProfile(userInfo._id)
+        .then((res) => {
+          console.log(res.data)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    }
   }
 
   const onClickEditButton = () => {

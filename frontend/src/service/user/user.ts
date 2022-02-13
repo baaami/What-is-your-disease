@@ -13,6 +13,7 @@ export const user = {
         Authorization: `Bearer ${token}`,
       },
     }
+
     return Axios(config)
   },
   addFollow: async (follow_id: string) => {

@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import User from '../../models/user';
 import Post from '../../models/post';
 import jwt from '../../lib/jwt';
@@ -153,10 +154,12 @@ export const unfollow = async (ctx) => {
  * 유저 정보 전달
  */
 export const profile = async (ctx) => {
+  const { userId } = ctx.params;
+
   // 팔로잉, 팔로워 id 값들을 전부 찾아서 보냄
   const query = [
     {
-      $match: { _id: ctx.state.user._id },
+      $match: { _id: mongoose.Types.ObjectId(userId) },
     },
     {
       $unwind: '$followingIds',
@@ -204,8 +207,18 @@ export const profile = async (ctx) => {
     },
   ];
 
+  let user;
   try {
-    const user = await User.aggregate(query).exec();
+    // TODO : 왜 행렬로 받게되는지 확인 <- aggregate 특성??
+    [user] = await User.aggregate(query).exec();
+
+    if (!user) {
+      try {
+        user = await User.findById(userId).exec();
+      } catch (e) {
+        ctx.throw(500, e);
+      }
+    }
     ctx.body = user;
   } catch (e) {
     ctx.throw(500, e);

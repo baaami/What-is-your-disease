@@ -11,7 +11,7 @@ user.patch('/update', checkLoggedIn, userCtrl.update);
 user.get('/accounts', checkLoggedIn, userCtrl.accounts);
 
 // 유저 프로필 조회
-user.get('/profile', checkLoggedIn, userCtrl.profile);
+user.get('/profile/:userId', checkLoggedIn, userCtrl.profile);
 
 // 유저 팔로우
 user.post('/follow', checkLoggedIn, userCtrl.follow);

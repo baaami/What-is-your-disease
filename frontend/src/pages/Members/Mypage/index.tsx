@@ -25,15 +25,6 @@ export default function Mypage(props: IMypageProps) {
   const [myPosts, setMyPosts] = useState([])
   const [total_cnt, setTotalCnt] = useState(0)
   const [current_page, setCurrentPage] = useState(1)
-  const getArrayToJsx = (arr: Array<string>) => {
-    return arr.map((item, index) => {
-      if (index === arr.length - 1) {
-        return <span>{item}</span>
-      } else {
-        return <span>{item}, </span>
-      }
-    })
-  }
 
   const getMyPosts = async () => {
     if (userInfo._id) {
@@ -49,12 +40,24 @@ export default function Mypage(props: IMypageProps) {
     }
   }
 
+  const getUserProfile = async () => {
+    await API.user
+      .getUserProfile(userInfo._id)
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }
+
   const onClickEditButton = () => {
     history.push('/infoForm')
   }
 
   useEffect(() => {
     getMyPosts()
+    getUserProfile()
   }, [userInfo, current_page])
 
   useEffect(() => {
@@ -65,12 +68,28 @@ export default function Mypage(props: IMypageProps) {
     <MyPageContainer>
       <Container>
         <TopSection>
-          <ProfileCard />
-          <FollowerTab />
+          <ProfileCard
+            nickname={userInfo.info.nickname}
+            followerCnt={userInfo.followerIds.length}
+            followingCnt={userInfo.followingIds.length}
+            postsCnt={total_cnt}
+          />
+          <FollowerTab
+            follow_ids={userInfo.followerIds}
+            following_ids={userInfo.followingIds}
+          />
         </TopSection>
         <InfoSection>
           <Title>내 정보</Title>
-          <InfoCard />
+          <InfoCard
+            name={userInfo.info.name}
+            age={userInfo.info.age}
+            gender={userInfo.info.gender}
+            nickname={userInfo.info.nickname}
+            bloodtype={userInfo.info.bloodtype}
+            allergy={userInfo.info.allergy}
+            medicines={userInfo.info.allergy}
+          />
         </InfoSection>
         <MyPostSection>
           <Title>내 게시글</Title>

@@ -177,7 +177,7 @@ export const CommentsSection = styled.div`
   border-radius: 8px;
 
   .commentsCnt {
-    padding-top: 20px;
+    padding: 20px 0;
   }
 
   .comment {

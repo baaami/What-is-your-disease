@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import profileDefault from 'assets/img/profile.svg'
 import { Tabs } from 'antd'
-
+import API from 'service/api'
 const followers = [
   { name: '오렌지좋아' },
   { name: '하이' },
@@ -20,7 +20,12 @@ const followers = [
 
 const { TabPane } = Tabs
 
-const FollowerTab = (props: any) => {
+interface FollowerTabModel {
+  follow_ids?: string[]
+  following_ids?: string[]
+}
+
+const FollowerTab = (props: FollowerTabModel) => {
   return (
     <FollowerTabWrapper>
       <Tabs defaultActiveKey="1">

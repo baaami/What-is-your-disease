@@ -3,10 +3,12 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { Container } from 'common.styles'
 import profileDefault from 'assets/img/profile.svg'
+import { useRecoilState } from 'recoil'
+import { currentUserInfo } from 'store/userInfo'
 
 const PostsTable = (props: any) => {
   const [filter, setFilter] = useState({ text: '최신순', key: 'latest' })
-
+  const [userInfo] = useRecoilState(currentUserInfo)
   useEffect(() => {
     if (props.getPosts) {
       props.getPosts(filter.key)
@@ -42,7 +44,14 @@ const PostsTable = (props: any) => {
           <PostTableBody key={index}>
             <div className="top">
               <div className="left">
-                <Link to={'/profilepage'} className="latestPost">
+                <Link
+                  to={
+                    item.user._id === userInfo._id
+                      ? '/mypage'
+                      : `/profilepage/${item.user._id}`
+                  }
+                  className="latestPost"
+                >
                   <div className="profileImg">
                     <img src={profileDefault} alt="프로필 기본 이미지" />
                   </div>

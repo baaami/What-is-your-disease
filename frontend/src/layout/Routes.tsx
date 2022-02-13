@@ -24,7 +24,7 @@ export default function Routes() {
         <Route path="/category" component={Category} />
         <Route path="/mypage" component={Mypage} />
         <Route path="/infoForm" component={InfoForm} />
-        <Route path="/profilepage/:userId" component={Profilepage} />
+        <Route path="/profilepage/:uid" exact component={Profilepage} />
         <Route path="/posts/lists" exact component={PostsLists} />
         <Route path="/posts/category/lists/:type" component={CategoryPosts} />
         <Route

@@ -3,37 +3,62 @@ import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
 import styled from 'styled-components'
 
-const InfoCard = (props: any) => {
+interface InfoCardModel {
+  name?: string
+  age?: number | string
+  gender?: string
+  nickname?: string
+  bloodtype?: string
+  allergy?: string[]
+  medicines?: string[]
+}
+
+const InfoCard = (props: InfoCardModel) => {
   const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
+
+  const getArrayToJsx = (arr: Array<string>) => {
+    if (!arr) return ''
+    return arr.map((item, index) => {
+      if (index === arr.length - 1) {
+        return <span key={`infoCardId${index}`}>{item}</span>
+      } else {
+        return <span key={`infoCardId${index}`}>{item}, </span>
+      }
+    })
+  }
 
   return (
     <InfoCardWrapper>
       <InfoCardWrap>
         <div className="col">
           <div className="row title">이름</div>
-          <div className="row data">{userInfo.info.name}</div>
+          <div className="row data">{props.name ?? ''}</div>
         </div>
         <div className="col">
           <div className="row title">나이</div>
-          <div className="row data">{userInfo.info.age}</div>
+          <div className="row data">{props.age ?? ''}</div>
         </div>
         <div className="col">
           <div className="row title">성별</div>
-          <div className="row data">{userInfo.info.gender}</div>
+          <div className="row data">{props.gender ?? ''}</div>
         </div>
       </InfoCardWrap>
       <InfoCardWrap>
         <div className="col">
           <div className="row title">혈액형</div>
-          <div className="row data">{userInfo.info.bloodtype}</div>
+          <div className="row data">{props.bloodtype ?? ''}</div>
         </div>
         <div className="col">
           <div className="row title">알러지</div>
-          <div className="row data">{userInfo.info.allergy}</div>
+          <div className="row data">
+            {getArrayToJsx(props.allergy as string[])}
+          </div>
         </div>
         <div className="col">
           <div className="row title">복용중인 약</div>
-          <div className="row data">{userInfo.info.medicines}</div>
+          <div className="row data">
+            {getArrayToJsx(props.medicines as string[])}
+          </div>
         </div>
       </InfoCardWrap>
     </InfoCardWrapper>
@@ -64,6 +89,7 @@ export const InfoCardWrap = styled.div`
     display: flex;
 
     .title {
+      width: 100px;
       font-size: 20px;
       margin-right: 54px;
     }

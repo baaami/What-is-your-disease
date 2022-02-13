@@ -4,7 +4,7 @@ export interface CreatePostModel {
   category: string
 }
 
-export interface PostUserModel {
+export interface PostUserModel extends ProfileModel {
   provider?: string
   providerId: string
   _id: string
@@ -17,4 +17,11 @@ export interface PostUserModel {
     allergy?: Array<string>
     medicines?: Array<string>
   }
+  followerIds?: string[]
+  followingIds?: string[]
+}
+
+export interface ProfileModel {
+  followers?: PostUserModel[]
+  followings?: PostUserModel[]
 }

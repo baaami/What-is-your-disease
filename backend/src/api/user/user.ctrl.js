@@ -157,7 +157,7 @@ export const profile = async (ctx) => {
   const { userId } = ctx.params;
 
   // 팔로잉, 팔로워 id 값들을 전부 찾아서 보냄
-  const query = [
+  const followQuery = [
     {
       $match: { _id: mongoose.Types.ObjectId(userId) },
     },
@@ -179,9 +179,14 @@ export const profile = async (ctx) => {
       $group: {
         _id: '$_id',
         info: { $first: '$info' },
-        followerIds: { $first: '$followerIds' },
         followings: { $push: '$followings' },
       },
+    },
+  ];
+
+  const followerQuery = [
+    {
+      $match: { _id: mongoose.Types.ObjectId(userId) },
     },
     {
       $unwind: '$followerIds',
@@ -202,27 +207,40 @@ export const profile = async (ctx) => {
         _id: '$_id',
         info: { $first: '$info' },
         followers: { $push: '$followers' },
-        followings: { $first: '$followings' },
       },
     },
   ];
 
-  let user;
+  let followUser, followerUser, user;
   try {
     // TODO : 왜 행렬로 받게되는지 확인 <- aggregate 특성??
-    [user] = await User.aggregate(query).exec();
-
-    if (!user) {
-      try {
-        user = await User.findById(userId).exec();
-      } catch (e) {
-        ctx.throw(500, e);
-      }
-    }
-    ctx.body = user;
+    [followUser] = await User.aggregate(followQuery).exec();
+    // console.log('[TEST] followUser:', followUser.followings);
   } catch (e) {
     ctx.throw(500, e);
   }
+
+  try {
+    [followerUser] = await User.aggregate(followerQuery).exec();
+    // console.log('[TEST] followerUser:', followerUser.followers);
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  try {
+    user = await User.findById(userId).exec();
+    user = user.toJSON();
+
+    if (followUser) {
+      user.followings = [...followUser.followings];
+    }
+    if (followerUser) {
+      user.followers = [...followerUser.followers];
+    }
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+  ctx.body = user;
 };
 
 /**

@@ -96,7 +96,7 @@ export default function Mypage(props: IMypageProps) {
             nickname={userInfo.info.nickname}
             bloodtype={userInfo.info.bloodtype}
             allergy={userInfo.info.allergy}
-            medicines={userInfo.info.allergy}
+            medicines={userInfo.info.medicines}
           />
         </InfoSection>
         <MyPostSection>

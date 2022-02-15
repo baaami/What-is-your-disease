@@ -5,7 +5,7 @@ import {
   ProfilepageContainer,
   TopSection,
 } from './styles'
-import { RouteComponentProps } from 'react-router-dom'
+import { RouteComponentProps, useHistory } from 'react-router-dom'
 import { Container, Title } from 'common.styles'
 import ProfileCard from 'components/ProfileCard'
 import FollowerTab from 'components/FollowerTab'
@@ -20,10 +20,12 @@ import { PostUserModel } from 'service/model/postModel'
 export default function Profilepage({
   match,
 }: RouteComponentProps<{ uid: string }>) {
+  const history = useHistory()
+
   const [myPosts, setMyPosts] = useState([])
   const [total_cnt, setTotalCnt] = useState(0)
   const [current_page, setCurrentPage] = useState(1)
-  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
+  const [userInfo] = useRecoilState(currentUserInfo)
   const [current_profile, setCurrentProfile] = useState<PostUserModel>(
     {} as PostUserModel,
   )
@@ -59,6 +61,7 @@ export default function Profilepage({
   }, [userInfo, current_page])
 
   useEffect(() => {
+    // if (match.params.uid === userInfo._id) history.push('/mypage')
     window.scrollTo({ top: 0 })
   }, [])
 

@@ -4,6 +4,10 @@ import profileDefault from 'assets/img/profile.svg'
 import { Tabs } from 'antd'
 import API from 'service/api'
 import { PostUserModel } from 'service/model/postModel'
+import { useHistory } from 'react-router-dom'
+import { useRecoilState } from 'recoil'
+import { currentUserInfo } from 'store/userInfo'
+
 const followers = [
   { name: '오렌지좋아' },
   { name: '하이' },
@@ -29,13 +33,29 @@ interface FollowerTabModel {
 }
 
 const FollowerTab = (props: FollowerTabModel) => {
+  const history = useHistory()
+
+  const [userInfo] = useRecoilState(currentUserInfo)
+
+  const onClickFollow = (follow_user: string) => {
+    if (follow_user === userInfo._id) {
+      history.push('/mypage')
+    } else {
+      history.push(`/profilepage/${follow_user}`)
+    }
+  }
+
   return (
     <FollowerTabWrapper>
       <Tabs defaultActiveKey="1">
         <TabPane tab="팔로워" key="1">
           <div className="profileWrap">
             {props.followers?.map((el, idx) => (
-              <div key={idx}>
+              <div
+                key={idx}
+                onClick={() => onClickFollow(el._id)}
+                style={{ cursor: 'pointer' }}
+              >
                 <img src={profileDefault} alt="프로필 사진" />
                 <p>{el.info.nickname}</p>
               </div>
@@ -45,7 +65,11 @@ const FollowerTab = (props: FollowerTabModel) => {
         <TabPane tab="팔로잉" key="2">
           <div className="profileWrap">
             {props.followings?.map((el, idx) => (
-              <div key={idx}>
+              <div
+                key={idx}
+                onClick={() => onClickFollow(el._id)}
+                style={{ cursor: 'pointer' }}
+              >
                 <img src={profileDefault} alt="프로필 사진" />
                 <p>{el.info.nickname}</p>
               </div>
@@ -66,9 +90,11 @@ export const FollowerTabWrapper = styled.div`
     display: flex;
     flex-wrap: wrap;
     text-align: center;
+    gap: 20px;
 
     img {
       width: 35px;
+      /* margin: 20px; */
     }
 
     p {
@@ -76,7 +102,7 @@ export const FollowerTabWrapper = styled.div`
       text-overflow: ellipsis;
       white-space: nowrap;
       width: 70px;
-      margin: 5px 25px 20px;
+      /* margin: 20px; */
       text-align: center;
       font-size: 15px;
 

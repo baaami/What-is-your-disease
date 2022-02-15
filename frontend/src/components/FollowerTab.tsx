@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import profileDefault from 'assets/img/profile.svg'
 import { Tabs } from 'antd'
 import API from 'service/api'
+import { PostUserModel } from 'service/model/postModel'
 const followers = [
   { name: '오렌지좋아' },
   { name: '하이' },
@@ -23,6 +24,8 @@ const { TabPane } = Tabs
 interface FollowerTabModel {
   follow_ids?: string[]
   following_ids?: string[]
+  followers?: PostUserModel[]
+  followings?: PostUserModel[]
 }
 
 const FollowerTab = (props: FollowerTabModel) => {
@@ -31,20 +34,20 @@ const FollowerTab = (props: FollowerTabModel) => {
       <Tabs defaultActiveKey="1">
         <TabPane tab="팔로워" key="1">
           <div className="profileWrap">
-            {followers.map((el, idx) => (
+            {props.followers?.map((el, idx) => (
               <div key={idx}>
                 <img src={profileDefault} alt="프로필 사진" />
-                <p>{el.name}</p>
+                <p>{el.info.nickname}</p>
               </div>
             ))}
           </div>
         </TabPane>
         <TabPane tab="팔로잉" key="2">
           <div className="profileWrap">
-            {followers.map((el, idx) => (
+            {props.followings?.map((el, idx) => (
               <div key={idx}>
                 <img src={profileDefault} alt="프로필 사진" />
-                <p>{el.name}</p>
+                <p>{el.info.nickname}</p>
               </div>
             ))}
           </div>

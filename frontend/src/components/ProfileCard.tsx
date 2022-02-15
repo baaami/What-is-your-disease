@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import profileDefault from 'assets/img/profile.svg'
 import { useLocation } from 'react-router-dom'
 import API from 'service/api'
+import { useRecoilState } from 'recoil'
+import { currentUserInfo } from 'store/userInfo'
 
 interface ProfileCardModel {
   currentUserId?: string
@@ -10,16 +12,21 @@ interface ProfileCardModel {
   postsCnt: string | number | undefined
   followerCnt: string | number | undefined
   followingCnt: string | number | undefined
+  followerIds?: string[]
+  nextCallback?: () => void
 }
 
 const ProfileCard = (props: ProfileCardModel) => {
   const location = useLocation()
+  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
 
   const addFollowUser = (follow_id: string) => {
     API.user
       .addFollow(follow_id)
       .then((res) => {
-        console.log(res.data)
+        if (props.nextCallback) {
+          props.nextCallback()
+        }
       })
       .catch((e) => {
         console.log(e)
@@ -30,7 +37,7 @@ const ProfileCard = (props: ProfileCardModel) => {
     API.user
       .removeFollow(un_follow_id)
       .then((res) => {
-        console.log(res.data)
+        if (props.nextCallback) props.nextCallback()
       })
       .catch((e) => {
         console.log(e)
@@ -57,18 +64,21 @@ const ProfileCard = (props: ProfileCardModel) => {
         </div>
         {location.pathname !== '/mypage' && (
           <>
-            <button
-              className="follow"
-              onClick={() => addFollowUser(props.currentUserId as string)}
-            >
-              팔로우
-            </button>
-            <button
-              className="unfollow"
-              onClick={() => unFollowUser(props.currentUserId as string)}
-            >
-              언팔로우
-            </button>
+            {props.followerIds?.includes(userInfo._id as string) ? (
+              <button
+                className="unfollow"
+                onClick={() => unFollowUser(props.currentUserId as string)}
+              >
+                언팔로우
+              </button>
+            ) : (
+              <button
+                className="follow"
+                onClick={() => addFollowUser(props.currentUserId as string)}
+              >
+                팔로우
+              </button>
+            )}
           </>
         )}
       </div>

@@ -16,6 +16,7 @@ import {
 import ProfileCard from 'components/ProfileCard'
 import FollowerTab from 'components/FollowerTab'
 import InfoCard from 'components/InfoCard'
+import { PostUserModel } from 'service/model/postModel'
 
 interface IMypageProps {}
 
@@ -25,6 +26,9 @@ export default function Mypage(props: IMypageProps) {
   const [myPosts, setMyPosts] = useState([])
   const [total_cnt, setTotalCnt] = useState(0)
   const [current_page, setCurrentPage] = useState(1)
+  const [current_profile, setCurrentProfile] = useState<PostUserModel>(
+    {} as PostUserModel,
+  )
 
   const getMyPosts = async () => {
     if (userInfo._id) {
@@ -45,7 +49,7 @@ export default function Mypage(props: IMypageProps) {
       await API.user
         .getUserProfile(userInfo._id)
         .then((res) => {
-          console.log(res.data)
+          setCurrentProfile(res.data)
         })
         .catch((e) => {
           console.log(e)
@@ -79,6 +83,8 @@ export default function Mypage(props: IMypageProps) {
           <FollowerTab
             follow_ids={userInfo.followerIds}
             following_ids={userInfo.followingIds}
+            followers={current_profile.followers}
+            followings={current_profile.followings}
           />
         </TopSection>
         <InfoSection>

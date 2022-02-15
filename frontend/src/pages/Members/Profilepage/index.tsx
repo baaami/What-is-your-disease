@@ -72,10 +72,14 @@ export default function Profilepage({
             followerCnt={current_profile?.followerIds?.length}
             followingCnt={current_profile?.followingIds?.length}
             postsCnt={total_cnt}
+            followerIds={current_profile?.followerIds}
+            nextCallback={getUserProfile}
           />
           <FollowerTab
             follow_ids={current_profile.followerIds}
             following_ids={current_profile.followingIds}
+            followers={current_profile.followers}
+            followings={current_profile.followings}
           />
         </TopSection>
         <InfoSection>

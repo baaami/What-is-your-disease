@@ -17,6 +17,7 @@ import ProfileCard from 'components/ProfileCard'
 import FollowerTab from 'components/FollowerTab'
 import InfoCard from 'components/InfoCard'
 import { PostUserModel } from 'service/model/postModel'
+import { setConstantValue } from 'typescript'
 
 interface IMypageProps {}
 
@@ -29,6 +30,9 @@ export default function Mypage(props: IMypageProps) {
   const [current_profile, setCurrentProfile] = useState<PostUserModel>(
     {} as PostUserModel,
   )
+  const [follow_posts, setFollowPosts] = useState([])
+  const [current_page_f, setCurrentPageF] = useState(1)
+  const [total_cnt_f, setTotalCntF] = useState(0)
 
   const getMyPosts = async () => {
     if (userInfo._id) {
@@ -57,6 +61,18 @@ export default function Mypage(props: IMypageProps) {
     }
   }
 
+  const getFollowPosts = async () => {
+    await API.posts
+      .getFollowPosts(current_page_f, 10)
+      .then((res) => {
+        setFollowPosts(res.data.data.post)
+        setTotalCntF(res.data.postTotalCnt)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }
+
   const onClickEditButton = () => {
     history.push('/infoForm')
   }
@@ -64,6 +80,7 @@ export default function Mypage(props: IMypageProps) {
   useEffect(() => {
     getMyPosts()
     getUserProfile()
+    getFollowPosts()
   }, [userInfo, current_page])
 
   useEffect(() => {
@@ -112,12 +129,12 @@ export default function Mypage(props: IMypageProps) {
         </MyPostSection>
         <FollowPostsSection>
           <Title>팔로우 게시글</Title>
-          <MyPostsTable posts={myPosts} />
+          <MyPostsTable posts={follow_posts} />
           <Pagination
-            total_count={total_cnt}
-            current_page={current_page}
+            total_count={total_cnt_f}
+            current_page={current_page_f}
             per_page={10}
-            onChange={setCurrentPage}
+            onChange={setCurrentPageF}
             block={5}
           />
         </FollowPostsSection>

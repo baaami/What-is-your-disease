@@ -117,4 +117,20 @@ export const posts = {
     }
     return Axios(config)
   },
+  getFollowPosts: async (page: number, postNum: number) => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: GET,
+      url: `/api/posts/follow/`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        page,
+        postNum,
+      },
+    }
+    return Axios(config)
+  },
 }

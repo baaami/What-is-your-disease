@@ -348,3 +348,45 @@ export const filter = async (ctx) => {
 
   ctx.body = responseData;
 };
+
+/**
+ * GET /api/posts/user/:userId?page=&postNum=
+ *
+ * @brief     로그인 회원 포스트 리스트를 전달
+ * @param {*} ctx
+ */
+export const follow = async (ctx) => {
+  const page = parseInt(ctx.query.page || '1', 10);
+  const postNum = parseInt(ctx.query.postNum || '10', 10);
+  let posts;
+
+  if (page < 1) {
+    ctx.status = 400;
+    return;
+  }
+  const followIds = [...ctx.state.user.followingIds];
+
+  const query = {
+    'user._id': { $in: followIds },
+  };
+
+  try {
+    posts = await getLatestPosts(ctx, query, page, postNum);
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  const postCount = await Post.countDocuments(query).exec();
+
+  const responseData = {
+    postTotalCnt: postCount,
+    data: {
+      post: posts.map((post) => ({
+        ...post,
+        body: removeHtmlAndShorten(post.body),
+      })),
+    },
+  };
+
+  ctx.body = responseData;
+};

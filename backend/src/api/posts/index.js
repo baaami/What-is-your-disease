@@ -1,4 +1,5 @@
 const Router = require('koa-router');
+import checkLoggedIn from '../../lib/checkLoggedIn';
 import * as postsCtrl from './posts.ctrl';
 
 const posts = new Router();
@@ -17,5 +18,8 @@ posts.get('/user/:userId', postsCtrl.user);
 
 // 필터 게시물 (필터링 테이블 작성 필요)
 posts.get('/filter/:orderBy', postsCtrl.filter);
+
+// 특정 유저 팔로우들의 게시물
+posts.get('/follow', checkLoggedIn, postsCtrl.follow);
 
 export default posts;

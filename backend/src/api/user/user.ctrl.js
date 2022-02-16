@@ -215,14 +215,12 @@ export const profile = async (ctx) => {
   try {
     // TODO : 왜 행렬로 받게되는지 확인 <- aggregate 특성??
     [followUser] = await User.aggregate(followQuery).exec();
-    // console.log('[TEST] followUser:', followUser.followings);
   } catch (e) {
     ctx.throw(500, e);
   }
 
   try {
     [followerUser] = await User.aggregate(followerQuery).exec();
-    // console.log('[TEST] followerUser:', followerUser.followers);
   } catch (e) {
     ctx.throw(500, e);
   }

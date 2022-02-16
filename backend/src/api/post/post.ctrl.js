@@ -258,7 +258,6 @@ export const like = async (ctx) => {
         { new: true },
       );
 
-      console.log('[TEST] result:', result);
       if (!result) {
         console.log('findOneAndUpdate Error');
       }

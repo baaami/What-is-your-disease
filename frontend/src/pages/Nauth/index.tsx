@@ -15,12 +15,6 @@ export default function Nauth(props: NauthProps) {
     // 인가 코드
     const code = new URL(window.location.href).searchParams.get('code')
 
-    console.log(
-      '[TEST] searchParams : ',
-      new URL(window.location.href).searchParams,
-    )
-    console.log('[TEST] code : ', code)
-
     client
       .post('/api/auth/callback/naver', { code })
       .then((res) => {

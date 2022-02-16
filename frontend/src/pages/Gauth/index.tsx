@@ -15,9 +15,6 @@ export default function Gauth(props: GauthProps) {
     // 인가 코드
     const code = new URL(window.location.href).searchParams.get('code')
 
-    console.log('[TEST] url : ', window.location.href)
-    console.log('[TEST] code : ', code)
-
     client
       .post('/api/auth/callback/google', { code })
       .then((res) => {

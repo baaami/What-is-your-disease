@@ -7,7 +7,7 @@ export const user = {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
-      url: `/api/user/profile/${uid}`,
+      url: `${BASE_URL}/api/user/profile/${uid}`,
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,
@@ -20,7 +20,7 @@ export const user = {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: POST,
-      url: `/api/user/follow`,
+      url: `${BASE_URL}/api/user/follow`,
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,
@@ -35,7 +35,7 @@ export const user = {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: POST,
-      url: `/api/user/unfollow`,
+      url: `${BASE_URL}/api/user/unfollow`,
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,

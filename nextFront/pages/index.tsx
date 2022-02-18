@@ -1,101 +1,101 @@
-import type { NextPage } from "next";
+import type { NextPage } from 'next'
 // import Head from "next/head";
 // import Image from "next/image";
 // import styles from "../stylesG/Home.module.css";
 
-import { useState, useEffect } from "react";
-import { Category, HomeContainer, HotTopic, MainBanner, Post } from "./styles";
+import { useState, useEffect } from 'react'
+import { Category, HomeContainer, HotTopic, MainBanner, Post } from './styles'
 // import { Link, useHistory } from 'react-router-dom'
-import { useRouter } from "next/router";
-import Image from "next/image";
-import Link from "next/link";
-import API from "service/api";
-import PostsTable from "components/PostsTable";
-import Pagination from "components/Pagination";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Container, NoData, Title } from "common.styles";
-import SwiperCore, { Navigation } from "swiper";
-import thumbnail from "assets/img/thumbnail.svg";
-import like_out from "assets/img/like_out.svg";
-import like_active from "assets/img/like_active.svg";
-import Search from "components/Search";
-import { useRecoilState } from "recoil";
-import { currentUserInfo } from "store/userInfo";
+import { useRouter } from 'next/router'
+import Image from 'next/image'
+import Link from 'next/link'
+import API from 'service/api'
+import PostsTable from 'components/PostsTable'
+import Pagination from 'components/Pagination'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Container, NoData, Title } from 'common.styles'
+import SwiperCore, { Navigation } from 'swiper'
+import thumbnail from 'assets/img/thumbnail.svg'
+import like_out from 'assets/img/like_out.svg'
+import like_active from 'assets/img/like_active.svg'
+import Search from 'components/Search'
+import { useRecoilState } from 'recoil'
+import { currentUserInfo } from 'store/userInfo'
 interface IHomeProps {}
 
 const categories = [
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-  { name: "내과" },
-];
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+  { name: '내과' },
+]
 
 const Home: NextPage = () => {
-  const history = useRouter();
-  const [latest_posts, setLatestPosts] = useState([]);
-  const [hot_posts, setHotPosts] = useState([]);
-  const [current_page, setCurrentPage] = useState(1);
-  const [total_cnt, setTotalCnt] = useState(0);
-  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo);
+  const router = useRouter()
+  const [latest_posts, setLatestPosts] = useState([])
+  const [hot_posts, setHotPosts] = useState([])
+  const [current_page, setCurrentPage] = useState(1)
+  const [total_cnt, setTotalCnt] = useState(0)
+  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
 
-  SwiperCore.use([Navigation]);
+  SwiperCore.use([Navigation])
 
   const getLatestPosts = async (order_by: string) => {
     await API.posts
       .getFilterPosts(order_by, current_page, 10)
       .then((res) => {
-        setTotalCnt(res.data.postTotalCnt);
-        setLatestPosts(res.data.data.post);
+        setTotalCnt(res.data.postTotalCnt)
+        setLatestPosts(res.data.data.post)
       })
       .catch((e) => {
-        console.log(e);
-      });
-  };
+        console.log(e)
+      })
+  }
 
   const getHotPosts = async () => {
     await API.posts
       .getHotPosts()
       .then((res) => {
-        setHotPosts(res.data.data.post);
+        setHotPosts(res.data.data.post)
       })
       .catch((e) => {
-        console.log(e);
-      });
-  };
+        console.log(e)
+      })
+  }
 
   useEffect(() => {
-    getHotPosts();
-    window.scrollTo({ top: 0 });
-  }, []);
+    getHotPosts()
+    window.scrollTo({ top: 0 })
+  }, [])
 
   useEffect(() => {
-    getLatestPosts("latest");
-  }, [current_page]);
+    getLatestPosts('latest')
+  }, [current_page])
 
   useEffect(() => {
-    console.log(userInfo);
-  });
+    console.log(userInfo)
+  })
 
   return (
     <HomeContainer>
       <MainBanner>
         <Container>
           <h2>너의 건강상태도 알려줘~!</h2>
-          {userInfo._id !== "" ? (
+          {userInfo._id !== '' ? (
             <Link href="/posts/edit">공유하러 가기</Link>
           ) : (
             <Link href="/login">공유하러 가기</Link>
@@ -112,12 +112,14 @@ const Home: NextPage = () => {
                   className="categoryItem"
                   key={idx}
                   onClick={() =>
-                    history.push(`/posts/category/lists/${item.name}`)
+                    router.push({
+                      pathname: `/posts/category/lists/${item.name}`,
+                    })
                   }
                 >
                   <h2>{item.name}</h2>
                 </div>
-              );
+              )
             })}
           </div>
         </Container>
@@ -140,7 +142,7 @@ const Home: NextPage = () => {
                             onClick={(e) => e.isPropagationStopped()}
                           >
                             <Image src={like_out} alt="like out icon" />
-                            <span style={{ color: "#ebebeb" }}>
+                            <span style={{ color: '#ebebeb' }}>
                               {item.likes}
                             </span>
                           </div>
@@ -151,7 +153,7 @@ const Home: NextPage = () => {
                               onClick={(e) => e.isPropagationStopped()}
                             >
                               <Image src={like_out} alt="like out icon" />
-                              <span style={{ color: "#ebebeb" }}>
+                              <span style={{ color: '#ebebeb' }}>
                                 {item.likes}
                               </span>
                             </div>
@@ -162,7 +164,7 @@ const Home: NextPage = () => {
                             onClick={(e) => e.isPropagationStopped()}
                           >
                             <Image src={like_active} alt="like active icon" />
-                            <span style={{ color: "#EA1F1C" }}>
+                            <span style={{ color: '#EA1F1C' }}>
                               {item.likes}
                             </span>
                           </div>
@@ -172,8 +174,8 @@ const Home: NextPage = () => {
                           <h2>{item.category}</h2>
                           <h3>{item.title}</h3>
                           <h4>
-                            {item.user.info.nickname}{" "}
-                            <span>{item.publishedDate.split("T")[0]}</span>
+                            {item.user.info.nickname}{' '}
+                            <span>{item.publishedDate.split('T')[0]}</span>
                           </h4>
                         </div>
                       </>
@@ -200,7 +202,9 @@ const Home: NextPage = () => {
         </Container>
       </Post>
     </HomeContainer>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
+
+// export const getServerSideProps = async () => {}

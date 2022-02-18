@@ -21,6 +21,16 @@ const app = new Koa();
 
 const router = new Router();
 
+const cors = require('@koa/cors');
+
+app.use(
+  cors({
+    // host: 'http://localhost:4000',
+    origin: 'http://localhost:3000',
+    // credentials: true,
+  }),
+);
+
 /**
  * app.use : 미들웨어 함수를 애플리케이션에 등록한다
  * @brief : route 전에 bodyparser 수행
@@ -37,14 +47,6 @@ const serve = require('koa-static');
 // 이미지 파일 인식을 위해 static경로 설정
 app.use(serve('.'));
 // console.log(__dirname + "./api/post/uploads/");
-
-const proxy = require('koa-proxy');
-
-app.use(
-  proxy({
-    host: 'http://localhost:3000',
-  }),
-);
 
 const port = PORT || 4000;
 app.listen(port, () => {

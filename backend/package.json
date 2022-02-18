@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/SeongBeom27/What-is-your-disease#readme",
   "dependencies": {
+    "@koa/cors": "^3.1.0",
     "@koa/multer": "^3.0.0",
     "axios": "^0.24.0",
     "bcrypt": "^5.0.1",
@@ -29,7 +30,6 @@
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
     "koa-passport": "^4.1.4",
-    "koa-proxy": "^1.0.0-alpha.3",
     "koa-router": "^10.1.1",
     "koa-session": "^6.2.0",
     "koa-static": "^5.0.0",

@@ -1,28 +1,28 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 // import { useHistory } from 'react-router-dom'
-import { useRouter } from "next/router";
-import styled from "styled-components";
-import API from "service/api";
-import icon from "../assets/img/search.svg";
+import { useRouter } from 'next/router'
+import styled from 'styled-components'
+import API from 'service/api'
+import icon from '../assets/img/search.svg'
 
 interface ISearchProps {}
 
 export default function Search(props: ISearchProps) {
-  const router = useRouter();
+  const router = useRouter()
 
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('')
 
   const onEnterSearch = async (e: any, click: string) => {
-    if (e.key === "Enter" || click === "click_event") {
+    if (e.key === 'Enter' || click === 'click_event') {
       router.push({
-        pathname: `/posts/lists/search/form`,
-        query: {
-          value: value,
-          type: "search",
-        },
-      });
+        pathname: `/posts/lists/search/form/${value}`,
+        // query: {
+        //   value: value,
+        //   type: "search",
+        // },
+      })
     }
-  };
+  }
 
   return (
     <SearchContainer>
@@ -32,17 +32,17 @@ export default function Search(props: ISearchProps) {
         placeholder="검색"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        onKeyPress={(e) => onEnterSearch(e, "")}
+        onKeyPress={(e) => onEnterSearch(e, '')}
       />
       <button>
         <img
           src={icon.src}
           alt="search icon"
-          onClick={(e) => onEnterSearch(e, "click_event")}
+          onClick={(e) => onEnterSearch(e, 'click_event')}
         />
       </button>
     </SearchContainer>
-  );
+  )
 }
 
 const SearchContainer = styled.div`
@@ -78,4 +78,4 @@ const SearchContainer = styled.div`
     background: transparent;
     border: none;
   }
-`;
+`

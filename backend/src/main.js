@@ -18,6 +18,7 @@ mongoose
   });
 
 const app = new Koa();
+
 const router = new Router();
 
 /**
@@ -36,6 +37,14 @@ const serve = require('koa-static');
 // 이미지 파일 인식을 위해 static경로 설정
 app.use(serve('.'));
 // console.log(__dirname + "./api/post/uploads/");
+
+const proxy = require('koa-proxy');
+
+app.use(
+  proxy({
+    host: 'http://localhost:3000',
+  }),
+);
 
 const port = PORT || 4000;
 app.listen(port, () => {

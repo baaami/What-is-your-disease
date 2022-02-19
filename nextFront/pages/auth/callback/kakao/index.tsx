@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import client from '../../../../lib/client'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
+import { setToken } from 'shared/token-manager'
 
 interface KauthProps {}
 
@@ -28,12 +29,14 @@ export default function Kauth(props: KauthProps) {
         // 첫번째 로그인 이라면
         if (is_new) {
           // 회원정보 입력 페이지로 이동
+          setToken(token)
           setUserInfo({
             ...userInfo,
             ...user,
           })
           router.push('/infoForm')
         } else {
+          setToken(token)
           setUserInfo({
             ...userInfo,
             ...user,

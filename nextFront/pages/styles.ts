@@ -1,11 +1,11 @@
-import styled from "styled-components";
-import mainBanner from "assets/img/mainBanner.svg";
-import next from "assets/img/arrow_next.svg";
-import nextActive from "assets/img/arrow_next_active.svg";
-import prev from "assets/img/arrow_prev.svg";
-import prevActive from "assets/img/arrow_prev_active.svg";
+import styled from 'styled-components'
+import mainBanner from 'assets/img/mainBanner.svg'
+import next from 'assets/img/arrow_next.svg'
+import nextActive from 'assets/img/arrow_next_active.svg'
+import prev from 'assets/img/arrow_prev.svg'
+import prevActive from 'assets/img/arrow_prev_active.svg'
 
-export const HomeContainer = styled.div``;
+export const HomeContainer = styled.div``
 export const MainBanner = styled.div`
   width: 100%;
   height: 750px;
@@ -41,7 +41,7 @@ export const MainBanner = styled.div`
       color: #1850a3;
     }
   }
-`;
+`
 export const Category = styled.div`
   margin-top: 90px;
 
@@ -70,7 +70,7 @@ export const Category = styled.div`
       }
     }
   }
-`;
+`
 export const HotTopic = styled.div`
   position: relative;
   margin-top: 110px;
@@ -127,7 +127,7 @@ export const HotTopic = styled.div`
       cursor: pointer;
 
       &:hover {
-        background: url(${nextActive}) no-repeat center;
+        background: url(${nextActive.src}) no-repeat center;
         background-color: #1850a3;
       }
     }
@@ -168,8 +168,8 @@ export const HotTopic = styled.div`
       }
     }
   }
-`;
+`
 export const Post = styled.div`
   margin-top: 110px;
   margin-bottom: 250px;
-`;
+`

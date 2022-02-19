@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { GetServerSideProps } from 'next'
 // import { RouteComponentProps, useHistory } from 'react-router-dom'
 import Router, { useRouter } from 'next/router'
 import Search from 'components/Search'
@@ -24,7 +25,14 @@ import like_active from 'assets/img/like_active.svg'
 
 interface IPostsDetailProps {}
 
-export default function PostsDetail(props: IPostsDetailProps) {
+export default function PostsDetail(props: {
+  postData: {
+    commentTotalCnt: number
+    data: {
+      post: PostModel
+    }
+  }
+}) {
   const router = useRouter()
   const [userInfo] = useRecoilState(currentUserInfo)
   const [post, setPost] = useState<PostModel>({} as PostModel)
@@ -198,7 +206,8 @@ export default function PostsDetail(props: IPostsDetailProps) {
     await API.post
       .addPostLike(postId)
       .then((res) => {
-        getPost()
+        // getPost()
+        router.replace(`/${router.asPath}`)
       })
       .catch((e) => {
         alert('좋아요실패')
@@ -238,15 +247,16 @@ export default function PostsDetail(props: IPostsDetailProps) {
 
   useEffect(() => {
     getPost()
+    console.log(props)
   }, [current_page])
 
   return (
     <PostsDetailContainer>
       <Container>
         <TopSection>
-          <div className="category">{post?.category}</div>
+          <div className="category">{props?.postData?.data.post.category}</div>
           <div className="hashtag">
-            {post?.tags?.map((item, index) => (
+            {props?.postData?.data.post.tags?.map((item, index) => (
               <span key={index} onClick={() => onClickHashtag(item)}>
                 #{item}
               </span>
@@ -254,18 +264,18 @@ export default function PostsDetail(props: IPostsDetailProps) {
           </div>
         </TopSection>
         <PostInfo>
-          <div className="postTitle">{post.title}</div>
+          <div className="postTitle">{props?.postData?.data.post.title}</div>
           <div className="postInfo">
-            <span>{post?.user?.info.nickname}</span>
+            <span>{props?.postData?.data.post.user?.info.nickname}</span>
             <span className="createdAt">
-              {post?.publishedDate?.split('T')[0]}
+              {props?.postData?.data.post.publishedDate?.split('T')[0]}
             </span>
-            <span>조회수 {post?.views}</span>
+            <span>조회수 {props?.postData?.data.post.views}</span>
             <span>
               <button onClick={() => onClickPostLike()}>
                 <img
                   src={
-                    post?.likeMe?.includes(userInfo._id)
+                    props?.postData?.data.post.likeMe?.includes(userInfo._id)
                       ? like_active.src
                       : like_out.src
                   }
@@ -280,7 +290,7 @@ export default function PostsDetail(props: IPostsDetailProps) {
         <hr />
         <section
           className="postContents"
-          dangerouslySetInnerHTML={{ __html: post?.body }}
+          dangerouslySetInnerHTML={{ __html: props?.postData?.data.post.body }}
         ></section>
         <hr />
         <Buttons className="buttonRow">
@@ -325,7 +335,9 @@ export default function PostsDetail(props: IPostsDetailProps) {
           </CreateComment>
         )}
         <CommentsSection>
-          <div className="commentsCnt">댓글 {comments_cnt}개</div>
+          <div className="commentsCnt">
+            댓글 {props.postData.commentTotalCnt}개
+          </div>
           {comments_list.map((comment: any, idx) => {
             return (
               <div className="comment" key={idx}>
@@ -454,4 +466,31 @@ export default function PostsDetail(props: IPostsDetailProps) {
       </Container>
     </PostsDetailContainer>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const params = context.params as { postId: string }
+  const res = await API.post.getPost(params.postId, 1)
+  // await API.post
+  //   .getPost(params.postId as string, 0)
+  //   .then((res) => {
+  //     return
+  //   })
+  //   .catch((e) => {
+  //     console.log(e.response)
+  //   })
+
+  // console.log(res)
+  // data 없을 땐 리턴값을 달리함
+  if (!res) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+  // console.log(res)
+  //pageProps로 넘길 데이터
+  return { props: { postData: res.data } }
 }

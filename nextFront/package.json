@@ -8,12 +8,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/react-cookies": "^0.1.0",
     "@types/styled-components": "^5.1.22",
     "antd": "^4.18.7",
     "axios": "^0.26.0",
     "next": "12.0.10",
+    "next-cookies": "^2.0.3",
     "rc-tween-one": "^3.0.3",
     "react": "17.0.2",
+    "react-cookies": "^0.1.1",
     "react-dom": "17.0.2",
     "react-quill": "^1.3.5",
     "recoil": "^0.6.1",

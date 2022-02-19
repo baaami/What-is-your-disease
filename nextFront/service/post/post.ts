@@ -26,13 +26,13 @@ export const post = {
     return Axios(config)
   },
   getPost: async (post_id: string, cpage: number) => {
-    const token = localStorage.getItem('jwttoken')
+    // const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
       url: `${BASE_URL}/api/post/read/${post_id}`,
       headers: {
         ...JSON_HEADER,
-        Authrization: `Bearer ${token}`,
+        // Authrization: `Bearer ${token}`,
       },
       params: {
         cpage,

@@ -22,6 +22,7 @@ export const HeaderContainer = styled.div`
       position: relative;
       left: -40px;
       width: 160px;
+      cursor: pointer;
     }
   }
 `

@@ -1,156 +1,163 @@
-import React, { useState, useRef, useMemo, useEffect } from "react";
+import React, { useState, useRef, useMemo, useEffect } from 'react'
 // import { useHistory } from 'react-router-dom'
-import { useRouter } from "next/router";
-import Button from "components/Button";
-import API from "service/api";
-import ReactQuill, { Quill } from "react-quill";
-import { Select, Tag, Input } from "antd";
-import { TweenOneGroup } from "rc-tween-one";
-import ImageResize from "quill-image-resize-module";
-import "react-quill/dist/quill.snow.css";
-import { PostModel } from "model/postsModel";
-import { categoryList } from "static/constant";
-import { Container } from "common.styles";
-import { PostEditContainer, HashTagSection } from "../styles";
+import { useRouter } from 'next/router'
+import Button from 'components/Button'
+import API from 'service/api'
+// import ReactQuill from 'react-quill'
+import { Select, Tag, Input } from 'antd'
+// import { TweenOneGroup } from 'rc-tween-one'
+import TweenOneGroup from 'rc-tween-one/lib/TweenOneGroup'
+// import ImageResize from 'quill-image-resize-module'
+import 'react-quill/dist/quill.snow.css'
+import { PostModel } from 'model/postsModel'
+import { categoryList } from 'static/constant'
+import { Container } from 'common.styles'
+import { PostEditContainer, HashTagSection } from 'styles/posts/styles'
+import dynamic from 'next/dynamic'
 
 interface IPostsEditProps {}
+const ReactQuill = dynamic(
+  async () => {
+    const { default: RQ } = await import('react-quill')
+    return function comp({ forwardedRef, ...props }: any) {
+      return <RQ ref={forwardedRef} {...props} />
+    }
+  },
+  { ssr: false },
+)
 
 const formats = [
-  "header",
-  "font",
-  "size",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-  "image",
-  "video",
-];
+  'header',
+  'font',
+  'size',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'blockquote',
+  'list',
+  'bullet',
+  'indent',
+  'link',
+  'image',
+  'video',
+]
 export default function PostsEdit(props: IPostsEditProps) {
-  const router = useRouter();
-  const quill_ref = useRef<ReactQuill>();
-  const saveInputRef = useRef(null);
+  const router = useRouter()
+  const quill_ref = useRef<any>()
+  const saveInputRef = useRef(null)
   const [pushState, setPushState] = useState<{ id: string; category: string }>({
-    id: "",
-    category: "",
-  });
-  const [posts_title, setPostsTitle] = useState("");
-  const [edit_contents, setEditContents] = useState("");
+    id: '',
+    category: '',
+  })
+  const [posts_title, setPostsTitle] = useState('')
+  const [edit_contents, setEditContents] = useState('')
   const [filter, setFilter] = useState(
-    pushState.category ? pushState.category : categoryList[0]
-  );
+    pushState.category ? pushState.category : categoryList[0],
+  )
 
-  const { Option } = Select;
+  const { Option } = Select
 
   const [tagState, setTagState] = useState({
-    tags: ["DR.U"],
+    tags: ['DR.U'],
     inputVisible: false,
-    inputValue: "",
-  });
+    inputValue: '',
+  })
 
   const handleClose = (removedTag: any) => {
-    const tags = tagState.tags.filter((tag) => tag !== removedTag);
-    setTagState({ ...tagState, tags });
-  };
+    const tags = tagState.tags.filter((tag) => tag !== removedTag)
+    setTagState({ ...tagState, tags })
+  }
 
   const handleInputChange = (e: any) => {
-    setTagState({ ...tagState, inputValue: e.target.value });
-  };
+    setTagState({ ...tagState, inputValue: e.target.value })
+  }
 
   const handleInputConfirm = () => {
-    const { inputValue } = tagState;
-    let { tags } = tagState;
+    const { inputValue } = tagState
+    let { tags } = tagState
 
     if (inputValue && tags.indexOf(inputValue) === -1) {
-      tags = [...tags, inputValue];
+      tags = [...tags, inputValue]
     }
 
     setTagState({
       tags,
       inputVisible: false,
-      inputValue: "",
-    });
-  };
+      inputValue: '',
+    })
+  }
 
   const forMap = (tag: any) => {
     const tagElem = (
       <Tag
         closable
         onClose={(e) => {
-          e.preventDefault();
-          handleClose(tag);
+          e.preventDefault()
+          handleClose(tag)
         }}
       >
         # {tag}
       </Tag>
-    );
+    )
     return (
-      <span key={tag} style={{ display: "inline-block" }}>
+      <span key={tag} style={{ display: 'inline-block' }}>
         {tagElem}
       </span>
-    );
-  };
+    )
+  }
 
   // const tagChild = tagState?.tags?.map(forMap);
 
   const imageHandler = (e: any) => {
     // 이미지를 업로드 할 input element 생성
-    const input = document.createElement("input");
-    input.setAttribute("name", "file");
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
-    input.setAttribute("style", "display: none");
-    document.body.appendChild(input);
+    const input = document.createElement('input')
+    input.setAttribute('name', 'file')
+    input.setAttribute('type', 'file')
+    input.setAttribute('accept', 'image/*')
+    input.setAttribute('style', 'display: none')
+    document.body.appendChild(input)
 
-    input.click();
+    input.click()
 
     input.onchange = async () => {
-      const file = input.files?.[0];
+      const file = input.files?.[0]
 
       // 백엔드 서버 경로에 이미지를 저장하고 이미지 경로를 받아오기
-      const res = await API.post.uploadImage(file as File);
-      const file_path = res.data as string[];
+      const res = await API.post.uploadImage(file as File)
+      const file_path = res.data as string[]
 
-      const range = quill_ref.current?.getEditor().getSelection()?.index;
+      const range = quill_ref.current?.getEditor().getSelection()?.index
       if (range !== null && range !== undefined) {
-        let quill = quill_ref.current?.getEditor();
+        let quill = quill_ref.current?.getEditor()
 
-        quill?.setSelection(range, 1);
+        quill?.setSelection(range, 1)
 
         file_path.forEach((item) => {
-          quill?.insertEmbed(
-            range + 1,
-            "image",
-            `http://localhost:4000${item}`
-          );
-        });
+          quill?.insertEmbed(range + 1, 'image', `http://localhost:4000${item}`)
+        })
       }
-    };
-  };
+    }
+  }
 
   // useMemo를 사용하지 않으면, 키를 입력할 때마다, imageHandler 때문에 focus가 계속 풀리게 됨.
   const modules = useMemo(
     () => ({
       toolbar: {
         container: [
-          ["bold", "italic", "underline", "strike", "blockquote"],
+          ['bold', 'italic', 'underline', 'strike', 'blockquote'],
           [
-            { size: ["small", false, "large", "huge"] },
-            { color: ["black", "red", "blue", "green"] },
+            { size: ['small', false, 'large', 'huge'] },
+            { color: ['black', 'red', 'blue', 'green'] },
           ],
           [
-            { list: "ordered" },
-            { list: "bullet" },
-            { indent: "-1" },
-            { indent: "+1" },
+            { list: 'ordered' },
+            { list: 'bullet' },
+            { indent: '-1' },
+            { indent: '+1' },
             { align: [] },
           ],
-          ["image", "video"],
+          ['image', 'video'],
         ],
         handlers: {
           // 이미지 핸들러가 들어갈 키
@@ -158,50 +165,50 @@ export default function PostsEdit(props: IPostsEditProps) {
         },
       },
     }),
-    []
-  );
+    [],
+  )
 
   const handleSubmitPost = async () => {
-    if (posts_title === "") {
-      return alert("제목을 입해주세요");
+    if (posts_title === '') {
+      return alert('제목을 입해주세요')
     }
     const req_data = {
       title: posts_title,
       body: edit_contents,
       category: filter,
       tags: [...tagState.tags],
-    };
+    }
 
     await API.post
       .createPost(req_data)
       .then((res) => {
-        router.push(`/posts/detail/${res.data._id}`);
+        router.push(`/posts/detail/${res.data._id}`)
       })
       .catch((e) => {
-        console.log(e);
-      });
-  };
+        console.log(e)
+      })
+  }
 
   const onClickEdit = async () => {
-    if (posts_title === "") {
-      return alert("제목을 입해주세요");
+    if (posts_title === '') {
+      return alert('제목을 입해주세요')
     }
     const req_data = {
       title: posts_title,
       body: edit_contents,
       category: filter,
       tags: [...tagState.tags],
-    };
+    }
     await API.post
       .editPost(pushState.id, req_data)
       .then((res) => {
-        alert("게시물 수정에 성공했습니다.");
-        router.back();
+        alert('게시물 수정에 성공했습니다.')
+        router.back()
       })
       .catch((e) => {
-        console.log(e);
-      });
-  };
+        console.log(e)
+      })
+  }
 
   const isEditButton = () => {
     if (pushState.id) {
@@ -211,7 +218,7 @@ export default function PostsEdit(props: IPostsEditProps) {
             수정
           </Button>
         </>
-      );
+      )
     } else {
       return (
         <>
@@ -219,27 +226,27 @@ export default function PostsEdit(props: IPostsEditProps) {
             작성
           </Button>
         </>
-      );
+      )
     }
-  };
+  }
 
   useEffect(() => {
     // const path_state = router.location.state as PostModel;
-    const { id, title, description, tag, category } = router.query;
-    console.log(tag);
+    const { id, title, description, tag, category } = router.query
+
     // API.post.
     if (id && title && description) {
-      setPostsTitle(title as string);
-      setEditContents(description as string);
+      setPostsTitle(title as string)
+      setEditContents(description as string)
       setTagState({
         ...tagState,
-        tags: typeof tag === "string" ? [tag] : (tag as string[]),
-      });
-      setPushState({ id: id as string, category: category as string });
-      setFilter(category as string);
+        tags: typeof tag === 'string' ? [tag] : (tag as string[]),
+      })
+      setPushState({ id: id as string, category: category as string })
+      setFilter(category as string)
     }
-    window.scrollTo({ top: 0 });
-  }, []);
+    window.scrollTo({ top: 0 })
+  }, [])
 
   return (
     <PostEditContainer>
@@ -263,11 +270,12 @@ export default function PostsEdit(props: IPostsEditProps) {
           onChange={(e) => setPostsTitle(e.target.value)}
         />
         <ReactQuill
-          ref={(element) => {
-            if (element !== null) {
-              quill_ref.current = element;
-            }
-          }}
+          // ref={(element) => {
+          //   if (element !== null) {
+          //     quill_ref.current = element
+          //   }
+          // }}
+          forwardRef={quill_ref}
           formats={formats}
           value={edit_contents}
           onChange={setEditContents}
@@ -282,12 +290,12 @@ export default function PostsEdit(props: IPostsEditProps) {
                 enter={{
                   scale: 0.8,
                   opacity: 0,
-                  type: "from",
+                  type: 'from',
                   duration: 100,
                 }}
                 onEnd={(e: any) => {
-                  if (e.type === "appear" || e.type === "enter") {
-                    e.target.style = "display: inline-block";
+                  if (e.type === 'appear' || e.type === 'enter') {
+                    e.target.style = 'display: inline-block'
                   }
                 }}
                 leave={{ opacity: 0, width: 0, scale: 0, duration: 200 }}
@@ -322,5 +330,5 @@ export default function PostsEdit(props: IPostsEditProps) {
         <div className="btnWrap">{isEditButton()}</div>
       </Container>
     </PostEditContainer>
-  );
+  )
 }

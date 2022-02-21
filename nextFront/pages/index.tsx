@@ -4,7 +4,13 @@ import type { NextPage } from 'next'
 // import styles from "../stylesG/Home.module.css";
 
 import { useState, useEffect } from 'react'
-import { Category, HomeContainer, HotTopic, MainBanner, Post } from './styles'
+import {
+  Category,
+  HomeContainer,
+  HotTopic,
+  MainBanner,
+  Post,
+} from 'styles/styles'
 // import { Link, useHistory } from 'react-router-dom'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
@@ -134,7 +140,7 @@ const Home: NextPage = () => {
               {hot_posts.slice(0, 10).map((item: any) => (
                 <SwiperSlide key={item._id}>
                   <Link href={`/posts/detail/${item._id}`} passHref>
-                    <span className="popularPost">
+                    <a className="popularPost">
                       <>
                         {item.likes === 0 ? (
                           <div
@@ -179,7 +185,7 @@ const Home: NextPage = () => {
                           </h4>
                         </div>
                       </>
-                    </span>
+                    </a>
                   </Link>
                 </SwiperSlide>
               ))}

@@ -1,91 +1,91 @@
-import React, { useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
-import { currentUserInfo } from "store/userInfo";
+import React, { useState, useEffect } from 'react'
+import { useRecoilState } from 'recoil'
+import { currentUserInfo } from 'store/userInfo'
 // import { useHistory } from 'react-router-dom'
-import { useRouter } from "next/router";
-import API from "service/api";
-import MyPostsTable from "components/MyPostsTable";
-import Pagination from "components/Pagination";
-import { Container, Title } from "common.styles";
+import { useRouter } from 'next/router'
+import API from 'service/api'
+import MyPostsTable from 'components/MyPostsTable'
+import Pagination from 'components/Pagination'
+import { Container, Title } from 'common.styles'
 import {
   FollowPostsSection,
   InfoSection,
   MyPageContainer,
   MyPostSection,
   TopSection,
-} from "./styles";
-import ProfileCard from "components/ProfileCard";
-import FollowerTab from "components/FollowerTab";
-import InfoCard from "components/InfoCard";
-import { PostUserModel } from "service/model/postModel";
+} from 'styles/mypage/styles'
+import ProfileCard from 'components/ProfileCard'
+import FollowerTab from 'components/FollowerTab'
+import InfoCard from 'components/InfoCard'
+import { PostUserModel } from 'service/model/postModel'
 
 interface IMypageProps {}
 
 export default function Mypage(props: IMypageProps) {
-  const router = useRouter();
-  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo);
-  const [myPosts, setMyPosts] = useState([]);
-  const [total_cnt, setTotalCnt] = useState(0);
-  const [current_page, setCurrentPage] = useState(1);
+  const router = useRouter()
+  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
+  const [myPosts, setMyPosts] = useState([])
+  const [total_cnt, setTotalCnt] = useState(0)
+  const [current_page, setCurrentPage] = useState(1)
   const [current_profile, setCurrentProfile] = useState<PostUserModel>(
-    {} as PostUserModel
-  );
-  const [follow_posts, setFollowPosts] = useState([]);
-  const [current_page_f, setCurrentPageF] = useState(1);
-  const [total_cnt_f, setTotalCntF] = useState(0);
+    {} as PostUserModel,
+  )
+  const [follow_posts, setFollowPosts] = useState([])
+  const [current_page_f, setCurrentPageF] = useState(1)
+  const [total_cnt_f, setTotalCntF] = useState(0)
 
   const getMyPosts = async () => {
     if (userInfo._id) {
       await API.posts
         .getMyPosts(userInfo._id, current_page, 10)
         .then((res) => {
-          setTotalCnt(res.data.postTotalCnt);
-          setMyPosts(res.data.data.post);
+          setTotalCnt(res.data.postTotalCnt)
+          setMyPosts(res.data.data.post)
         })
         .catch((e) => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     }
-  };
+  }
 
   const getUserProfile = async () => {
     if (userInfo._id) {
       await API.user
         .getUserProfile(userInfo._id)
         .then((res) => {
-          setCurrentProfile(res.data);
+          setCurrentProfile(res.data)
         })
         .catch((e) => {
-          console.log(e);
-        });
+          console.log(e)
+        })
     }
-  };
+  }
 
   const getFollowPosts = async () => {
     await API.posts
       .getFollowPosts(current_page_f, 10)
       .then((res) => {
-        setFollowPosts(res.data.data.post);
-        setTotalCntF(res.data.postTotalCnt);
+        setFollowPosts(res.data.data.post)
+        setTotalCntF(res.data.postTotalCnt)
       })
       .catch((e) => {
-        console.log(e);
-      });
-  };
+        console.log(e)
+      })
+  }
 
   const onClickEditButton = () => {
-    router.push("/infoForm");
-  };
+    router.push('/infoForm')
+  }
 
   useEffect(() => {
-    getMyPosts();
-    getUserProfile();
-    getFollowPosts();
-  }, [userInfo, current_page]);
+    getMyPosts()
+    getUserProfile()
+    getFollowPosts()
+  }, [userInfo, current_page])
 
   useEffect(() => {
-    window.scrollTo({ top: 0 });
-  }, []);
+    window.scrollTo({ top: 0 })
+  }, [])
 
   return (
     <MyPageContainer>
@@ -140,5 +140,5 @@ export default function Mypage(props: IMypageProps) {
         </FollowPostsSection>
       </Container>
     </MyPageContainer>
-  );
+  )
 }

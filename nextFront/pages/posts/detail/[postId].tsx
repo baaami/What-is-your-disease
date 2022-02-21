@@ -19,7 +19,7 @@ import {
   CommentsSection,
   CreateComment,
   Buttons,
-} from '../styles'
+} from 'styles/posts/styles'
 import like_out from 'assets/img/like_out.svg'
 import like_active from 'assets/img/like_active.svg'
 
@@ -471,16 +471,7 @@ export default function PostsDetail(props: {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const params = context.params as { postId: string }
   const res = await API.post.getPost(params.postId, 1)
-  // await API.post
-  //   .getPost(params.postId as string, 0)
-  //   .then((res) => {
-  //     return
-  //   })
-  //   .catch((e) => {
-  //     console.log(e.response)
-  //   })
 
-  // console.log(res)
   // data 없을 땐 리턴값을 달리함
   if (!res) {
     return {

@@ -4,7 +4,7 @@ import {
   PostSection,
   ProfilepageContainer,
   TopSection,
-} from './styles'
+} from 'styles/profilepage/styles'
 // import { RouteComponentProps, useHistory } from 'react-router-dom'
 import { useRouter } from 'next/router'
 import { Container, Title } from 'common.styles'

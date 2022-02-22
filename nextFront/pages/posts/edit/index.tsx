@@ -1,11 +1,9 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react'
-// import { useHistory } from 'react-router-dom'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Button from 'components/Button'
 import API from 'service/api'
-// import ReactQuill from 'react-quill'
 import { Select, Tag, Input } from 'antd'
-// import { TweenOneGroup } from 'rc-tween-one'
 import TweenOneGroup from 'rc-tween-one/lib/TweenOneGroup'
 // import ImageResize from 'quill-image-resize-module'
 import 'react-quill/dist/quill.snow.css'
@@ -106,8 +104,6 @@ export default function PostsEdit(props: IPostsEditProps) {
       </span>
     )
   }
-
-  // const tagChild = tagState?.tags?.map(forMap);
 
   const imageHandler = (e: any) => {
     // 이미지를 업로드 할 input element 생성
@@ -231,7 +227,6 @@ export default function PostsEdit(props: IPostsEditProps) {
   }
 
   useEffect(() => {
-    // const path_state = router.location.state as PostModel;
     const { id, title, description, tag, category } = router.query
 
     // API.post.
@@ -250,6 +245,9 @@ export default function PostsEdit(props: IPostsEditProps) {
 
   return (
     <PostEditContainer>
+      <Head>
+        <title>Dr.u | {pushState.id !== '' ? '글 수정' : '글 작성'}</title>
+      </Head>
       <Container>
         <Select
           onChange={(value) => setFilter(value)}
@@ -270,11 +268,6 @@ export default function PostsEdit(props: IPostsEditProps) {
           onChange={(e) => setPostsTitle(e.target.value)}
         />
         <ReactQuill
-          // ref={(element) => {
-          //   if (element !== null) {
-          //     quill_ref.current = element
-          //   }
-          // }}
           forwardRef={quill_ref}
           formats={formats}
           value={edit_contents}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { GetServerSideProps } from 'next'
-// import { RouteComponentProps, useHistory } from 'react-router-dom'
+import Head from 'next/head'
 import Router, { useRouter } from 'next/router'
 import Search from 'components/Search'
 import Button from 'components/Button'
@@ -81,7 +81,6 @@ export default function PostsDetail(props: {
   }
 
   const onClickEdit = (postData: PostModel) => {
-    // router.push('/posts/edit', postData)
     console.log(postData.tags)
     Router.push({
       pathname: '/posts/edit',
@@ -126,14 +125,9 @@ export default function PostsDetail(props: {
   }
 
   const onClickHashtag = (target_hashtag: string) => {
-    // router.push(`/posts/lists/search/hashtag/${target_hashtag}`);
     console.log(target_hashtag)
     router.push({
       pathname: `/posts/lists/search/hashtag/${target_hashtag}`,
-      // query: {
-      //   type: 'hashtag',
-      //   value: target_hashtag,
-      // },
     })
   }
 
@@ -252,6 +246,9 @@ export default function PostsDetail(props: {
 
   return (
     <PostsDetailContainer>
+      <Head>
+        <title>Dr.u | {props?.postData?.data.post.title}</title>
+      </Head>
       <Container>
         <TopSection>
           <div className="category">{props?.postData?.data.post.category}</div>

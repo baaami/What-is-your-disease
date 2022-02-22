@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import Head from 'next/head'
 import {
   InfoSection,
   PostSection,
   ProfilepageContainer,
   TopSection,
 } from 'styles/profilepage/styles'
-// import { RouteComponentProps, useHistory } from 'react-router-dom'
 import { useRouter } from 'next/router'
 import { Container, Title } from 'common.styles'
 import ProfileCard from 'components/ProfileCard'
@@ -66,6 +66,9 @@ export default function Profilepage() {
 
   return (
     <ProfilepageContainer>
+      <Head>
+        <title>Dr.u | {current_profile?.info?.nickname}</title>
+      </Head>
       <Container>
         <TopSection>
           <ProfileCard

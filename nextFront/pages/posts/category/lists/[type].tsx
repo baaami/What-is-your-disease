@@ -68,12 +68,6 @@ export default function PostsLists() {
             <span style={{ color: '#1850a3', fontWeight: 'bold' }}>{type}</span>{' '}
             카테고리에 대한 검색결과 입니다.
           </div>
-          {/* <div className="title">게시글</div>
-          <DropDown
-            now_value={filter}
-            filter_data={dropdownOption}
-            setFilter={setFilter}
-          /> */}
         </div>
         <PostsTable posts={postsList} />
         {postsList.length === 0 && (

@@ -1,8 +1,5 @@
 import type { NextPage } from 'next'
-// import Head from "next/head";
-// import Image from "next/image";
-// import styles from "../stylesG/Home.module.css";
-
+import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import {
   Category,
@@ -98,6 +95,9 @@ const Home: NextPage = () => {
 
   return (
     <HomeContainer>
+      <Head>
+        <title>Dr.u</title>
+      </Head>
       <MainBanner>
         <Container>
           <h2>너의 건강상태도 알려줘~!</h2>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import Head from 'next/head'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
-// import { useHistory } from 'react-router-dom'
 import { useRouter } from 'next/router'
 import API from 'service/api'
 import MyPostsTable from 'components/MyPostsTable'
@@ -89,6 +89,9 @@ export default function Mypage(props: IMypageProps) {
 
   return (
     <MyPageContainer>
+      <Head>
+        <title>Dr.u | 마이페이지</title>
+      </Head>
       <Container>
         <TopSection>
           <ProfileCard

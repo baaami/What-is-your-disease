@@ -3,7 +3,7 @@ import Koa from 'koa';
 import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 import mongoose from 'mongoose';
-
+import cors from '@koa/cors';
 import api from './api';
 
 const { PORT, MONGO_URI } = process.env;
@@ -18,10 +18,10 @@ mongoose
   });
 
 const app = new Koa();
+const server = require('http').Server(app.callback());
+const io = require('socket.io')(server, { cors: { origin: '*' } });
 
 const router = new Router();
-
-const cors = require('@koa/cors');
 
 app.use(
   cors({
@@ -49,6 +49,6 @@ app.use(serve('.'));
 // console.log(__dirname + "./api/post/uploads/");
 
 const port = PORT || 4000;
-app.listen(port, () => {
+server.listen(port, () => {
   console.log('Listening to port %d', port);
 });

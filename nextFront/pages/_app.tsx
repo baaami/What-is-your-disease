@@ -2,6 +2,7 @@ import { NextPage, NextComponentType } from 'next'
 import '../stylesG/globals.css'
 import { useRouter } from 'next/router'
 import type { AppProps, AppInitialProps, AppContext } from 'next/app'
+import Chatting from 'components/Chatting'
 import { RecoilRoot } from 'recoil'
 import Footer from 'layout/Footer'
 import 'antd/dist/antd.css'
@@ -20,6 +21,7 @@ const MyApp: NextComponentType<AppContext, AppInitialProps, AppProps> = ({
     <RecoilRoot>
       {location.pathname === '/' ? <HomeHeader /> : <SubHeader />}
       <Component {...pageProps} />
+      <Chatting />
       <Footer />
     </RecoilRoot>
   )

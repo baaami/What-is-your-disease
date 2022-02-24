@@ -7,7 +7,7 @@ const socketManager = (socket) => {
 
   // 1. 로그인 인증 확인
 
-  socket.on('login', (user) => {
+  socket.on('enter', (user) => {
     console.log('사용자가 접속하였습니다.');
     console.dir(user);
 
@@ -31,27 +31,47 @@ const socketManager = (socket) => {
   socket.on('message', function (message) {
     console.log('message 이벤트를 받았습니다.');
 
-    if (message.roomId) {
-      console.log('group chat ');
+    if (message.roomname) {
+      console.log(socket.userId + ':' + message.data);
+
+      const respMsg = {
+        name: socket.userId,
+        data: message.data,
+      };
       // 모든 namespace ('/') 내 roomId에 해당하는 room에 message를 송신
-      io.sockets.in(message.roomId).emit('message', message);
+      io.sockets.in(message.roomname).emit('message', respMsg);
     }
   });
 
   socket.on('room', (room) => {
     if (room.command == 'create') {
-      console.log('create room : ', room);
+      console.log(room.name, '방에 입장하셨습니다.');
       // 방 create
       socket.join(room.name);
+
+      const message = {
+        name: socket.userId,
+        data: socket.userId + '님이 ' + room.name + '방에 입장하셨습니다',
+      };
+
+      io.sockets.in(room.name).emit('message', message);
     } else if (room.command == 'join') {
-      console.log('join room : ', room);
+      console.log(socket.userId, '님이 ', room.name, '방에 입장하셨습니다');
       // 방 Join
       socket.join(room.name);
+
+      const message = {
+        name: socket.userId,
+        data: socket.userId + '님이 ' + room.name + '방에 입장하셨습니다',
+      };
+
+      io.sockets.in(room.name).emit('message', message);
     } else if (room.command == 'leave') {
       // 방 Leave
       socket.leave(room.name);
 
       const message = {
+        name: socket.userId,
         data: socket.userId + '님이 나가셨습니다',
       };
 
@@ -62,11 +82,11 @@ const socketManager = (socket) => {
 
       delete enter_ids[socket.userId];
 
-      console.log(
-        roon.name,
-        '방에 접속한 클라이언트 수 : %d',
-        io.sockets.adapter.rooms[room.name].length,
-      );
+      // console.log(
+      //   room.name,
+      //   '방에 접속한 클라이언트 수 : %d',
+      //   io.sockets.adapter.rooms[room.name].length,
+      // );
     }
   });
 };

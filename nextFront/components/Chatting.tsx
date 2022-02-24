@@ -2,8 +2,16 @@ import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Box from 'assets/img/profile.svg'
 import styled from 'styled-components'
+import socketIOClient from 'socket.io-client'
+import { currentUserInfo } from 'store/userInfo'
+import { useRecoilState } from 'recoil'
 
+// const manager = new Manager('http://localhost:4000', {
+//   autoConnect: false,
+// })
+// const socket = manager.socket('/')
 const Chatting = () => {
+  const [userInfo] = useRecoilState(currentUserInfo)
   const [vis_chat, setVisChat] = useState(false)
   const chat_box_ref = useRef<HTMLDivElement>(null)
 
@@ -26,6 +34,22 @@ const Chatting = () => {
       window.removeEventListener('mousedown', onClickInsideDetector)
     }
   }, [])
+
+  useEffect(() => {
+    const socket = socketIOClient('http://localhost:4000')
+
+    if (userInfo._id !== '') {
+      socket.emit('enter', {
+        id: userInfo._id,
+      })
+
+      socket.emit('message', { room: '백신', message: 'ㅎㅇㅎㅇ' })
+
+      socket.on('백신', (data) => {
+        console.log(data)
+      })
+    }
+  }, [userInfo])
   return (
     <>
       <OpenChattingBox onClick={() => setVisChat(!vis_chat)}>

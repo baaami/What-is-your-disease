@@ -89,10 +89,6 @@ const Home: NextPage = () => {
     getLatestPosts('latest')
   }, [current_page])
 
-  useEffect(() => {
-    console.log(userInfo)
-  })
-
   return (
     <HomeContainer>
       <Head>

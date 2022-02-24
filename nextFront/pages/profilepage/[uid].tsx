@@ -43,7 +43,6 @@ export default function Profilepage() {
   }
 
   const getUserProfile = async () => {
-    console.log(router.query.uid)
     await API.user
       .getUserProfile(router.query.uid as string)
       .then((res) => {

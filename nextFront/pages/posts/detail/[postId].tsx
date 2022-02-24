@@ -81,7 +81,6 @@ export default function PostsDetail(props: {
   }
 
   const onClickEdit = (postData: PostModel) => {
-    console.log(postData.tags)
     Router.push({
       pathname: '/posts/edit',
       query: {
@@ -125,7 +124,6 @@ export default function PostsDetail(props: {
   }
 
   const onClickHashtag = (target_hashtag: string) => {
-    console.log(target_hashtag)
     router.push({
       pathname: `/posts/lists/search/hashtag/${target_hashtag}`,
     })
@@ -235,13 +233,11 @@ export default function PostsDetail(props: {
   }
 
   useEffect(() => {
-    console.log(router.query)
     window.scrollTo({ top: 0 })
   }, [])
 
   useEffect(() => {
     getPost()
-    console.log(props)
   }, [current_page])
 
   return (

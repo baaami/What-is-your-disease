@@ -27,6 +27,27 @@ const socketManager = (socket) => {
     );
   });
 
+  socket.on('disconnect', (user) => {
+    console.log('사용자가 접속을 끊었습니다.');
+
+    // 연결 종료
+    socket.disconnect();
+
+    delete enter_ids[socket.userId];
+
+    const message = {
+      name: socket.userId,
+      data: socket.userId + '님이 연결을 끊었습니다.',
+    };
+
+    io.sockets.emit('message', message);
+
+    console.log(
+      '접속한 클라이언트 ID 갯수 : %d',
+      Object.keys(enter_ids).length,
+    );
+  });
+
   // 'message' 이벤트를 받았을 때의 처리
   socket.on('message', function (message) {
     console.log('message 이벤트를 받았습니다.');
@@ -76,26 +97,8 @@ const socketManager = (socket) => {
       };
 
       io.sockets.in(room.name).emit('message', message);
-
-      // 연결 종료
-      socket.disconnect();
-
-      delete enter_ids[socket.userId];
-
-      // console.log(
-      //   room.name,
-      //   '방에 접속한 클라이언트 수 : %d',
-      //   io.sockets.adapter.rooms[room.name].length,
-      // );
     }
   });
 };
-
-// 클라이언트에 처리 상태를 알려주기 위해 정의한 함수
-// 응답 메소드;
-function sendResponse(socket, command, code, message) {
-  var statusObj = { command: command, code: code, message: message };
-  socket.emit('response', statusObj);
-}
 
 export default socketManager;

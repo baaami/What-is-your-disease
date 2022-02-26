@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
 import Box from 'assets/img/profile.svg'
 import CloseIcon from 'assets/img/close_icon.svg'
 import Icon from 'assets/img/chat_title_icon.svg'
 import styled from 'styled-components'
-import { categoryList } from 'static/constant'
+import ChattingLists from './ChattingLists'
+import ChattingRoom from './ChattingRoom'
 
 const Chatting = () => {
-  const router = useRouter()
   const [vis_chat, setVisChat] = useState(false)
+  const [vis_room, setVisRoom] = useState(false)
   const chat_box_ref = useRef<HTMLDivElement>(null)
 
   /* 어딜 클릭했는지 확인 */
@@ -31,13 +31,17 @@ const Chatting = () => {
       window.removeEventListener('mousedown', onClickInsideDetector)
     }
   }, [])
+
+  console.log('vis_chat: ', vis_chat)
+  console.log('vis_room: ', vis_room)
+
   return (
     <>
       <OpenChattingBox onClick={() => setVisChat(!vis_chat)}>
         <Image src={Box} width="50px" height="50px" alt="채팅 여는 이미지" />
       </OpenChattingBox>
       <ChattingBox ref={chat_box_ref} is_vis={vis_chat}>
-        <ButtonWrap>
+        <ChattingBoxHeader>
           <Title>
             DR.U 채팅방
             <Image src={Icon} alt="아이콘" />
@@ -45,21 +49,12 @@ const Chatting = () => {
           <CloseButton onClick={() => setVisChat(false)}>
             <Image src={CloseIcon} alt="닫기 버튼" />
           </CloseButton>
-        </ButtonWrap>
-        {categoryList.map((item, idx) => (
-          <ChattingList key={idx}>
-            <h3>{item}</h3>
-            <EnterButton
-              onClick={() =>
-                router.push({
-                  pathname: `/posts/category/lists/${item}`,
-                })
-              }
-            >
-              입장
-            </EnterButton>
-          </ChattingList>
-        ))}
+        </ChattingBoxHeader>
+        {vis_room ? (
+          <ChattingRoom />
+        ) : (
+          <ChattingLists clickEnter={setVisRoom(true)} />
+        )}
       </ChattingBox>
     </>
   )
@@ -102,7 +97,6 @@ const ChattingBox = styled.div<{ is_vis?: boolean }>`
   border-radius: 5px;
   transition: all 0.21s;
   z-index: 10001;
-  overflow-y: scroll;
 
   opacity: ${(props) => (props.is_vis ? 1 : 0)};
   transform: ${(props) =>
@@ -118,7 +112,9 @@ const Title = styled.h3`
     width: 25px !important;
   }
 `
-const ButtonWrap = styled.div`
+const ChattingBoxHeader = styled.div`
+  width: 100%;
+  height: 60px;
   display: flex;
   justify-content: space-between;
   padding: 10px 15px;
@@ -129,20 +125,4 @@ const CloseButton = styled.button`
   &:hover {
     transform: rotate(360deg);
   }
-`
-const ChattingList = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: calc(100% - 30px);
-  height: 70px;
-  margin: 15px;
-  border-bottom: 1px solid #c4c4c4;
-`
-const EnterButton = styled.button`
-  width: 80px;
-  height: calc(100% - 15px);
-  background-color: #1850a3;
-  border-radius: 5px;
-  color: #fff;
-  font-weight: 700;
 `

@@ -1,103 +1,65 @@
 import { io } from '../main';
 
-let enter_ids = {};
-
 const socketManager = (socket) => {
-  console.log('connect');
+  console.log('사용자가 접속하였습니다.');
 
-  // 1. 로그인 인증 확인
-
-  socket.on('enter', (user) => {
-    console.log('사용자가 접속하였습니다.');
-    console.dir(user);
-
-    // login_ids에 유저아이디를 사용하여 socket.id 저장
-    enter_ids[user.id] = socket.id;
-
-    // socket에 userId 저장
-    socket.userId = user.id;
-
-    // 기존 클라이언트 ID가 없으면 클라이언트 ID를 맵에 추가
-    console.log('사용자 id:', user.id);
-    console.log('소켓 id:', socket.id);
-
+  socket.on('join', (data) => {
     console.log(
-      '접속한 클라이언트 ID 갯수 : %d',
-      Object.keys(enter_ids).length,
+      data.user.nickname,
+      '님이 ',
+      data.room.name,
+      '에 입장하셨습니다.',
     );
-  });
 
-  socket.on('disconnect', (user) => {
-    console.log('사용자가 접속을 끊었습니다.');
+    socket.user = data.user;
+    socket.room = data.room;
 
-    // 연결 종료
-    socket.disconnect();
+    socket.join(socket.room.name);
 
-    delete enter_ids[socket.userId];
-
-    const message = {
-      name: socket.userId,
-      data: socket.userId + '님이 연결을 끊었습니다.',
+    const rep = {
+      user: socket.user,
+      room: socket.room,
     };
 
-    io.sockets.emit('message', message);
+    io.sockets.in(socket.room.name).emit('roomin', rep);
+  });
 
+  socket.on('leave', (data) => {
     console.log(
-      '접속한 클라이언트 ID 갯수 : %d',
-      Object.keys(enter_ids).length,
+      socket.user.nickname,
+      '님이 ',
+      //  socket.room이라는 객체가 원래 없다면 변경
+      socket.room.name,
+      '에서 퇴장하셨습니다.',
     );
+
+    const rep = {
+      user: socket.user,
+      room: socket.room,
+    };
+
+    io.sockets.in(socket.room.name).emit('roomout', rep);
+
+    socket.leave(socket.room.name);
+    // socket.room 초기화
+    socket.room = undefined;
+  });
+
+  socket.on('disconnecton', () => {
+    console.log(socket.user.nickname, '님이 연결을 끊었습니다.');
   });
 
   // 'message' 이벤트를 받았을 때의 처리
   socket.on('message', function (message) {
-    console.log('message 이벤트를 받았습니다.');
+    console.log(socket.user.nickname + ':' + message.data);
 
-    if (message.roomname) {
-      console.log(socket.userId + ':' + message.data);
+    const res = {
+      user: socket.user,
+      data: message.data,
+    };
 
-      const respMsg = {
-        name: socket.userId,
-        data: message.data,
-      };
-      // 모든 namespace ('/') 내 roomId에 해당하는 room에 message를 송신
-      io.sockets.in(message.roomname).emit('message', respMsg);
-    }
-  });
-
-  socket.on('room', (room) => {
-    if (room.command == 'create') {
-      console.log(room.name, '방에 입장하셨습니다.');
-      // 방 create
-      socket.join(room.name);
-
-      const message = {
-        name: socket.userId,
-        data: socket.userId + '님이 ' + room.name + '방에 입장하셨습니다',
-      };
-
-      io.sockets.in(room.name).emit('message', message);
-    } else if (room.command == 'join') {
-      console.log(socket.userId, '님이 ', room.name, '방에 입장하셨습니다');
-      // 방 Join
-      socket.join(room.name);
-
-      const message = {
-        name: socket.userId,
-        data: socket.userId + '님이 ' + room.name + '방에 입장하셨습니다',
-      };
-
-      io.sockets.in(room.name).emit('message', message);
-    } else if (room.command == 'leave') {
-      // 방 Leave
-      socket.leave(room.name);
-
-      const message = {
-        name: socket.userId,
-        data: socket.userId + '님이 나가셨습니다',
-      };
-
-      io.sockets.in(room.name).emit('message', message);
-    }
+    // 모든 namespace ('/') 내 roomId에 해당하는 room에 message를 송신
+    io.sockets.in(socket.room.name).emit('message', res);
   });
 };
 

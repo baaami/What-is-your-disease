@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import Box from 'assets/img/profile.svg'
 import CloseIcon from 'assets/img/close_icon.svg'
 import Icon from 'assets/img/chat_title_icon.svg'
@@ -7,6 +8,7 @@ import styled from 'styled-components'
 import { categoryList } from 'static/constant'
 
 const Chatting = () => {
+  const router = useRouter()
   const [vis_chat, setVisChat] = useState(false)
   const chat_box_ref = useRef<HTMLDivElement>(null)
 
@@ -45,10 +47,18 @@ const Chatting = () => {
           </CloseButton>
         </ButtonWrap>
         {categoryList.map((item, idx) => (
-          <ChattingRoom key={idx}>
+          <ChattingList key={idx}>
             <h3>{item}</h3>
-            <EnterButton>입장</EnterButton>
-          </ChattingRoom>
+            <EnterButton
+              onClick={() =>
+                router.push({
+                  pathname: `/posts/category/lists/${item}`,
+                })
+              }
+            >
+              입장
+            </EnterButton>
+          </ChattingList>
         ))}
       </ChattingBox>
     </>
@@ -120,7 +130,7 @@ const CloseButton = styled.button`
     transform: rotate(360deg);
   }
 `
-const ChattingRoom = styled.div`
+const ChattingList = styled.div`
   display: flex;
   justify-content: space-between;
   width: calc(100% - 30px);

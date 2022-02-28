@@ -1,7 +1,24 @@
 import { io } from '../main';
 
+// nickname: socket.id
+let nicktoId = {};
+
 const socketManager = (socket) => {
   console.log('사용자가 접속하였습니다.');
+
+  socket.on('login', (data) => {
+    console.log(data.user.nickname, '님이 로그인하였습니다.');
+
+    socket.user = data.user;
+
+    nicktoId[data.user.id] = socket.id;
+
+    const rep = {
+      user: socket.user,
+    };
+
+    io.sockets.in(socket.room.name).emit('roomin', rep);
+  });
 
   socket.on('join', (data) => {
     console.log(

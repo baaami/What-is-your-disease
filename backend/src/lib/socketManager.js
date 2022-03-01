@@ -86,7 +86,7 @@ const socketManager = (socket) => {
    * 푸쉬 방향 : socket.user.nicname -> data.receiver.nickname
    * 푸쉬 타입 : data.type => post, comment, reply, like, follow
    */
-  socket.on('push', (data) => {
+  socket.on('push', async (data) => {
     // nicktoId array에 data.receiver.nickname이 존재할 경우 바로 push
     if (data.receiver.nickname in Object.keys(nicktoId)) {
       const res = {

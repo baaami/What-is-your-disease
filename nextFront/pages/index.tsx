@@ -24,28 +24,7 @@ import like_active from 'assets/img/like_active.svg'
 import Search from 'components/Search'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
-interface IHomeProps {}
-
-const categories = [
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-  { name: '내과' },
-]
+import { categoryList } from 'static/constant'
 
 const Home: NextPage = () => {
   const router = useRouter()
@@ -108,18 +87,18 @@ const Home: NextPage = () => {
         <Container>
           <Title>카테고리</Title>
           <div className="category">
-            {categories.map((item, idx) => {
+            {categoryList.map((item, idx) => {
               return (
                 <div
                   className="categoryItem"
                   key={idx}
-                  onClick={() =>
-                    router.push({
-                      pathname: `/posts/category/lists/${item.name}`,
-                    })
-                  }
+                  // onClick={() =>
+                  //   router.push({
+                  //     pathname: `/posts/category/lists/${item}`,
+                  //   })
+                  // }
                 >
-                  <h2>{item.name}</h2>
+                  <h2>{item}</h2>
                 </div>
               )
             })}

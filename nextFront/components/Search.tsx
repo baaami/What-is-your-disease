@@ -48,7 +48,7 @@ export default function Search(props: ISearchProps) {
 const SearchContainer = styled.div`
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: end;
   margin-bottom: 15px;
 
   input {

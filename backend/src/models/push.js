@@ -11,5 +11,5 @@ export const PushSchema = new Schema({
   },
 });
 
-const Push = mongoose.model('User', PushSchema);
+const Push = mongoose.model('Push', PushSchema);
 export default Push;

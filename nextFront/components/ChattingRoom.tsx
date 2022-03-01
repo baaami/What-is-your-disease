@@ -82,6 +82,7 @@ const ChattingRoom = (props: ChattingRoomModel) => {
   }, [])
 
   useEffect(() => {
+    console.log('sss')
     return () => {
       socket.emit('leave')
     }
@@ -103,88 +104,14 @@ const ChattingRoom = (props: ChattingRoomModel) => {
               </MyChat>
             )
           } else {
-            ;<Chat key={`message_${item.user.id}_${index}`}>
-              <Image src={Icon} alt="아이콘" />
-              <div>{item.data}</div>
-            </Chat>
+            return (
+              <Chat key={`message_${item.user.id}_${index}`}>
+                <Image src={Icon} alt="아이콘" />
+                <div>{item.data}</div>
+              </Chat>
+            )
           }
         })}
-        {/* <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <MyChat>
-          <Image src={Icon} alt="아이콘" />
-          <div>ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ</div>
-        </MyChat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>
-            ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
-          </div>
-        </Chat>
-        <MyChat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </MyChat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <MyChat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </MyChat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <MyChat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </MyChat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>
-            ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
-          </div>
-        </Chat> */}
         <SendMessageBox>
           <InputBox
             placeholder="메세지를 입력하세요."

@@ -1,32 +1,34 @@
-import React, { useEffect } from "react";
-import { SignupWrapper } from "styles/Singup.styles";
-import { useRouter } from "next/router";
-import naver from "assets/img/naver_login.png";
-import kakao from "assets/img/kakao_login.png";
-import google from "assets/img/google_login.png";
-import Image from "next/image";
-import { KAKAO_AUTH_URL, NAVER_AUTH_URL, GOOGLE_AUTH_URL } from "lib/OAuth";
+import React, { useEffect } from 'react'
+import { SignupWrapper } from 'styles/Singup.styles'
+import { useRouter } from 'next/router'
+import naver from 'assets/img/naver_login.png'
+import kakao from 'assets/img/kakao_login.png'
+import google from 'assets/img/google_login.png'
+import Image from 'next/image'
+import { KAKAO_AUTH_URL, NAVER_AUTH_URL, GOOGLE_AUTH_URL } from 'lib/OAuth'
 
 interface LoginProps {}
 
 export default function Login(props: LoginProps) {
-  const router = useRouter();
+  const router = useRouter()
   const getKakaoCode = () => {
     // window.location.href = KAKAO_AUTH_URL;
-    router.push(KAKAO_AUTH_URL);
-  };
+    router.push(KAKAO_AUTH_URL)
+  }
 
   const getNaverCode = () => {
-    window.location.href = NAVER_AUTH_URL;
-  };
+    // window.location.href = NAVER_AUTH_URL;
+    router.push(NAVER_AUTH_URL)
+  }
 
   const getGoogleCode = () => {
-    window.location.href = GOOGLE_AUTH_URL;
-  };
+    // window.location.href = GOOGLE_AUTH_URL
+    router.push(GOOGLE_AUTH_URL)
+  }
 
   useEffect(() => {
-    window.scrollTo({ top: 0 });
-  }, []);
+    window.scrollTo({ top: 0 })
+  }, [])
 
   return (
     <SignupWrapper className="wrap">
@@ -43,5 +45,5 @@ export default function Login(props: LoginProps) {
         </button>
       </div>
     </SignupWrapper>
-  );
+  )
 }

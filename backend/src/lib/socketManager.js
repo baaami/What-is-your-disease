@@ -6,7 +6,7 @@ let nicktoId = {};
 
 const socketManager = (socket) => {
   console.log('사용자가 접속하였습니다.');
-
+  console.log(socket.user);
   socket.on('login', (data) => {
     console.log(data.user.nickname, '님이 로그인하였습니다.');
 
@@ -22,6 +22,7 @@ const socketManager = (socket) => {
   });
 
   socket.on('join', (data) => {
+    console.log(data);
     console.log(
       data.user.nickname,
       '님이 ',
@@ -69,6 +70,7 @@ const socketManager = (socket) => {
 
   // 'message' 이벤트를 받았을 때의 처리
   socket.on('message', function (message) {
+    console.log(socket.user);
     console.log(socket.user.nickname + ':' + message.data);
 
     const res = {

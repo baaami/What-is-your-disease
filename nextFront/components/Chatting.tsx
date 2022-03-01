@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Box from 'assets/img/profile.svg'
 import CloseIcon from 'assets/img/close_icon.svg'
@@ -6,7 +6,7 @@ import Icon from 'assets/img/chat_title_icon.svg'
 import styled from 'styled-components'
 import ChattingLists from './ChattingLists'
 import ChattingRoom from './ChattingRoom'
-import socketIOClient from 'socket.io-client'
+import socketIOClient, { Socket } from 'socket.io-client'
 import { currentUserInfo } from 'store/userInfo'
 import { useRecoilState } from 'recoil'
 
@@ -18,44 +18,51 @@ const Chatting = () => {
   const [userInfo] = useRecoilState(currentUserInfo)
   const [vis_chat, setVisChat] = useState(false)
   const [vis_room, setVisRoom] = useState(false)
+  const [current_room, setCurrentRoom] = useState('')
+  const [socket, setSocket] = useState<Socket>({} as Socket)
   const chat_box_ref = useRef<HTMLDivElement>(null)
+  // /* 어딜 클릭했는지 확인 */
+  // const onClickInsideDetector = (e: any) => {
+  //   if (chat_box_ref && chat_box_ref!.contains(e.target)) {
+  //     /** CLICK INSIDE -> DO NOTHING */
+  //   } else {
+  //     if (e.target.alt === 'profile') return
+  //     /* CLICK OUTSIDE -> SELECT CLOSE */
+  //     setVisChat(false)
+  //   }
+  // }
 
-  /* 어딜 클릭했는지 확인 */
-  const onClickInsideDetector = (e: any) => {
-    if (chat_box_ref.current && chat_box_ref.current!.contains(e.target)) {
-      /** CLICK INSIDE -> DO NOTHING */
-    } else {
-      if (e.target.alt === 'profile') return
-      /* CLICK OUTSIDE -> SELECT CLOSE */
-      setVisChat(false)
-    }
-  }
+  // /* 클릭시 닫힘 처리  */
+  // useEffect(() => {
+  //   window.addEventListener('mousedown', onClickInsideDetector)
 
-  /* 클릭시 닫힘 처리  */
+  //   return () => {
+  //     window.removeEventListener('mousedown', onClickInsideDetector)
+  //   }
+  // }, [])
+
   useEffect(() => {
-    window.addEventListener('mousedown', onClickInsideDetector)
+    setSocket(socketIOClient('http://localhost:4000'))
 
     return () => {
-      window.removeEventListener('mousedown', onClickInsideDetector)
+      console.log('component unmount')
+      socket.emit('leave')
     }
   }, [])
-  useEffect(() => {
-    const socket = socketIOClient('http://localhost:4000')
 
-    if (userInfo._id !== '') {
-      socket.emit('enter', {
+  const joinRoom = (room_name: string) => {
+    console.log(`채팅방 조인 : ${room_name}`)
+    setCurrentRoom(room_name)
+    socket.emit('join', {
+      user: {
         id: userInfo._id,
-      })
-
-      socket.emit('message', { room: '백신', message: 'ㅎㅇㅎㅇ' })
-
-      socket.on('백신', (data) => {
-        console.log(data)
-      })
-    }
-  }, [userInfo])
-  console.log('vis_chat: ', vis_chat)
-  console.log('vis_room: ', vis_room)
+        nickname: userInfo.info.nickname,
+      },
+      room: {
+        name: room_name,
+      },
+    })
+  }
 
   return (
     <>
@@ -72,17 +79,19 @@ const Chatting = () => {
             <Image src={CloseIcon} alt="닫기 버튼" />
           </CloseButton>
         </ChattingBoxHeader>
-        {vis_room ? (
-          <ChattingRoom />
+        {current_room !== '' ? (
+          <ChattingRoom socket={socket} current_room={current_room} />
         ) : (
-          <ChattingLists clickEnter={setVisRoom(true)} />
+          <ChattingLists clickEnter={(e) => joinRoom(e)} />
         )}
       </ChattingBox>
     </>
   )
 }
 
-export default Chatting
+export default React.memo(Chatting, (p, n) => {
+  return p === n
+})
 
 const OpenChattingBox = styled.button`
   /*둥둥 떠다니기 애니메이션*/

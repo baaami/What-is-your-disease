@@ -133,6 +133,7 @@ const ChattingBox = styled.div<{ is_vis?: boolean }>`
   transform: ${(props) =>
     props.is_vis ? 'translateY(0px)' : 'translateY(12px)'};
   visibility: ${(props) => (props.is_vis ? 'visible' : 'hidden')};
+  overflow: hidden;
 `
 const Title = styled.h3`
   margin-bottom: 0;

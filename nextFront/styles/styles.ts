@@ -171,5 +171,5 @@ export const HotTopic = styled.div`
 `
 export const Post = styled.div`
   margin-top: 110px;
-  margin-bottom: 250px;
+  margin-bottom: 100px;
 `

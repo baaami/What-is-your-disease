@@ -6,6 +6,7 @@ export const PostListsContainer = styled.div`
 
 export const PostListsWrap = styled.div`
   margin-top: 100px;
+  margin-bottom: 100px;
   .noData {
     text-align: center;
     font-size: 24px;

@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect, useRef } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import Image from 'next/image'
 import Icon from 'assets/img/profile.svg'
@@ -14,11 +14,22 @@ interface ChattingRoomModel {
 }
 
 interface ChattingMessageListModel {
-  data: string
+  data?: string
   user: {
     id: string
     nickname: string
   }
+  room?: string
+  event?: 'roomout' | 'roomin'
+}
+
+interface roomUserModel {
+  event: 'roomout' | 'roomin'
+  user: {
+    id: string
+    nickname: string
+  }
+  room: string
 }
 
 const ChattingRoom = (props: ChattingRoomModel) => {
@@ -29,9 +40,9 @@ const ChattingRoom = (props: ChattingRoomModel) => {
   const [userInfo] = useRecoilState(currentUserInfo)
 
   // 메세지 리스트 state
-  const [message_list, setMessageList] = useState<ChattingMessageListModel[]>(
-    [],
-  )
+  const [message_list, setMessageList] = useState<
+    Array<ChattingMessageListModel>
+  >([])
 
   // 채팅 input state
   const [chatting_message, setChattingMessage] = useState('')
@@ -53,7 +64,9 @@ const ChattingRoom = (props: ChattingRoomModel) => {
 
   // 메세지 보내기
   const sendMessage = (message: string) => {
-    console.log('실행')
+    if (message === '') {
+      return
+    }
     socket.emit('message', {
       data: message,
     })
@@ -61,28 +74,19 @@ const ChattingRoom = (props: ChattingRoomModel) => {
     setChattingMessage('')
   }
 
-  // 메세지 받음
-  const receiveMessage = (data: ChattingMessageListModel) => {
-    // console.log(message_list)
-    // const nextState = [...message_list, data]
-    // console.log(nextState)
-    setMessageList((currentMessage) => [...currentMessage, data])
-  }
-
   useEffect(() => {
     socket.on('message', (data: ChattingMessageListModel) => {
-      console.log(`message: ${data.data}`)
-      console.log(`보낸사람: ${data.user.nickname}`)
-      // const nextState = [...message_list, data]
-      // console.log(message_list)
-      // setMessageList(nextState)
-
-      receiveMessage(data)
+      setMessageList((currentMessage) => [...currentMessage, data])
+    })
+    socket.on('roomin', (data: roomUserModel) => {
+      setMessageList((currentMessage) => [...currentMessage, data])
+    })
+    socket.on('roomout', (data: roomUserModel) => {
+      setMessageList((currentMessage) => [...currentMessage, data])
     })
   }, [])
 
   useEffect(() => {
-    console.log('sss')
     return () => {
       socket.emit('leave')
     }
@@ -96,18 +100,33 @@ const ChattingRoom = (props: ChattingRoomModel) => {
     <ChattingRoomWrapper>
       <ChattingRoomWrap ref={message_wrap_ref}>
         {message_list.map((item, index) => {
-          if (item.user.id === userInfo._id) {
+          if (item.event === 'roomin') {
+            return (
+              <div className="roomIn">
+                {item.user.nickname} 님이 입장 하셨습니다.
+              </div>
+            )
+          } else if (item.event === 'roomout') {
+            return (
+              <div className="roomOut">
+                {item.user.nickname} 님이 입장 퇴장했습니다.
+              </div>
+            )
+          } else if (item.user.id === userInfo._id) {
             return (
               <MyChat key={`message_${item.user.id}_${index}`}>
-                <Image src={Icon} alt="아이콘" />
-                <div>{item.data}</div>
+                <img src={Icon.src} alt="아이콘" />
+                <div className="myMessageBox">{item.data}</div>
               </MyChat>
             )
           } else {
             return (
               <Chat key={`message_${item.user.id}_${index}`}>
-                <Image src={Icon} alt="아이콘" />
-                <div>{item.data}</div>
+                <img src={Icon.src} alt="아이콘" />
+                <section className="otherBox">
+                  <div className="">{item.user.nickname}</div>
+                  <div className="otherMessageBox">{item.data}</div>
+                </section>
               </Chat>
             )
           }
@@ -116,6 +135,12 @@ const ChattingRoom = (props: ChattingRoomModel) => {
           <InputBox
             placeholder="메세지를 입력하세요."
             onChange={(e) => setChattingMessage(e.target.value)}
+            onKeyPress={(e: React.KeyboardEvent<Element>) => {
+              if (e.key === 'Enter') {
+                e.preventDefault()
+                sendMessage(chatting_message)
+              }
+            }}
             value={chatting_message}
           ></InputBox>
           <SendButton onClick={() => sendMessage(chatting_message)}>
@@ -138,24 +163,34 @@ const ChattingRoomWrapper = styled.div`
 const ChattingRoomWrap = styled.div`
   height: calc(100% - 100px);
   overflow-y: scroll;
+
+  .roomIn,
+  .roomOut {
+    margin-bottom: 10px;
+  }
 `
 const Chat = styled.div`
+  width: 100%;
   display: flex;
   align-items: flex-start;
   margin-bottom: 10px;
   padding-right: 15px;
 
   img {
-    width: 25px !important;
-    height: 25px !important;
+    width: 30px !important;
+    height: 30px !important;
     padding-right: 5px !important;
   }
-
-  div {
-    max-width: calc(100% - 40px);
-    padding: 5px;
-    background-color: #f4f4f4;
-    border-radius: 8px;
+  section.otherBox {
+    max-width: 100%;
+    width: 100%;
+    div.otherMessageBox {
+      max-width: calc(100% - 40px);
+      width: max-content;
+      padding: 5px;
+      background-color: #f4f4f4;
+      border-radius: 8px;
+    }
   }
 `
 const MyChat = styled.div`
@@ -166,12 +201,12 @@ const MyChat = styled.div`
   padding-right: 15px;
 
   img {
-    width: 25px !important;
-    height: 25px !important;
+    width: 30px !important;
+    height: 30px !important;
     padding-left: 5px !important;
   }
 
-  div {
+  div.myMessageBox {
     max-width: calc(100% - 40px);
     padding: 5px;
     background-color: #f7e6e8;
@@ -185,6 +220,7 @@ const SendMessageBox = styled.div`
   width: 100%;
   height: 100px;
   background-color: aliceblue;
+  overflow: hidden;
 `
 const InputBox = styled.textarea`
   width: 80%;

@@ -36,6 +36,7 @@ const socketManager = (socket) => {
     socket.join(socket.room.name);
 
     const rep = {
+      event: 'roomin',
       user: socket.user,
       room: socket.room,
     };
@@ -53,6 +54,7 @@ const socketManager = (socket) => {
     );
 
     const rep = {
+      event: 'roomout',
       user: socket.user,
       room: socket.room,
     };

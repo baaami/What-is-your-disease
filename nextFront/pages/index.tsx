@@ -98,7 +98,13 @@ const Home: NextPage = () => {
                   //   })
                   // }
                 >
-                  <h2>{item}</h2>
+                  <h2
+                    onClick={() =>
+                      router.push({ pathname: `/posts/category/lists/${item}` })
+                    }
+                  >
+                    {item}
+                  </h2>
                 </div>
               )
             })}

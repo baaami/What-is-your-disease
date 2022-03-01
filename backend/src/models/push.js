@@ -5,7 +5,10 @@ export const PushSchema = new Schema({
   sender: mongoose.Types.ObjectId,
   receiver: mongoose.Types.ObjectId,
   type: String,
-  argv: String, // 부가정보
+  publishedDate: {
+    type: Date,
+    default: Date.now, // 현재 날짜를 기본값으로 지정
+  },
 });
 
 const Push = mongoose.model('User', PushSchema);

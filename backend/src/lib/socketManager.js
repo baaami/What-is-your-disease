@@ -1,4 +1,5 @@
 import { io } from '../main';
+import Push from '../models/push';
 
 // nickname: socket.id
 let nicktoId = {};
@@ -77,6 +78,42 @@ const socketManager = (socket) => {
 
     // 모든 namespace ('/') 내 roomId에 해당하는 room에 message를 송신
     io.sockets.in(socket.room.name).emit('message', res);
+  });
+
+  /**
+   * @brief push 알림 구현
+   *
+   * 푸쉬 방향 : socket.user.nicname -> data.receiver.nickname
+   * 푸쉬 타입 : data.type => post, comment, reply, like, follow
+   */
+  socket.on('push', (data) => {
+    // nicktoId array에 data.receiver.nickname이 존재할 경우 바로 push
+    if (data.receiver.nickname in Object.keys(nicktoId)) {
+      const res = {
+        sender: socket.user.nickname,
+        receiver: data.receiver.nickname,
+        type: data.type,
+        publishedDate: {
+          type: Date,
+          default: Date.now, // 현재 날짜를 기본값으로 지정
+        },
+      };
+
+      socket.broadcast.to(nicktoId[data.receiver.nickname]).emit('push', res);
+    } else {
+      // 존재하지 않을 경우 DB에 해당 내역 삽입
+      const push = new Push({
+        sender: socket.user.nickname,
+        receiver: data.receiver.nickname,
+        type: data.type,
+      });
+
+      try {
+        await push.save();
+      } catch (e) {
+        console.log(500, e);
+      }
+    }
   });
 };
 

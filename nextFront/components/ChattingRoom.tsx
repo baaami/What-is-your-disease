@@ -109,7 +109,7 @@ const ChattingRoom = (props: ChattingRoomModel) => {
           } else if (item.event === 'roomout') {
             return (
               <div className="roomOut">
-                {item.user.nickname} 님이 입장 퇴장했습니다.
+                {item.user.nickname} 님이 퇴장했습니다.
               </div>
             )
           } else if (item.user.id === userInfo._id) {

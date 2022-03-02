@@ -1,5 +1,6 @@
 import { io } from '../main';
 import Push from '../models/push';
+import Chat from '../models/chat';
 
 // nickname: socket.id
 let nicktoId = {};
@@ -71,9 +72,8 @@ const socketManager = (socket) => {
   });
 
   // 'message' 이벤트를 받았을 때의 처리
-  socket.on('message', function (message) {
+  socket.on('message', async (message) => {
     console.log(socket.user);
-    console.log(socket.user.nickname + ':' + message.data);
 
     const res = {
       user: socket.user,
@@ -82,6 +82,19 @@ const socketManager = (socket) => {
 
     // 모든 namespace ('/') 내 roomId에 해당하는 room에 message를 송신
     io.sockets.in(socket.room.name).emit('message', res);
+
+    // 채팅 내용 저장
+    const chat = new Chat({
+      sender: socket.user.id,
+      room: socket.room.name,
+      data: message.data,
+    });
+
+    try {
+      await chat.save();
+    } catch (e) {
+      ctx.throw(500, e);
+    }
   });
 
   /**

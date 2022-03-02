@@ -26,7 +26,12 @@ export const HeaderContainer = styled.div`
     }
   }
 `
+export const ContainerWrap = styled.div`
+  display: flex;
+  align-items: center;
+`
 export const ProfileContainer = styled.div`
+  margin-right: 30px;
   a,
   button {
     /* transition: all 0.3s ease-in;
@@ -37,6 +42,102 @@ export const ProfileContainer = styled.div`
 
     img {
       width: 55px;
+    }
+  }
+`
+export const ProfileModal = styled.div`
+  position: absolute;
+  right: -20px;
+  color: white;
+  padding: 30px;
+  width: 380px;
+  height: 240px;
+  background-color: rgba(85, 85, 85);
+  border-radius: 4px;
+  transition: all 0.21s;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+
+  &.vis {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(3px);
+  }
+  .profileWrap {
+    display: flex;
+    gap: 18px;
+
+    .nickname {
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .buttonWrap {
+      button {
+        font-size: 15px;
+        text-decoration: underline !important;
+      }
+    }
+  }
+  .modalLink {
+    button {
+      display: inline-block;
+      margin-top: 25px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+  }
+`
+export const NoticeContainer = styled.div``
+export const NoticeModal = styled.div`
+  position: absolute;
+  right: -20px;
+  color: white;
+  padding: 15px 20px;
+  width: 280px;
+  height: 600px;
+  background-color: #fff;
+  border: 1px solid #999;
+  border-radius: 4px;
+  color: #000;
+  transition: all 0.21s;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+
+  &.vis {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(3px);
+  }
+  .noticeWrap {
+    display: block;
+
+    .noticeHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #545454;
+
+      span {
+        font-weight: 900;
+        color: #e96767;
+      }
+    }
+
+    .noticeContents {
+      margin-top: 20px;
+
+      div {
+        margin-bottom: 10px;
+
+        span {
+          margin-left: 10px;
+          font-size: 12px;
+          color: #999;
+        }
+      }
     }
   }
 `
@@ -84,49 +185,4 @@ export const Descript = styled.h2`
 export const SnsContainer = styled.div`
   display: flex;
   justify-content: end;
-`
-
-export const HeaderModal = styled.div`
-  position: absolute;
-  right: -20px;
-  color: white;
-  padding: 30px;
-  width: 380px;
-  height: 240px;
-  background-color: rgba(85, 85, 85);
-  border-radius: 4px;
-  transition: all 0.21s;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
-
-  &.vis {
-    visibility: visible;
-    opacity: 1;
-    transform: translateY(3px);
-  }
-  .profileWrap {
-    display: flex;
-    gap: 18px;
-
-    .nickname {
-      font-size: 24px;
-      font-weight: 900;
-    }
-
-    .buttonWrap {
-      button {
-        font-size: 15px;
-        text-decoration: underline !important;
-      }
-    }
-  }
-  .modalLink {
-    button {
-      display: inline-block;
-      margin-top: 25px;
-      font-size: 18px;
-      cursor: pointer;
-    }
-  }
 `

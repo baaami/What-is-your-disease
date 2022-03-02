@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/router'
 import Image from 'next/image'
-import Box from 'assets/img/profile.svg'
-import CloseIcon from 'assets/img/close_icon.svg'
+import Box from 'assets/img/chat_icon.svg'
+import Close from 'assets/img/close_icon.svg'
 import Icon from 'assets/img/chat_title_icon.svg'
+import Exit from 'assets/img/exit_gray.svg'
 import styled from 'styled-components'
 import ChattingLists from './ChattingLists'
 import ChattingRoom from './ChattingRoom'
@@ -15,9 +17,10 @@ import { useRecoilState } from 'recoil'
 // })
 // const socket = manager.socket('/')
 const Chatting = () => {
+  const router = useRouter()
+
   const [userInfo] = useRecoilState(currentUserInfo)
   const [vis_chat, setVisChat] = useState(false)
-  const [vis_room, setVisRoom] = useState(false)
   const [current_room, setCurrentRoom] = useState('')
   const [socket, setSocket] = useState<Socket>({} as Socket)
   const chat_box_ref = useRef<HTMLDivElement>(null)
@@ -70,19 +73,32 @@ const Chatting = () => {
         <Image src={Box} width="50px" height="50px" alt="채팅 여는 이미지" />
       </OpenChattingBox>
       <ChattingBox ref={chat_box_ref} is_vis={vis_chat}>
-        <ChattingBoxHeader>
-          <Title>
-            DR.U 채팅방
-            <Image src={Icon} alt="아이콘" />
-          </Title>
-          <CloseButton onClick={() => setVisChat(false)}>
-            <Image src={CloseIcon} alt="닫기 버튼" />
-          </CloseButton>
-        </ChattingBoxHeader>
         {current_room !== '' ? (
-          <ChattingRoom socket={socket} current_room={current_room} />
+          <>
+            <ChattingBoxHeader>
+              <Title>
+                {current_room} 채팅방
+                <Image src={Icon} alt="아이콘" />
+              </Title>
+              <ChattingHeaderButton onClick={() => setCurrentRoom('')}>
+                <Image src={Exit} alt="나가기 버튼" />
+              </ChattingHeaderButton>
+            </ChattingBoxHeader>
+            <ChattingRoom socket={socket} current_room={current_room} />
+          </>
         ) : (
-          <ChattingLists clickEnter={(e) => joinRoom(e)} />
+          <>
+            <ChattingBoxHeader>
+              <Title>
+                DR.U 채팅방
+                <Image src={Icon} alt="아이콘" />
+              </Title>
+              <ChattingHeaderButton onClick={() => setVisChat(false)}>
+                <Image src={Close} alt="닫기 버튼" />
+              </ChattingHeaderButton>
+            </ChattingBoxHeader>
+            <ChattingLists clickEnter={(e) => joinRoom(e)} />
+          </>
         )}
       </ChattingBox>
     </>
@@ -152,9 +168,7 @@ const ChattingBoxHeader = styled.div`
   padding: 10px 15px;
   border-bottom: 1px solid #1850a3;
 `
-const CloseButton = styled.button`
-  transition: all 0.4s ease-in;
-  &:hover {
-    transform: rotate(360deg);
-  }
+const ChattingHeaderButton = styled.button`
+  position: relative;
+  top: 3px;
 `

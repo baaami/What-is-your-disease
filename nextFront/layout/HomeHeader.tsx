@@ -1,96 +1,113 @@
-import React, { useEffect, useState, useRef } from "react";
-import { HeaderContainer, ProfileContainer, HeaderModal } from "./styles";
+import React, { useEffect, useState, useRef } from 'react'
+import {
+  ContainerWrap,
+  HeaderContainer,
+  NoticeContainer,
+  NoticeModal,
+  ProfileContainer,
+  ProfileModal,
+} from './styles'
 // import { Link, useHistory, useLocation } from "react-router-dom";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useRecoilState } from "recoil";
-import API from "service/api";
-import { currentUserInfo } from "store/userInfo";
-import { Container } from "common.styles";
-import logo from "../assets/img/hlogo.svg";
-import profile from "../assets/img/profile.svg";
-import { Header } from "antd/lib/layout/layout";
-import Image from "next/link";
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useRecoilState } from 'recoil'
+import API from 'service/api'
+import { currentUserInfo } from 'store/userInfo'
+import { Container } from 'common.styles'
+import logo from '../assets/img/hlogo.svg'
+import profile from '../assets/img/profile.svg'
+import notice from '../assets/img/bell_icon.svg'
+import Image from 'next/link'
 
 export default function HomeHeader() {
-  const location = useRouter();
-  const history = useRouter();
+  const location = useRouter()
+  const history = useRouter()
 
-  const profile_modal_ref = useRef<HTMLDivElement>(null);
+  const profile_modal_ref = useRef<HTMLDivElement>(null)
+  const notice_modal_ref = useRef<HTMLDivElement>(null)
 
-  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo);
-  const [border, setBorder] = useState("rgba(255,255,255,0)");
-  const [background, setBackground] = useState("transparent");
+  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
+  const [border, setBorder] = useState('rgba(255,255,255,0)')
+  const [background, setBackground] = useState('transparent')
 
-  const [vis_modal, setVisModal] = useState(false);
+  const [vis_profile_modal, setVisProfileModal] = useState(false)
+  const [vis_notice_modal, setVisNoticeModal] = useState(false)
 
   const scrollHandler = () => {
     if (window.scrollY < 40) {
-      setBackground("transparent");
-      setBorder("rgba(255,255,255,0)");
+      setBackground('transparent')
+      setBorder('rgba(255,255,255,0)')
     } else {
-      setBackground("#fff");
-      setBorder("#ccc");
+      setBackground('#fff')
+      setBorder('#ccc')
     }
-  };
+  }
 
   const getUserInfo = async () => {
     await API.auth
       .getUserInfo()
       .then((res) => {
-        if (res.data === "") {
+        if (res.data === '') {
           return setUserInfo({
             ...userInfo,
-            provider: "",
-            providerId: "",
-            _id: "",
+            provider: '',
+            providerId: '',
+            _id: '',
             info: {
-              name: "",
-              age: "",
-              gender: "",
-              nickname: "",
-              bloodtype: "",
+              name: '',
+              age: '',
+              gender: '',
+              nickname: '',
+              bloodtype: '',
               allergy: [],
               medicines: [],
             },
-          });
+          })
         }
-        setUserInfo({ ...userInfo, ...res.data });
+        setUserInfo({ ...userInfo, ...res.data })
       })
       .catch((e) => {
-        console.log(e);
-      });
-  };
+        console.log(e)
+      })
+  }
 
   const logoutHandler = async () => {
-    localStorage.removeItem("jwttoken");
-    localStorage.removeItem("userInfo");
-    setVisModal(false);
+    localStorage.removeItem('jwttoken')
+    localStorage.removeItem('userInfo')
+    setVisProfileModal(false)
     setUserInfo({
       ...userInfo,
-      provider: "",
-      providerId: "",
-      _id: "",
+      provider: '',
+      providerId: '',
+      _id: '',
       info: {
-        name: "",
-        age: "",
-        gender: "",
-        nickname: "",
-        bloodtype: "",
+        name: '',
+        age: '',
+        gender: '',
+        nickname: '',
+        bloodtype: '',
         allergy: [],
         medicines: [],
       },
-    });
-    history.replace("/");
-  };
+    })
+    history.replace('/')
+  }
 
   const clickProfileIcon = () => {
-    if (vis_modal) {
-      setVisModal(false);
+    if (vis_profile_modal) {
+      setVisProfileModal(false)
     } else {
-      setVisModal(true);
+      setVisProfileModal(true)
     }
-  };
+  }
+
+  const clickNoticeIcon = () => {
+    if (vis_notice_modal) {
+      setVisNoticeModal(false)
+    } else {
+      setVisNoticeModal(true)
+    }
+  }
 
   /* 어딜 클릭했는지 확인 */
   const onClickInsideDetector = (e: any) => {
@@ -100,96 +117,139 @@ export default function HomeHeader() {
     ) {
       /** CLICK INSIDE -> DO NOTHING */
     } else {
-      if (e.target.alt === "profile") return;
+      if (e.target.alt === 'profile') return
       /* CLICK OUTSIDE -> SELECT CLOSE */
-      setVisModal(false);
+      setVisProfileModal(false)
     }
-  };
+  }
 
   useEffect(() => {
     if (
       // typeof window !== undefined &&
       // window?.localStorage.getItem("jwttoken") &&
       !userInfo.info.name &&
-      userInfo.info.name !== "" &&
-      location.pathname !== "/infoForm"
+      userInfo.info.name !== '' &&
+      location.pathname !== '/infoForm'
     ) {
-      alert("회원정보 작성 후 이용 바랍니다.");
-      history.push("/infoForm");
+      alert('회원정보 작성 후 이용 바랍니다.')
+      history.push('/infoForm')
     } else {
-      getUserInfo();
+      getUserInfo()
     }
 
-    window.addEventListener("scroll", scrollHandler);
-  }, [location.pathname]);
+    window.addEventListener('scroll', scrollHandler)
+  }, [location.pathname])
 
   /* 클릭시 닫힘 처리  */
   useEffect(() => {
-    window.addEventListener("mousedown", onClickInsideDetector);
+    window.addEventListener('mousedown', onClickInsideDetector)
 
     return () => {
-      window.removeEventListener("mousedown", onClickInsideDetector);
-    };
-  }, []);
+      window.removeEventListener('mousedown', onClickInsideDetector)
+    }
+  }, [])
 
   return (
     <>
       <HeaderContainer
         style={{
           background: background,
-          borderBottomWidth: "1px",
-          borderBottomStyle: "solid",
+          borderBottomWidth: '1px',
+          borderBottomStyle: 'solid',
           borderColor: border,
-          transition: "0.21s",
+          transition: '0.21s',
         }}
       >
         <Container className="flexWrap headerContainer">
           <Link href="/" passHref>
             <img className="logo" src={logo.src} alt="logo" />
           </Link>
-          <ProfileContainer onClick={() => clickProfileIcon()}>
-            {userInfo._id !== "" ? (
-              <button className="headerTxt">
-                <img src={profile.src} alt="profile" />
-              </button>
-            ) : (
-              <a className="headerText">
-                <Link href="/login" passHref>
+          <ContainerWrap>
+            <ProfileContainer onClick={() => clickProfileIcon()}>
+              {userInfo._id !== '' ? (
+                <button className="headerTxt">
                   <img src={profile.src} alt="profile" />
-                </Link>
-              </a>
-            )}
-            <HeaderModal
-              ref={profile_modal_ref}
-              className={`${vis_modal ? "vis" : ""}`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <section className="profileWrap">
-                <div>
-                  <img src={profile.src} alt="" />
-                </div>
-                <div>
-                  <div className="nickname">{userInfo.info.nickname}</div>
-                  <div className="buttonWrap">
-                    <button onClick={() => history.push("/infoForm")}>
-                      회원정보 수정하기
-                    </button>
-                  </div>
-                </div>
-              </section>
-              <div className="modalLink">
-                <button onClick={() => history.push("/mypage")}>
-                  마이페이지
                 </button>
-              </div>
-              <div className="modalLink">
-                <button onClick={logoutHandler}>로그아웃</button>
-              </div>
-            </HeaderModal>
-          </ProfileContainer>
+              ) : (
+                <a className="headerText">
+                  <Link href="/login" passHref>
+                    <img src={profile.src} alt="profile" />
+                  </Link>
+                </a>
+              )}
+              <ProfileModal
+                ref={profile_modal_ref}
+                className={`${vis_profile_modal ? 'vis' : ''}`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <section className="profileWrap">
+                  <div>
+                    <img src={profile.src} alt="profile" />
+                  </div>
+                  <div>
+                    <div className="nickname">{userInfo.info.nickname}</div>
+                    <div className="buttonWrap">
+                      <button onClick={() => history.push('/infoForm')}>
+                        회원정보 수정하기
+                      </button>
+                    </div>
+                  </div>
+                </section>
+                <div className="modalLink">
+                  <button onClick={() => history.push('/mypage')}>
+                    마이페이지
+                  </button>
+                </div>
+                <div className="modalLink">
+                  <button onClick={logoutHandler}>로그아웃</button>
+                </div>
+              </ProfileModal>
+            </ProfileContainer>
+            <NoticeContainer onClick={() => clickNoticeIcon()}>
+              <button className="headerTxt">
+                <img src={notice.src} alt="notice" />
+              </button>
+              <NoticeModal
+                ref={notice_modal_ref}
+                className={`${vis_notice_modal ? 'vis' : ''}`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <section className="noticeWrap">
+                  <div className="noticeHeader">
+                    <div>
+                      알림 <span>7</span> 건
+                    </div>
+                    <div
+                      style={{
+                        textDecoration: 'underline',
+                        fontSize: 12,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      모두 읽음
+                    </div>
+                  </div>
+                  <div className="noticeContents">
+                    <div>
+                      읽지 않은 채팅이 있습니다. 확인해주세요.<span>2일전</span>
+                    </div>
+                    <div>
+                      글쓰러간지 일주일이 넘었네요! 글쓰러 가볼까요?
+                      <span>5일전</span>
+                    </div>
+                    <div>
+                      읽지 않은 채팅이 있습니다. 확인해주세요.<span>7일전</span>
+                    </div>
+                    <div>
+                      읽지 않은 채팅이 있습니다.<span>15일전</span>
+                    </div>
+                  </div>
+                </section>
+              </NoticeModal>
+            </NoticeContainer>
+          </ContainerWrap>
         </Container>
       </HeaderContainer>
-      {/* <Routes /> */}
     </>
-  );
+  )
 }

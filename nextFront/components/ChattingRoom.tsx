@@ -115,14 +115,14 @@ const ChattingRoom = (props: ChattingRoomModel) => {
           } else if (item.user.id === userInfo._id) {
             return (
               <MyChat key={`message_${item.user.id}_${index}`}>
-                <img src={Icon.src} alt="아이콘" />
+                <img src={Icon.src} alt="프로필 아이콘" />
                 <div className="myMessageBox">{item.data}</div>
               </MyChat>
             )
           } else {
             return (
               <Chat key={`message_${item.user.id}_${index}`}>
-                <img src={Icon.src} alt="아이콘" />
+                <img src={Icon.src} alt="프로필 아이콘" />
                 <section className="otherBox">
                   <div className="">{item.user.nickname}</div>
                   <div className="otherMessageBox">{item.data}</div>
@@ -160,6 +160,7 @@ const ChattingRoomWrapper = styled.div`
   padding: 15px;
   padding-right: 0;
 `
+
 const ChattingRoomWrap = styled.div`
   height: calc(100% - 100px);
   overflow-y: scroll;

@@ -4,7 +4,6 @@ import profileDefault from 'assets/img/profile.svg'
 import { Tabs } from 'antd'
 import API from 'service/api'
 import { PostUserModel } from 'service/model/postModel'
-// import { useHistory } from "react-router-dom";
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useRecoilState } from 'recoil'

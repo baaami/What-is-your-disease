@@ -89,7 +89,7 @@ export const InfoCardWrap = styled.div`
     display: flex;
 
     .title {
-      width: 100px;
+      width: 110px;
       font-size: 20px;
       margin-right: 54px;
     }

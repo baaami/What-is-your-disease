@@ -3,6 +3,12 @@ import mongoose, { Schema } from 'mongoose';
 export const PushSchema = new Schema({
   _id: mongoose.Types.ObjectId,
   sender: mongoose.Types.ObjectId,
+  senderInfo: {
+    senderId: mongoose.Types.ObjectId,
+    postId: mongoose.Types.ObjectId,
+    commentId: mongoose.Types.ObjectId,
+    replyId: mongoose.Types.ObjectId,
+  },
   receiver: mongoose.Types.ObjectId,
   type: String,
   publishedDate: {

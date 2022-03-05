@@ -9,6 +9,7 @@ const PostSchema = new Schema({
   title: String,
   body: String,
   category: String,
+  diseasePeriod: String,
   views: Number,
   likes: Number,
   likeMe: [mongoose.Types.ObjectId],

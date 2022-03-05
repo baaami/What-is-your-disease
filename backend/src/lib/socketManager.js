@@ -104,26 +104,23 @@ const socketManager = (socket) => {
    * 푸쉬 타입 : data.type => post, comment, reply, like, follow
    */
   socket.on('push', async (data) => {
-    // nicktoId array에 data.receiver.nickname이 존재할 경우 바로 push
-    if (data.receiver.nickname in Object.keys(nicktoId)) {
-      const res = {
-        sender: socket.user.nickname,
-        receiver: data.receiver.nickname,
-        type: data.type,
-        publishedDate: {
-          type: Date,
-          default: Date.now, // 현재 날짜를 기본값으로 지정
-        },
-      };
+    const res = {
+      sender: socket.user.nickname,
+      receiver: data.receiver.nickname,
+      type: data.type,
+      Info: data.info,
+      publishedDate: {
+        type: Date,
+        default: Date.now, // 현재 날짜를 기본값으로 지정
+      },
+    };
 
+    if (data.receiver.nickname in Object.keys(nicktoId)) {
+      // 수신자가 현재 접속 중일 경우 바로 push
       socket.broadcast.to(nicktoId[data.receiver.nickname]).emit('push', res);
     } else {
-      // 존재하지 않을 경우 DB에 해당 내역 삽입
-      const push = new Push({
-        sender: socket.user.nickname,
-        receiver: data.receiver.nickname,
-        type: data.type,
-      });
+      // 접속 중이지 않을 경우 DB에 해당 내역 삽입
+      const push = new Push(res);
 
       try {
         await push.save();

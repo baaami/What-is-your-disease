@@ -6,7 +6,7 @@ export const posts = {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
-      url: `http://locaohost:4000/api/posts/latest`,
+      url: `${BASE_URL}/api/posts/latest`,
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,
@@ -52,7 +52,7 @@ export const posts = {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
-      url: `http://localhost:4000/api/posts/filter/${orderBy}`,
+      url: `${BASE_URL}/api/posts/filter/${orderBy}`,
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,

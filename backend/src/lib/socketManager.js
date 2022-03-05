@@ -19,7 +19,7 @@ const socketManager = (socket) => {
       user: socket.user,
     };
 
-    io.sockets.in(socket.room.name).emit('roomin', rep);
+    // io.sockets.in(socket.room.name).emit('roomin', rep);
   });
 
   socket.on('join', (data) => {

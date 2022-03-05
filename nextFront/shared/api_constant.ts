@@ -1,4 +1,5 @@
 export const BASE_URL = 'http://localhost:4000'
+// export const BASE_URL = 'https://dru-backend.herokuapp.com'
 export const GET = 'GET'
 export const POST = 'POST'
 export const PUT = 'PUT'

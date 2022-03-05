@@ -10,19 +10,22 @@ import ChattingLists from './ChattingLists'
 import ChattingRoom from './ChattingRoom'
 import socketIOClient, { Socket } from 'socket.io-client'
 import { currentUserInfo } from 'store/userInfo'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { socketInit } from 'store/socket'
 
 // const manager = new Manager('http://localhost:4000', {
 //   autoConnect: false,
 // })
 // const socket = manager.socket('/')
+
 const Chatting = () => {
   const router = useRouter()
 
   const [userInfo] = useRecoilState(currentUserInfo)
   const [vis_chat, setVisChat] = useState(false)
   const [current_room, setCurrentRoom] = useState('')
-  const [socket, setSocket] = useState<Socket>({} as Socket)
+  // const [socket, setSocket] = useState<Socket>({} as Socket)
+  const socket = useRecoilValue(socketInit)
   const chat_box_ref = useRef<HTMLDivElement>(null)
   // /* 어딜 클릭했는지 확인 */
   // const onClickInsideDetector = (e: any) => {
@@ -45,7 +48,7 @@ const Chatting = () => {
   // }, [])
 
   useEffect(() => {
-    setSocket(socketIOClient('http://localhost:4000'))
+    // setSocket({ socket: socketIOClient('http://localhost:4000') })
 
     return () => {
       console.log('component unmount')

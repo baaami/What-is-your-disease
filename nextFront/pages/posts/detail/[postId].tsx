@@ -22,6 +22,7 @@ import {
 } from 'styles/posts/styles'
 import like_out from 'assets/img/like_out.svg'
 import like_active from 'assets/img/like_active.svg'
+import { socketInit } from 'store/socket'
 
 interface IPostsDetailProps {}
 
@@ -34,6 +35,7 @@ export default function PostsDetail(props: {
   }
 }) {
   const router = useRouter()
+  const [socket] = useRecoilState(socketInit)
   const [userInfo] = useRecoilState(currentUserInfo)
   const [post, setPost] = useState<PostModel>({} as PostModel)
   const [comment_value, setCommentValue] = useState('')
@@ -138,6 +140,18 @@ export default function PostsDetail(props: {
       .createComment(postId, comment_value)
       .then((res) => {
         getPost()
+        const commentsLength = res.data.comments.length
+        const currentCommentId = res.data.comments[commentsLength - 1]._id
+        socket.emit('push', {
+          receiver: {
+            nickname: post.user.info.nickname,
+          },
+          info: {
+            postId: post._id,
+            commentId: currentCommentId,
+          },
+          type: 'comment',
+        })
       })
       .catch((e) => {
         console.log(e)

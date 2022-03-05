@@ -26,7 +26,7 @@ import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
 import { categoryList } from 'static/constant'
 
-const Home: NextPage = () => {
+const Home: NextPage = (props) => {
   const router = useRouter()
   const [latest_posts, setLatestPosts] = useState([])
   const [hot_posts, setHotPosts] = useState([])

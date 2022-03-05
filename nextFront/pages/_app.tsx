@@ -1,4 +1,5 @@
-import { NextPage, NextComponentType } from 'next'
+import { useEffect } from 'react'
+import { NextComponentType } from 'next'
 import '../stylesG/globals.css'
 import { useRouter } from 'next/router'
 import type { AppProps, AppInitialProps, AppContext } from 'next/app'
@@ -11,7 +12,7 @@ import HomeHeader from 'layout/HomeHeader'
 import SubHeader from 'layout/SubHeader'
 import cookies from 'next-cookies'
 import { setToken } from 'shared/token-manager'
-
+import SocketProvider from 'components/SocketProvider'
 const MyApp: NextComponentType<AppContext, AppInitialProps, AppProps> = ({
   Component,
   pageProps,
@@ -19,10 +20,12 @@ const MyApp: NextComponentType<AppContext, AppInitialProps, AppProps> = ({
   const location = useRouter()
   return (
     <RecoilRoot>
-      {location.pathname === '/' ? <HomeHeader /> : <SubHeader />}
-      <Component {...pageProps} />
-      <Chatting />
-      <Footer />
+      <SocketProvider>
+        {location.pathname === '/' ? <HomeHeader /> : <SubHeader />}
+        <Component {...pageProps} s={'ss'} />
+        <Chatting />
+        <Footer />
+      </SocketProvider>
     </RecoilRoot>
   )
 }

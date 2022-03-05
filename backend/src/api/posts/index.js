@@ -5,21 +5,15 @@ import * as postsCtrl from './posts.ctrl';
 const posts = new Router();
 
 // 카테고리 게시물
-posts.get('/', postsCtrl.category);
-
-// 최신 게시물
-posts.get('/latest', postsCtrl.latest);
-
-// 인기 게시물
-posts.get('/hot', postsCtrl.hot);
-
-// 특정 유저 게시물 -> 자신일 경우 자신의 _id값 전달
-posts.get('/user/:userId', postsCtrl.user);
+posts.get('/', postsCtrl.category, postsCtrl.filter);
 
 // 필터 게시물 (필터링 테이블 작성 필요)
 posts.get('/filter/:orderBy', postsCtrl.filter);
 
+// 특정 유저 게시물 -> 자신일 경우 자신의 _id값 전달
+posts.get('/user/:userId', postsCtrl.user, postsCtrl.filter);
+
 // 특정 유저 팔로우들의 게시물
-posts.get('/follow', checkLoggedIn, postsCtrl.follow);
+posts.get('/follow', checkLoggedIn, postsCtrl.follow, postsCtrl.filter);
 
 export default posts;

@@ -107,7 +107,7 @@ export const filter = async (ctx) => {
   let posts;
 
   const query = {
-    ...(ctx.mongo.query ? ctx.mongo.query : {}),
+    ...(ctx.state.query ? ctx.state.query : {}),
     ...(tag ? { tags: tag } : {}),
     ...(diseasePeriod
       ? { diseasePeriod: diseasePeriod }
@@ -187,7 +187,7 @@ export const user = async (ctx) => {
       : { diseasePeriod: 'acute' }),
   };
 
-  ctx.mongo.query = query;
+  ctx.state.query = query;
   next();
 };
 
@@ -213,7 +213,7 @@ export const category = async (ctx) => {
       : { diseasePeriod: 'acute' }),
   };
 
-  ctx.mongo.query = query;
+  ctx.state.query = query;
   next();
 };
 
@@ -232,6 +232,6 @@ export const follow = async (ctx) => {
     diseasePeriod: diseasePeriod,
   };
 
-  ctx.mongo.query = query;
+  ctx.state.query = query;
   next();
 };

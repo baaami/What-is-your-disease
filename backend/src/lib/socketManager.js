@@ -1,7 +1,7 @@
 import { io } from '../main';
 import Push from '../models/push';
 import Chat from '../models/chat';
-
+import mongoose from 'mongoose';
 // nickname: socket.id
 let nicktoId = {};
 
@@ -104,6 +104,7 @@ const socketManager = (socket) => {
    * 푸쉬 타입 : data.type => post, comment, reply, like, follow
    */
   socket.on('push', async (data) => {
+    console.log(data);
     const res = {
       _id: mongoose.Types.ObjectId(),
       sender: socket.user.nickname,
@@ -111,7 +112,6 @@ const socketManager = (socket) => {
       type: data.type,
       Info: data.info,
     };
-
     if (data.receiver.nickname in Object.keys(nicktoId)) {
       res = { ...res, date: new Date() };
       // 수신자가 현재 접속 중일 경우 바로 push

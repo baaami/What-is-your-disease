@@ -50,7 +50,7 @@ const Home: NextPage = (props) => {
 
   const getHotPosts = async () => {
     await API.posts
-      .getHotPosts()
+      .getFilterPosts('hotest', 1, 10)
       .then((res) => {
         setHotPosts(res.data.data.post)
       })

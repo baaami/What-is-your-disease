@@ -6,13 +6,26 @@ import { Container } from 'common.styles'
 import profileDefault from 'assets/img/profile.svg'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
+import { Select } from 'antd'
 
 const PostsTable = (props: any) => {
-  const [filter, setFilter] = useState({ text: '최신순', key: 'latest' })
+  const { Option } = Select
+  // const [filter, setFilter] = useState({ text: '최신순', key: 'latest' })
+  const [filter, setFilter] = useState('latest')
+  const [period, setPeriod] = useState('all')
   const [userInfo] = useRecoilState(currentUserInfo)
+
+  const handlePostsPeriod = (e: string) => {
+    setFilter(e)
+  }
+
+  const handleDiseasePeroid = (e: string) => {
+    setPeriod(e)
+  }
+
   useEffect(() => {
-    if (props.getPosts) {
-      props.getPosts(filter.key)
+    if (props.getPosts && props.posts) {
+      props.getPosts(filter)
     }
   }, [filter])
   return (
@@ -20,7 +33,7 @@ const PostsTable = (props: any) => {
       <PostTableHeader>
         <div className="headerTitle">전체</div>
         <div className="filterTab">
-          <div
+          {/* <div
             className={`tab ${filter.text === '최신순' ? 'active' : ''}`}
             onClick={() => setFilter({ text: '최신순', key: 'latest' })}
           >
@@ -37,7 +50,29 @@ const PostsTable = (props: any) => {
             onClick={() => setFilter({ text: '인기순', key: 'hotest' })}
           >
             인기순
-          </div>
+          </div> */}
+          <Select
+            onChange={handleDiseasePeroid}
+            defaultValue={'all'}
+            style={{ width: 100 }}
+          >
+            <Option value="all">전체</Option>
+            <Option value="early">초기</Option>
+            <Option value="late">말기</Option>
+            <Option value="acute">급성</Option>
+            <Option value="chronic">만성</Option>
+            <Option value="emergency">응급</Option>
+            <Option value="cure">완치</Option>
+          </Select>
+          <Select
+            onChange={handlePostsPeriod}
+            defaultValue={'latest'}
+            style={{ width: 100 }}
+          >
+            <Option value="latest">최신순</Option>
+            <Option value="oldest">오래된순</Option>
+            <Option value="hotest">인기순</Option>
+          </Select>
         </div>
       </PostTableHeader>
       {props.posts.map((item: any, index: number) => {
@@ -137,8 +172,8 @@ export const PostTableHeader = styled.div`
   .filterTab {
     display: flex;
     align-items: center;
-
-    .tab {
+    gap: 10px;
+    /* .tab {
       margin-left: 40px;
       font-size: 18px;
       font-weight: 500;
@@ -148,7 +183,7 @@ export const PostTableHeader = styled.div`
         font-weight: 700;
         color: #1850a3;
       }
-    }
+    } */
   }
 `
 export const PostTableBody = styled.div`

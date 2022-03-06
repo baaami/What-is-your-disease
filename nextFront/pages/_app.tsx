@@ -22,7 +22,7 @@ const MyApp: NextComponentType<AppContext, AppInitialProps, AppProps> = ({
     <RecoilRoot>
       <SocketProvider>
         {location.pathname === '/' ? <HomeHeader /> : <SubHeader />}
-        <Component {...pageProps} s={'ss'} />
+        <Component {...pageProps} />
         <Chatting />
         <Footer />
       </SocketProvider>

@@ -109,9 +109,7 @@ export const filter = async (ctx) => {
   const query = {
     ...(ctx.state.query ? ctx.state.query : {}),
     ...(tag ? { tags: tag } : {}),
-    ...(diseasePeriod
-      ? { diseasePeriod: diseasePeriod }
-      : { diseasePeriod: 'acute' }),
+    ...(diseasePeriod ? { diseasePeriod: diseasePeriod } : {}),
   };
 
   switch (orderBy) {
@@ -182,9 +180,7 @@ export const user = async (ctx) => {
 
   const query = {
     ...(user._id ? { 'user._id': user._id } : {}),
-    ...(diseasePeriod
-      ? { diseasePeriod: diseasePeriod }
-      : { diseasePeriod: 'acute' }),
+    ...(diseasePeriod ? { diseasePeriod: diseasePeriod } : {}),
   };
 
   ctx.state.query = query;
@@ -208,9 +204,7 @@ export const category = async (ctx) => {
   // category 값이 존재할 경우 category 필드에서 확인 후 획득
   const query = {
     ...(category ? { category: category } : {}),
-    ...(diseasePeriod
-      ? { diseasePeriod: diseasePeriod }
-      : { diseasePeriod: 'acute' }),
+    ...(diseasePeriod ? { diseasePeriod: diseasePeriod } : {}),
   };
 
   ctx.state.query = query;
@@ -229,7 +223,7 @@ export const follow = async (ctx) => {
 
   const query = {
     'user._id': { $in: followIds },
-    diseasePeriod: diseasePeriod,
+    ...(diseasePeriod ? { diseasePeriod: diseasePeriod } : {}),
   };
 
   ctx.state.query = query;

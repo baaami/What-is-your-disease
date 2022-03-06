@@ -20,7 +20,7 @@ export default function Kauth(props: KauthProps) {
     const code = router.asPath.split('code=')[1]
 
     client
-      .post(`${BASE_URL}}/api/auth/callback/kakao`, { code })
+      .post(`${BASE_URL}/api/auth/callback/kakao`, { code })
       .then((res) => {
         const { user, is_new, token } = res.data
         // 예시로 로컬에 저장

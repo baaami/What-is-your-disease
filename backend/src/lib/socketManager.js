@@ -105,17 +105,15 @@ const socketManager = (socket) => {
    */
   socket.on('push', async (data) => {
     const res = {
+      _id: mongoose.Types.ObjectId(),
       sender: socket.user.nickname,
       receiver: data.receiver.nickname,
       type: data.type,
       Info: data.info,
-      publishedDate: {
-        type: Date,
-        default: Date.now, // 현재 날짜를 기본값으로 지정
-      },
     };
 
     if (data.receiver.nickname in Object.keys(nicktoId)) {
+      res = { ...res, date: new Date() };
       // 수신자가 현재 접속 중일 경우 바로 push
       socket.broadcast.to(nicktoId[data.receiver.nickname]).emit('push', res);
     } else {

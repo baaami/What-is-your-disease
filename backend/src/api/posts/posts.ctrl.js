@@ -3,8 +3,6 @@ import mongoose from 'mongoose';
 import sanitizeHtml from 'sanitize-html';
 import User from '../../models/user';
 
-const { ObjectId } = mongoose.Types;
-
 const sanitizeOption = {
   allowedTags: [
     'h1',

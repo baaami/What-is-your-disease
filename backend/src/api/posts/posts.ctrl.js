@@ -165,7 +165,7 @@ export const filter = async (ctx) => {
  * @brief     로그인 회원 포스트 리스트를 전달
  * @param {*} ctx
  */
-export const user = async (ctx) => {
+export const user = async (ctx, next) => {
   const { userId } = ctx.params;
   const { diseasePeriod } = ctx.query;
 
@@ -191,7 +191,7 @@ export const user = async (ctx) => {
  * @brief     로그인 회원 포스트 리스트를 전달
  * @param {*} ctx
  */
-export const category = async (ctx) => {
+export const category = async (ctx, next) => {
   const { diseasePeriod, category } = ctx.query;
 
   if (!category) {
@@ -215,7 +215,7 @@ export const category = async (ctx) => {
  * @brief     로그인 회원 포스트 리스트를 전달
  * @param {*} ctx
  */
-export const follow = async (ctx) => {
+export const follow = async (ctx, next) => {
   const { diseasePeriod } = ctx.query;
   const followIds = [...ctx.state.user.followingIds];
 

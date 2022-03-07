@@ -158,7 +158,11 @@ export default function PostsDetail(props: {
       })
   }
 
-  const handleSubmitReply = async (comment_id: string, contents: string) => {
+  const handleSubmitReply = async (
+    comment_id: string,
+    contents: string,
+    writer: string,
+  ) => {
     const postId = router.query.postId as string
     if (reply_value === '') {
       return alert('답글을 입력해주세요')
@@ -168,6 +172,22 @@ export default function PostsDetail(props: {
       .createReply(comment_id, contents, postId)
       .then((res) => {
         getPost()
+        const comment = res.data.comments.filter(
+          (i: any) => i._id === comment_id,
+        )[0]
+        console.log(comment)
+        const replyId = comment.replies[comment.replies.length - 1]._id
+        socket.emit('push', {
+          receiver: {
+            nickname: writer,
+          },
+          info: {
+            postId: postId,
+            commentId: comment_id,
+            replyId,
+          },
+          type: 'reply',
+        })
       })
       .catch((e) => {
         console.log(e)
@@ -213,6 +233,15 @@ export default function PostsDetail(props: {
       .addPostLike(postId)
       .then((res) => {
         // getPost()
+        socket.emit('push', {
+          receiver: {
+            nickname: post.user.info.nickname,
+          },
+          info: {
+            senderId: userInfo._id,
+          },
+          type: 'like',
+        })
         router.replace(`/${router.asPath}`)
       })
       .catch((e) => {
@@ -290,7 +319,7 @@ export default function PostsDetail(props: {
                 />
                 {/* <img src={like_active} alt="like active icon" /> */}
               </button>
-              {post.likes}
+              {props?.postData?.data.post.likes}
             </span>
           </div>
         </PostInfo>
@@ -403,7 +432,11 @@ export default function PostsDetail(props: {
                       id="submitComment"
                       type="button"
                       onClick={() =>
-                        handleSubmitReply(comment._id, reply_value)
+                        handleSubmitReply(
+                          comment._id,
+                          reply_value,
+                          comment.user.info.nickname,
+                        )
                       }
                     >
                       등록

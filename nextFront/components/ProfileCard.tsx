@@ -1,49 +1,61 @@
-import React from "react";
-import styled from "styled-components";
-import profileDefault from "assets/img/profile.svg";
+import React from 'react'
+import styled from 'styled-components'
+import profileDefault from 'assets/img/profile.svg'
 // import { useLocation } from 'react-router-dom'
-import API from "service/api";
-import { useRecoilState } from "recoil";
-import { currentUserInfo } from "store/userInfo";
-import { useRouter } from "next/router";
+import API from 'service/api'
+import { useRecoilState } from 'recoil'
+import { currentUserInfo } from 'store/userInfo'
+import { useRouter } from 'next/router'
+import { socketInit } from 'store/socket'
 
 interface ProfileCardModel {
-  currentUserId?: string;
-  nickname: string;
-  postsCnt: string | number | undefined;
-  followerCnt: string | number | undefined;
-  followingCnt: string | number | undefined;
-  followerIds?: string[];
-  nextCallback?: () => void;
+  currentUserId?: string
+  nickname: string
+  postsCnt: string | number | undefined
+  followerCnt: string | number | undefined
+  followingCnt: string | number | undefined
+  followerIds?: string[]
+  nextCallback?: () => void
 }
 
 const ProfileCard = (props: ProfileCardModel) => {
-  const location = useRouter();
-  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo);
+  const location = useRouter()
+  const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
+  const [socket] = useRecoilState(socketInit)
 
   const addFollowUser = (follow_id: string) => {
     API.user
       .addFollow(follow_id)
       .then((res) => {
         if (props.nextCallback) {
-          props.nextCallback();
+          props.nextCallback()
         }
+
+        socket.emit('push', {
+          receiver: {
+            nickname: props.nickname,
+          },
+          info: {
+            senderId: userInfo._id,
+          },
+          type: 'follow',
+        })
       })
       .catch((e) => {
-        console.log(e);
-      });
-  };
+        console.log(e)
+      })
+  }
 
   const unFollowUser = (un_follow_id: string) => {
     API.user
       .removeFollow(un_follow_id)
       .then((res) => {
-        if (props.nextCallback) props.nextCallback();
+        if (props.nextCallback) props.nextCallback()
       })
       .catch((e) => {
-        console.log(e);
-      });
-  };
+        console.log(e)
+      })
+  }
 
   return (
     <ProfileCardWrapper>
@@ -63,7 +75,7 @@ const ProfileCard = (props: ProfileCardModel) => {
             팔로잉 <span>{props.followingCnt ?? 0}</span>
           </div>
         </div>
-        {location.pathname !== "/mypage" && (
+        {location.pathname !== '/mypage' && (
           <>
             {props.followerIds?.includes(userInfo._id as string) ? (
               <button
@@ -84,10 +96,10 @@ const ProfileCard = (props: ProfileCardModel) => {
         )}
       </div>
     </ProfileCardWrapper>
-  );
-};
+  )
+}
 
-export default ProfileCard;
+export default ProfileCard
 
 export const ProfileCardWrapper = styled.div`
   display: flex;
@@ -138,4 +150,4 @@ export const ProfileCardWrapper = styled.div`
       font-weight: 700;
     }
   }
-`;
+`

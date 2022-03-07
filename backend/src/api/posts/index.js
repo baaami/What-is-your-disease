@@ -8,7 +8,7 @@ const posts = new Router();
 posts.get('/', postsCtrl.category, postsCtrl.filter);
 
 // 필터 게시물 (필터링 테이블 작성 필요)
-posts.get('/filter/:orderBy', postsCtrl.filter);
+posts.get('/filter', postsCtrl.filter);
 
 // 특정 유저 게시물 -> 자신일 경우 자신의 _id값 전달
 posts.get('/user/:userId', postsCtrl.user, postsCtrl.filter);

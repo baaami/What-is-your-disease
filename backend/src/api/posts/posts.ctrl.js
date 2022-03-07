@@ -88,14 +88,10 @@ export const getHotPosts = async (ctx, query, page, postNum) => {
  * @param {*} ctx
  */
 export const filter = async (ctx) => {
-  const { orderBy } = ctx.params;
-
   // filter를 직접 불렀을 경우 사용
-  const { diseasePeriod } = ctx.query;
+  const { diseasePeriod, orderBy, tag } = ctx.query;
   const page = parseInt(ctx.query.page || '1', 10);
   const postNum = parseInt(ctx.query.postNum || '10', 10);
-
-  const { tag } = ctx.query;
 
   if (page < 1) {
     ctx.status = 400;
@@ -167,22 +163,20 @@ export const filter = async (ctx) => {
  */
 export const user = async (ctx, next) => {
   const { userId } = ctx.params;
-  const { diseasePeriod } = ctx.query;
 
-  let user, posts;
+  let user;
   try {
     user = await User.findById(userId);
   } catch (e) {
     ctx.throw(500, e);
   }
 
-  const query = {
+  let query = {
     ...(user._id ? { 'user._id': user._id } : {}),
-    ...(diseasePeriod ? { diseasePeriod: diseasePeriod } : {}),
   };
 
   ctx.state.query = query;
-  next();
+  return next();
 };
 
 /**
@@ -192,7 +186,7 @@ export const user = async (ctx, next) => {
  * @param {*} ctx
  */
 export const category = async (ctx, next) => {
-  const { diseasePeriod, category } = ctx.query;
+  const { category } = ctx.query;
 
   if (!category) {
     ctx.status = 400;
@@ -202,11 +196,10 @@ export const category = async (ctx, next) => {
   // category 값이 존재할 경우 category 필드에서 확인 후 획득
   const query = {
     ...(category ? { category: category } : {}),
-    ...(diseasePeriod ? { diseasePeriod: diseasePeriod } : {}),
   };
 
   ctx.state.query = query;
-  next();
+  return next();
 };
 
 /**
@@ -216,14 +209,12 @@ export const category = async (ctx, next) => {
  * @param {*} ctx
  */
 export const follow = async (ctx, next) => {
-  const { diseasePeriod } = ctx.query;
   const followIds = [...ctx.state.user.followingIds];
 
   const query = {
     'user._id': { $in: followIds },
-    ...(diseasePeriod ? { diseasePeriod: diseasePeriod } : {}),
   };
 
   ctx.state.query = query;
-  next();
+  return next();
 };

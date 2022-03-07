@@ -5,12 +5,29 @@ import mongoose from 'mongoose';
 // nickname: socket.id
 let nicktoId = {};
 
+// 모든 방에 대해 현재 방 내부 사람들의 값을 알려줌
+const EmitNumberofPeople = () => {
+  for (const room of io.sockets.adapter.rooms.keys()) {
+    console.log(
+      'room : ',
+      room,
+      ' 인원 : ',
+      io.sockets.adapter.rooms.get(room).size,
+    );
+    io.sockets
+      .in(room)
+      .emit('numberOfpeople', io.sockets.adapter.rooms.get(room).size);
+  }
+};
+
 const socketManager = (socket) => {
   console.log('사용자가 접속하였습니다.');
-  console.log(socket.user);
+
+  // 모든 방에 대해서 10초 마다 현재 방 인원의 개수를 보냄
+  // let RoomCount = setInterval(EmitNumberofPeople, 10 * 1000);
+
   socket.on('login', (data) => {
     console.log(data.user.nickname, '님이 로그인하였습니다.');
-
     socket.user = data.user;
 
     nicktoId[data.user.id] = socket.id;
@@ -23,7 +40,6 @@ const socketManager = (socket) => {
   });
 
   socket.on('join', (data) => {
-    console.log(data);
     console.log(
       data.user.nickname,
       '님이 ',
@@ -42,17 +58,30 @@ const socketManager = (socket) => {
       room: socket.room,
     };
 
+    io.sockets
+      .in(socket.room.name)
+      .emit(
+        'numberOfpeople',
+        io.sockets.adapter.rooms.get(socket.room.name).size,
+      );
+
+    console.log(
+      socket.room.name,
+      ' 방 인원 :',
+      io.sockets.adapter.rooms.get(socket.room.name).size,
+    );
+
     io.sockets.in(socket.room.name).emit('roomin', rep);
   });
 
   socket.on('leave', (data) => {
-    console.log(
-      socket.user.nickname,
-      '님이 ',
-      //  socket.room이라는 객체가 원래 없다면 변경
-      socket.room.name,
-      '에서 퇴장하셨습니다.',
-    );
+    // console.log(
+    //   socket.user.nickname,
+    //   '님이 ',
+    //   //  socket.room이라는 객체가 원래 없다면 변경
+    //   socket.room.name,
+    //   '에서 퇴장하셨습니다.',
+    // );
 
     const rep = {
       event: 'roomout',
@@ -60,11 +89,24 @@ const socketManager = (socket) => {
       room: socket.room,
     };
 
-    io.sockets.in(socket.room.name).emit('roomout', rep);
-
     socket.leave(socket.room.name);
     // socket.room 초기화
     socket.room = undefined;
+
+    io.sockets
+      .in(socket.room.name)
+      .emit(
+        'numberOfpeople',
+        io.sockets.adapter.rooms.get(socket.room.name).size,
+      );
+
+    console.log(
+      socket.room.name,
+      ' 방 인원 :',
+      io.sockets.adapter.rooms.get(socket.room.name).size,
+    );
+
+    io.sockets.in(socket.room.name).emit('roomout', rep);
   });
 
   socket.on('disconnecton', () => {
@@ -73,8 +115,6 @@ const socketManager = (socket) => {
 
   // 'message' 이벤트를 받았을 때의 처리
   socket.on('message', async (message) => {
-    console.log(socket.user);
-
     const res = {
       user: socket.user,
       data: message.data,
@@ -83,17 +123,21 @@ const socketManager = (socket) => {
     // 모든 namespace ('/') 내 roomId에 해당하는 room에 message를 송신
     io.sockets.in(socket.room.name).emit('message', res);
 
-    // 채팅 내용 저장
-    const chat = new Chat({
+    const data = {
+      _id: mongoose.Types.ObjectId(),
       sender: socket.user.id,
       room: socket.room.name,
       data: message.data,
-    });
+    };
+
+    console.log('data : ', data);
+    // 채팅 내용 저장
+    const chat = new Chat(data);
 
     try {
       await chat.save();
     } catch (e) {
-      ctx.throw(500, e);
+      console.log('Save chat error: ', e);
     }
   });
 
@@ -123,7 +167,7 @@ const socketManager = (socket) => {
       try {
         await push.save();
       } catch (e) {
-        console.log(500, e);
+        console.log('Save push error: ', e);
       }
     }
   });

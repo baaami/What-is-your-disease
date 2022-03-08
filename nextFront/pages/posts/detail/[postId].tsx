@@ -115,6 +115,7 @@ export default function PostsDetail(props: {
   }
 
   const onClickListsLink = () => {
+    router.back()
     // const stateFromPush = router.location.state as {
     //   is_create_state?: boolean
     // }

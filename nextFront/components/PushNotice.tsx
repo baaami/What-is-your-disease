@@ -13,6 +13,7 @@ interface PushListsModel {
   receiver: string
   type: 'post' | 'comment' | 'reply' | 'follow' | 'like'
   Info: {
+    senderId: string
     postId: string
     commentId: string
   }
@@ -71,7 +72,6 @@ const PushNotice = (props: PushNoticeModel) => {
 
   useEffect(() => {
     if (Object.keys(socket).length !== 0 && !socket.hasListeners('push')) {
-      console.log('이벤트등록ㄴㄴ')
       socket.on('push', (data) => {
         setPushList((lists) => [...lists, data])
       })
@@ -133,7 +133,14 @@ const PushNotice = (props: PushNoticeModel) => {
                 )
               } else if (item.type === 'follow') {
                 return (
-                  <div key={item._id}>
+                  <div
+                    key={item._id}
+                    onClick={() => {
+                      router.push({
+                        pathname: `/profilepage/${item.Info.senderId}`,
+                      })
+                    }}
+                  >
                     {item.sender}님이 회원님을 팔로우 하기 시작했습니다.
                   </div>
                 )
@@ -218,6 +225,7 @@ export const NoticeModal = styled.div`
       div {
         margin-bottom: 10px;
         cursor: pointer;
+        word-break: keep-all;
         span {
           margin-left: 10px;
           font-size: 12px;

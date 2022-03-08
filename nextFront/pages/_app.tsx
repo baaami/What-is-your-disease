@@ -13,6 +13,7 @@ import SubHeader from 'layout/SubHeader'
 import cookies from 'next-cookies'
 import { setToken } from 'shared/token-manager'
 import SocketProvider from 'components/SocketProvider'
+
 const MyApp: NextComponentType<AppContext, AppInitialProps, AppProps> = ({
   Component,
   pageProps,
@@ -21,7 +22,8 @@ const MyApp: NextComponentType<AppContext, AppInitialProps, AppProps> = ({
   return (
     <RecoilRoot>
       <SocketProvider>
-        {location.pathname === '/' ? <HomeHeader /> : <SubHeader />}
+        {/* {location.pathname === '/' ? <HomeHeader /> : <SubHeader />} */}
+        <HomeHeader />
         <Component {...pageProps} />
         <Chatting />
         <Footer />

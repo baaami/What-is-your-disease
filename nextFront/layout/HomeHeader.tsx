@@ -8,7 +8,7 @@ import {
 } from './styles'
 // import { Link, useHistory, useLocation } from "react-router-dom";
 import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { Router, useRouter } from 'next/router'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import API from 'service/api'
 import { currentUserInfo } from 'store/userInfo'
@@ -17,6 +17,7 @@ import logo from '../assets/img/hlogo.svg'
 import profile from '../assets/img/profile.svg'
 import Image from 'next/link'
 import PushNotice from 'components/PushNotice'
+import { route } from 'next/dist/server/router'
 
 export default function HomeHeader() {
   const location = useRouter()
@@ -126,7 +127,9 @@ export default function HomeHeader() {
       getUserInfo()
     }
 
-    window.addEventListener('scroll', scrollHandler)
+    if (location.pathname === '/') {
+      window.addEventListener('scroll', scrollHandler)
+    }
   }, [location.pathname])
 
   /* 클릭시 닫힘 처리  */
@@ -141,13 +144,17 @@ export default function HomeHeader() {
   return (
     <>
       <HeaderContainer
-        style={{
-          background: background,
-          borderBottomWidth: '1px',
-          borderBottomStyle: 'solid',
-          borderColor: border,
-          transition: '0.21s',
-        }}
+        style={
+          history.pathname === '/'
+            ? {
+                background: background,
+                borderBottomWidth: '1px',
+                borderBottomStyle: 'solid',
+                borderColor: border,
+                transition: '0.21s',
+              }
+            : { background: '#fff', borderBottom: '1px solid #ccc' }
+        }
       >
         <Container className="flexWrap headerContainer">
           <Link href="/" passHref>

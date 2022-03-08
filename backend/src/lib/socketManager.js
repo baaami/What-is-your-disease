@@ -29,8 +29,7 @@ const socketManager = (socket) => {
   socket.on('login', (data) => {
     console.log(data.user.nickname, '님이 로그인하였습니다.');
     socket.user = data.user;
-    nicktoId[data.user.id] = socket.id;
-
+    nicktoId[data.user.nickname] = socket.id;
     const rep = {
       user: socket.user,
     };
@@ -148,19 +147,20 @@ const socketManager = (socket) => {
    */
   socket.on('push', async (data) => {
     // console.log(data);
-    const res = {
+    let res = {
       _id: mongoose.Types.ObjectId(),
       sender: socket.user.nickname,
       receiver: data.receiver.nickname,
       type: data.type,
       Info: data.info,
     };
-    console.log(data.receiver.nickname);
-    console.log(nicktoId);
-    if (data.receiver.nickname in Object.keys(nicktoId)) {
+
+    // if (data.receiver.nickname in Object.keys(nicktoId)) {
+    if (Object.keys(nicktoId).includes(data.receiver.nickname)) {
       res = { ...res, date: new Date() };
+      console.log(res);
       // 수신자가 현재 접속 중일 경우 바로 push
-      socket.broadcast.to(nicktoId[data.receiver.nickname]).emit('push', res);
+      io.to(nicktoId[data.receiver.nickname]).emit('push', res);
     } else {
       // 접속 중이지 않을 경우 DB에 해당 내역 삽입
       const push = new Push(res);

@@ -89,58 +89,7 @@ export const ProfileModal = styled.div`
     }
   }
 `
-export const NoticeContainer = styled.div``
-export const NoticeModal = styled.div`
-  position: absolute;
-  right: -20px;
-  color: white;
-  padding: 15px 20px;
-  width: 280px;
-  height: 600px;
-  background-color: #fff;
-  border: 1px solid #999;
-  border-radius: 4px;
-  color: #000;
-  transition: all 0.21s;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-10px);
 
-  &.vis {
-    visibility: visible;
-    opacity: 1;
-    transform: translateY(3px);
-  }
-  .noticeWrap {
-    display: block;
-
-    .noticeHeader {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: #545454;
-
-      span {
-        font-weight: 900;
-        color: #e96767;
-      }
-    }
-
-    .noticeContents {
-      margin-top: 20px;
-
-      div {
-        margin-bottom: 10px;
-
-        span {
-          margin-left: 10px;
-          font-size: 12px;
-          color: #999;
-        }
-      }
-    }
-  }
-`
 export const InfoCardContainer = styled.div`
   display: flex;
   align-items: center;

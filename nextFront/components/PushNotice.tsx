@@ -5,13 +5,24 @@ import { Socket } from 'socket.io-client'
 import { socketInit } from 'store/socket'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import API from 'service/api'
-
+import { useRouter } from 'next/router'
 interface PushNoticeModel {}
+interface PushListsModel {
+  _id: string
+  sender: string
+  receiver: string
+  type: 'post' | 'comment' | 'reply' | 'follow' | 'like'
+  Info: {
+    postId: string
+    commentId: string
+  }
+}
 
 const PushNotice = (props: PushNoticeModel) => {
+  const router = useRouter()
   const socket = useRecoilValue(socketInit)
   const [vis_notice_modal, setVisNoticeModal] = useState(false)
-  const [push_list, setPushList] = useState()
+  const [push_list, setPushList] = useState<PushListsModel[]>([])
   const notice_modal_ref = useRef<HTMLDivElement>(null)
   const clickNoticeIcon = () => {
     if (vis_notice_modal) {
@@ -35,25 +46,11 @@ const PushNotice = (props: PushNoticeModel) => {
     }
   }
 
-  const handlePushEvent = () => {
-    if (Object.keys(socket).length !== 0) {
-      console.log('이벤트등록')
-      socket.on('push', (data) => {
-        console.log(data)
-      })
-    } else {
-      return setTimeout(() => {
-        console.log('실행')
-        handlePushEvent()
-      }, 500)
-    }
-  }
-
   const getPushList = async () => {
     await API.user
       .getPushList()
       .then((res) => {
-        console.log(res)
+        setPushList((lists) => [...lists, ...res.data])
       })
       .catch((e) => {
         console.log(e)
@@ -74,9 +71,9 @@ const PushNotice = (props: PushNoticeModel) => {
 
   useEffect(() => {
     if (Object.keys(socket).length !== 0 && !socket.hasListeners('push')) {
-      console.log('이벤트등록')
+      console.log('이벤트등록ㄴㄴ')
       socket.on('push', (data) => {
-        console.log(`소켓데이터 ${data}`)
+        setPushList((lists) => [...lists, data])
       })
     }
   }, [socket])
@@ -94,7 +91,7 @@ const PushNotice = (props: PushNoticeModel) => {
         <section className="noticeWrap">
           <div className="noticeHeader">
             <div>
-              알림 <span>7</span> 건
+              알림 <span>{push_list.length}</span> 건
             </div>
             <div
               style={{
@@ -107,7 +104,55 @@ const PushNotice = (props: PushNoticeModel) => {
             </div>
           </div>
           <div className="noticeContents">
-            <div>
+            {push_list.map((item) => {
+              if (item.type === 'comment') {
+                return (
+                  <div
+                    key={item._id}
+                    onClick={() => {
+                      router.push({
+                        pathname: `/posts/detail/${item.Info.postId}`,
+                      })
+                    }}
+                  >
+                    {item.sender}님이 회원님의 게시글에 답글을 남겼습니다.
+                  </div>
+                )
+              } else if (item.type === 'like') {
+                return (
+                  <div
+                    key={item._id}
+                    onClick={() => {
+                      router.push({
+                        pathname: `/posts/detail/${item.Info.postId}`,
+                      })
+                    }}
+                  >
+                    {item.sender}님이 회원님의 게시글을 게시글을 좋아합니다.
+                  </div>
+                )
+              } else if (item.type === 'follow') {
+                return (
+                  <div key={item._id}>
+                    {item.sender}님이 회원님을 팔로우 하기 시작했습니다.
+                  </div>
+                )
+              } else if (item.type === 'reply') {
+                return (
+                  <div
+                    key={item._id}
+                    onClick={() => {
+                      router.push({
+                        pathname: `/posts/detail/${item.Info.postId}`,
+                      })
+                    }}
+                  >
+                    {item.sender}님이 회원님의 댓글에 답글을 남겼습니다.
+                  </div>
+                )
+              }
+            })}
+            {/* <div>
               읽지 않은 채팅이 있습니다. 확인해주세요sssssss.<span>2일전</span>
             </div>
             <div>
@@ -119,7 +164,7 @@ const PushNotice = (props: PushNoticeModel) => {
             </div>
             <div>
               읽지 않은 채팅이 있습니다.<span>15일전</span>
-            </div>
+            </div> */}
           </div>
         </section>
       </NoticeModal>
@@ -145,6 +190,7 @@ export const NoticeModal = styled.div`
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
+  overflow-y: scroll;
 
   &.vis {
     visibility: visible;
@@ -171,7 +217,7 @@ export const NoticeModal = styled.div`
 
       div {
         margin-bottom: 10px;
-
+        cursor: pointer;
         span {
           margin-left: 10px;
           font-size: 12px;

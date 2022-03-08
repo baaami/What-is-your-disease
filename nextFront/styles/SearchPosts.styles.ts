@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const PostListsContainer = styled.div`
-  padding-top: 170px;
+  padding: 100px 0 200px;
 `
 
 export const PostListsWrap = styled.div`
@@ -15,7 +15,7 @@ export const PostListsWrap = styled.div`
     font-size: 24px;
     margin-bottom: 20px;
     span {
-      color: #3c6d2e;
+      color: #1850a3;
       font-weight: 900;
     }
   }

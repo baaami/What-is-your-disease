@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import API from 'service/api'
 import icon from '../assets/img/search.svg'
+import { Container } from 'common.styles'
 
 interface ISearchProps {}
 
@@ -47,12 +48,11 @@ export default function Search(props: ISearchProps) {
 
 const SearchContainer = styled.div`
   position: relative;
-  display: flex;
-  justify-content: end;
-  margin-bottom: 15px;
+  max-width: 1200px;
+  margin: 15px auto;
 
   input {
-    width: 300px;
+    width: 100%;
     height: 45px;
     line-height: 44px;
     padding: 0 60px 0 25px;

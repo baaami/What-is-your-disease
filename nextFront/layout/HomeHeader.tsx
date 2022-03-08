@@ -2,10 +2,9 @@ import React, { useEffect, useState, useRef } from 'react'
 import {
   ContainerWrap,
   HeaderContainer,
-  NoticeContainer,
-  NoticeModal,
   ProfileContainer,
   ProfileModal,
+  HeaderModal,
 } from './styles'
 // import { Link, useHistory, useLocation } from "react-router-dom";
 import Link from 'next/link'
@@ -16,7 +15,6 @@ import { currentUserInfo } from 'store/userInfo'
 import { Container } from 'common.styles'
 import logo from '../assets/img/hlogo.svg'
 import profile from '../assets/img/profile.svg'
-import notice from '../assets/img/bell_icon.svg'
 import Image from 'next/link'
 import PushNotice from 'components/PushNotice'
 

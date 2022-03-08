@@ -5,7 +5,7 @@ export const HeaderContainer = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 10000;
+  z-index: 100;
 
   &.sub {
     background: #fff;
@@ -16,7 +16,7 @@ export const HeaderContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 95px;
+    height: 80px;
 
     .logo {
       position: relative;
@@ -185,4 +185,50 @@ export const Descript = styled.h2`
 export const SnsContainer = styled.div`
   display: flex;
   justify-content: end;
+`
+
+export const HeaderModal = styled.div`
+  position: absolute;
+  right: -20px;
+  color: white;
+  padding: 30px;
+  width: 380px;
+  height: 240px;
+  background-color: rgba(85, 85, 85);
+  border-radius: 4px;
+  transition: all 0.21s;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  z-index: 101;
+
+  &.vis {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(3px);
+  }
+  .profileWrap {
+    display: flex;
+    gap: 18px;
+
+    .nickname {
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .buttonWrap {
+      button {
+        font-size: 15px;
+        text-decoration: underline !important;
+      }
+    }
+  }
+  .modalLink {
+    button {
+      display: inline-block;
+      margin-top: 25px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+  }
 `

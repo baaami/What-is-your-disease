@@ -13,12 +13,21 @@ export const MainBanner = styled.div`
   background: url(${mainBanner.src}) no-repeat center;
   background-size: cover;
 
+  @media (max-width: 530px) {
+    height: 500px;
+    padding: 200px 0;
+  }
+
   h2 {
     margin-bottom: 30px;
     text-align: center;
     font-size: 38px;
     font-weight: 900;
     color: #1850a3;
+
+    @media (max-width: 530px) {
+      font-size: 28px;
+    }
   }
 
   a {
@@ -34,6 +43,13 @@ export const MainBanner = styled.div`
     font-weight: 900;
     color: #fff;
     transition: all 0.3s ease-in;
+
+    @media (max-width: 530px) {
+      width: 220px;
+      height: 55px;
+      line-height: 55px;
+      font-size: 20px;
+    }
 
     &:hover {
       background: #fff;
@@ -54,6 +70,13 @@ export const Category = styled.div`
       border: 1px solid #c4c4c4;
       cursor: pointer;
 
+      @media (max-width: 755px) {
+        width: calc(100% / 4);
+      }
+      @media (max-width: 565px) {
+        width: calc(100% / 2);
+      }
+
       &:hover {
         background: #1850a3;
       }
@@ -67,6 +90,10 @@ export const Category = styled.div`
         text-align: center;
         font-size: 20px;
         font-weight: 700;
+
+        @media (max-width: 414px) {
+          font-size: 16px;
+        }
       }
     }
   }
@@ -75,30 +102,11 @@ export const HotTopic = styled.div`
   position: relative;
   margin-top: 110px;
 
-  .ant-carousel {
-    width: 321px;
-  }
-
   .swiper {
     padding-top: 60px;
 
     .swiper-slide {
       position: relative;
-
-      .likeBox {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        display: flex;
-        align-items: center;
-        z-index: 1;
-
-        span {
-          margin-left: 5px;
-          font-size: 18px;
-          font-weight: 500;
-        }
-      }
     }
 
     .swiper-button-prev {
@@ -133,39 +141,59 @@ export const HotTopic = styled.div`
     }
   }
 
-  .descript {
-    width: 321px;
-    padding: 15px;
-    background: #1850a3;
+  .slideBox {
+    width: 100%;
+    padding: 35px 20px;
+    background: #fff;
+    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.05);
+    border: 1px solid #f4f4f4;
+    border-radius: 8px;
 
+    .rankingImg {
+      position: absolute;
+      right: 20px;
+      top: 0;
+    }
     h2 {
-      width: fit-content;
-      padding: 2px 14px;
-      background: #fff;
+      margin-bottom: 0;
       border-radius: 50px;
-      font-size: 14px;
+      font-size: 22px;
       font-weight: 700;
-      color: #333;
+    }
+    .likes {
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #545454;
+
+      span {
+        padding-left: 2px;
+        padding-right: 5px;
+      }
     }
     h3 {
-      width: 280px;
+      width: 200px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       font-size: 18px;
-      color: #fff;
+      font-weight: 500;
+    }
+    p {
+      display: -webkit-box;
+      word-wrap: break-word;
+      -webkit-line-clamp: 7;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.5;
+      height: 155px;
+      font-size: 15px;
     }
     h4 {
       margin-bottom: 0;
       text-align: end;
-      font-size: 16px;
-      color: #fff;
-
-      span {
-        margin-left: 10px;
-        font-size: 15px;
-        font-weight: 400;
-      }
+      font-size: 15px;
+      font-weight: 400;
     }
   }
 `

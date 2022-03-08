@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import {
   ContainerWrap,
   HeaderContainer,
-  NoticeContainer,
-  NoticeModal,
   ProfileContainer,
   ProfileModal,
+  HeaderModal,
 } from './styles'
 // import { Link, useHistory, useLocation } from "react-router-dom";
 import Link from 'next/link'
@@ -15,9 +14,8 @@ import API from 'service/api'
 import { currentUserInfo } from 'store/userInfo'
 import { Container } from 'common.styles'
 import logo from '../assets/img/hlogo.svg'
-import notice from '../assets/img/bell_icon.svg'
 import profile from '../assets/img/profile.svg'
-import Image from 'next/image'
+import Image from 'next/link'
 import PushNotice from 'components/PushNotice'
 
 export default function SubHeader() {

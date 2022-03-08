@@ -8,7 +8,6 @@ import {
   MainBanner,
   Post,
 } from 'styles/styles'
-// import { Link, useHistory } from 'react-router-dom'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -18,13 +17,13 @@ import Pagination from 'components/Pagination'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Container, NoData, Title } from 'common.styles'
 import SwiperCore, { Navigation } from 'swiper'
-import thumbnail from 'assets/img/thumbnail.svg'
-import like_out from 'assets/img/like_out.svg'
-import like_active from 'assets/img/like_active.svg'
-import Search from 'components/Search'
+import first from 'assets/img/first.svg'
+import second from 'assets/img/second.svg'
+import third from 'assets/img/third.svg'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
 import { categoryList } from 'static/constant'
+import Search from 'components/Search'
 
 const Home: NextPage = (props) => {
   const router = useRouter()
@@ -77,12 +76,16 @@ const Home: NextPage = (props) => {
         <Container>
           <h2>너의 건강상태도 알려줘~!</h2>
           {userInfo._id !== '' ? (
-            <Link href="/posts/edit">공유하러 가기</Link>
+            <Link href="/posts/edit">글쓰러 가기</Link>
           ) : (
-            <Link href="/login">공유하러 가기</Link>
+            <Link href="/login">글쓰러 가기</Link>
           )}
         </Container>
       </MainBanner>
+      <Container style={{ marginTop: '90px' }}>
+        <Title style={{ marginBottom: 0 }}>원하는 증상을 검색하세요.</Title>
+        <Search />
+      </Container>
       <Category>
         <Container>
           <Title>카테고리</Title>
@@ -117,56 +120,57 @@ const Home: NextPage = (props) => {
           {hot_posts.length === 0 ? (
             <NoData>조회된 결과가 없습니다.</NoData>
           ) : (
-            <Swiper navigation spaceBetween={30} slidesPerView={3.4}>
-              {hot_posts.slice(0, 10).map((item: any) => (
+            <Swiper
+              navigation
+              spaceBetween={30}
+              breakpoints={{
+                1200: {
+                  slidesPerView: 3.4,
+                },
+                // when window width is >= 768px
+                850: {
+                  slidesPerView: 2.5,
+                },
+                640: {
+                  slidesPerView: 1.5,
+                },
+              }}
+            >
+              {hot_posts.slice(0, 10).map((item: any, index) => (
                 <SwiperSlide key={item._id}>
                   <Link href={`/posts/detail/${item._id}`} passHref>
-                    <a className="popularPost">
-                      <>
-                        {item.likes === 0 ? (
-                          <div
-                            className="likeBox"
-                            onClick={(e) => e.isPropagationStopped()}
-                          >
-                            <Image src={like_out} alt="like out icon" />
-                            <span style={{ color: '#ebebeb' }}>
-                              {item.likes}
-                            </span>
-                          </div>
-                        ) : !item.likeMe.includes(userInfo._id) ? (
-                          <>
-                            <div
-                              className="likeBox"
-                              onClick={(e) => e.isPropagationStopped()}
-                            >
-                              <Image src={like_out} alt="like out icon" />
-                              <span style={{ color: '#ebebeb' }}>
-                                {item.likes}
-                              </span>
-                            </div>
-                          </>
-                        ) : (
-                          <div
-                            className="likeBox"
-                            onClick={(e) => e.isPropagationStopped()}
-                          >
-                            <Image src={like_active} alt="like active icon" />
-                            <span style={{ color: '#EA1F1C' }}>
-                              {item.likes}
-                            </span>
-                          </div>
-                        )}
-                        <img src={thumbnail.src} alt="기본 이미지" />
-                        <div className="descript">
-                          <h2>{item.category}</h2>
-                          <h3>{item.title}</h3>
-                          <h4>
-                            {item.user.info.nickname}{' '}
-                            <span>{item.publishedDate.split('T')[0]}</span>
-                          </h4>
-                        </div>
-                      </>
-                    </a>
+                    <div className="slideBox">
+                      {index === 0 ? (
+                        <img
+                          className="rankingImg"
+                          src={first.src}
+                          alt="1순위 아이콘"
+                        />
+                      ) : index === 1 ? (
+                        <img
+                          className="rankingImg"
+                          src={second.src}
+                          alt="2순위 아이콘"
+                        />
+                      ) : index === 2 ? (
+                        <img
+                          className="rankingImg"
+                          src={third.src}
+                          alt="3순위 아이콘"
+                        />
+                      ) : null}
+                      <h2>#{item.category}</h2>
+                      <div className="likes">
+                        좋아요 <span>{item.likes}</span> 조회수
+                        <span>{item.views}</span>
+                      </div>
+                      <h3>{item.title}</h3>
+                      <p>{item.body}</p>
+                      <h4>
+                        <span>{item.publishedDate.split('T')[0]}</span>{' '}
+                        {item.user.info.nickname}
+                      </h4>
+                    </div>
                   </Link>
                 </SwiperSlide>
               ))}
@@ -177,7 +181,6 @@ const Home: NextPage = (props) => {
       <Post>
         <Container>
           <Title>전체 게시물</Title>
-          <Search />
           <PostsTable posts={latest_posts} getPosts={getLatestPosts} />
           <Pagination
             current_page={current_page}

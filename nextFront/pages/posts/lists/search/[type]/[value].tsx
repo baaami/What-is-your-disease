@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 // import { RouteComponentProps } from 'react-router-dom'
 import { useRouter } from 'next/router'
 import { PostListsContainer, PostListsWrap } from 'styles/SearchPosts.styles'
-import Search from 'components/Search'
 import PostsTable from 'components/PostsTable'
 import API from 'service/api'
 import { PostModel } from 'model/postsModel'
 import useSearchPage from './hooks/useSearchPage'
+import Search from 'components/Search'
+import { Container, Title } from 'common.styles'
 const categories = [
   { id: '0', imgUrl: '/assets/img/vaccine.svg', name: '백신' },
   { id: '1', imgUrl: '/assets/img/cold.svg', name: '감기' },
@@ -40,23 +41,27 @@ export default function SearchPosts() {
 
   return (
     <PostListsContainer>
-      <Search />
-      <PostListsWrap className="wrap">
-        <div className="titleWrap">
-          {type === 'hashtag' ? (
-            <>
-              <span>#{value}</span>에 대한 검색결과 입니다.
-            </>
-          ) : (
-            <>
-              <span>{value}</span>에 대한 검색결과 입니다.
-            </>
+      <Container>
+        <Search />
+      </Container>
+      <PostListsWrap>
+        <Container>
+          <div className="titleWrap">
+            {type === 'hashtag' ? (
+              <>
+                <span>#{value}</span>에 대한 검색결과 입니다.
+              </>
+            ) : (
+              <>
+                <span>{value}</span>에 대한 검색결과 입니다.
+              </>
+            )}
+          </div>
+          <PostsTable posts={postsList} />
+          {postsList.length === 0 && (
+            <div className="noData">조회된 결과가 없습니다.</div>
           )}
-        </div>
-        <PostsTable posts={postsList} />
-        {postsList.length === 0 && (
-          <div className="noData">조회된 결과가 없습니다.</div>
-        )}
+        </Container>
       </PostListsWrap>
     </PostListsContainer>
   )

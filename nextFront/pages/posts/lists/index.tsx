@@ -1,45 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { PostListsContainer, PostListsWrap } from "styles/PostLists.styles";
-import Search from "components/Search";
-import PostsTable from "components/PostsTable";
-import DropDown from "components/DropDown";
-import API from "service/api";
-import { PostModel } from "model/postsModel";
-import Pagination from "components/Pagination";
+import React, { useEffect, useState } from 'react'
+import { PostListsContainer, PostListsWrap } from 'styles/PostLists.styles'
+import PostsTable from 'components/PostsTable'
+import DropDown from 'components/DropDown'
+import API from 'service/api'
+import { PostModel } from 'model/postsModel'
+import Pagination from 'components/Pagination'
 
 interface IPostsListsProps {}
 
-const dropdownOption = ["최신순", "오래된순", "인기순"];
+const dropdownOption = ['최신순', '오래된순', '인기순']
 
 export default function PostsLists(props: IPostsListsProps) {
-  const [filter, setFilter] = useState("최신순");
-  const [state, setstate] = useState();
-  const [postsList, setPostsList] = useState<PostModel[]>([]);
-  const [total_cnt, setTotalCnt] = useState(0);
-  const [current_page, setCurrentPage] = useState(1);
+  const [filter, setFilter] = useState('최신순')
+  const [state, setstate] = useState()
+  const [postsList, setPostsList] = useState<PostModel[]>([])
+  const [total_cnt, setTotalCnt] = useState(0)
+  const [current_page, setCurrentPage] = useState(1)
   const getFilterPosts = async (orderBy: string, page: number) => {
     await API.posts
       .getFilterPosts(orderBy, page, 10)
       .then((res) => {
-        setTotalCnt(res.data.postTotalCnt);
-        setPostsList(res.data.data.post);
+        setTotalCnt(res.data.postTotalCnt)
+        setPostsList(res.data.data.post)
       })
       .catch((e) => {
-        console.log(e);
-      });
-  };
+        console.log(e)
+      })
+  }
 
   useEffect(() => {
-    window.scrollTo({ top: 0 });
-  }, []);
+    window.scrollTo({ top: 0 })
+  }, [])
 
   useEffect(() => {
-    getFilterPosts(filter, current_page);
-  }, [filter, current_page]);
+    getFilterPosts(filter, current_page)
+  }, [filter, current_page])
 
   return (
     <PostListsContainer>
-      <Search />
       <PostListsWrap className="wrap">
         {/* <div className="titleWrap">
           <div className="listTitle">게시글</div>
@@ -59,5 +57,5 @@ export default function PostsLists(props: IPostsListsProps) {
         onChange={setCurrentPage}
       />
     </PostListsContainer>
-  );
+  )
 }

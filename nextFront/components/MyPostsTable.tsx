@@ -1,37 +1,37 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
 // import { Link } from 'react-router-dom'
-import Link from "next/link";
-import { Container } from "common.styles";
+import Link from 'next/link'
+import { Container } from 'common.styles'
 
 const MyPostsTable = (props: any) => {
-  const [filter, setFilter] = useState({ text: "최신순", key: "latest" });
+  const [filter, setFilter] = useState({ text: '최신순', key: 'latest' })
 
   useEffect(() => {
     if (props.getPosts) {
-      props.getPosts(filter.key);
+      props.getPosts(filter.key)
     }
-  }, [filter]);
+  }, [filter])
   return (
-    <Container>
+    <>
       <PostTableHeader>
         <div className="headerTitle">전체</div>
         <div className="filterTab">
           <div
-            className={`tab ${filter.text === "최신순" ? "active" : ""}`}
-            onClick={() => setFilter({ text: "최신순", key: "latest" })}
+            className={`tab ${filter.text === '최신순' ? 'active' : ''}`}
+            onClick={() => setFilter({ text: '최신순', key: 'latest' })}
           >
             최신순
           </div>
           <div
-            className={`tab ${filter.text === "오래된순" ? "active" : ""}`}
-            onClick={() => setFilter({ text: "오래된순", key: "oldest" })}
+            className={`tab ${filter.text === '오래된순' ? 'active' : ''}`}
+            onClick={() => setFilter({ text: '오래된순', key: 'oldest' })}
           >
             오래된순
           </div>
           <div
-            className={`tab ${filter.text === "인기순" ? "active" : ""}`}
-            onClick={() => setFilter({ text: "인기순", key: "hotest" })}
+            className={`tab ${filter.text === '인기순' ? 'active' : ''}`}
+            onClick={() => setFilter({ text: '인기순', key: 'hotest' })}
           >
             인기순
           </div>
@@ -42,7 +42,7 @@ const MyPostsTable = (props: any) => {
           <PostTableBody key={index}>
             <div className="top">
               <div className="left">
-                <div className="date">{item.publishedDate.split("T")[0]}</div>
+                <div className="date">{item.publishedDate.split('T')[0]}</div>
               </div>
               <div className="right">
                 <div className="count">
@@ -52,7 +52,7 @@ const MyPostsTable = (props: any) => {
                   조회수 <span>{item.views}</span>
                 </div>
                 <div className="count">
-                  댓글{" "}
+                  댓글{' '}
                   <span>
                     {item.commentIds
                       ? item.commentIds.length
@@ -77,9 +77,9 @@ const MyPostsTable = (props: any) => {
                       {item.tags.map((el: any, idx: any) => {
                         return (
                           <span className="hashtag" key={idx}>
-                            #{el}{" "}
+                            #{el}{' '}
                           </span>
-                        );
+                        )
                       })}
                     </div>
                   </div>
@@ -87,13 +87,13 @@ const MyPostsTable = (props: any) => {
               </Link>
             </a>
           </PostTableBody>
-        );
+        )
       })}
-    </Container>
-  );
-};
+    </>
+  )
+}
 
-export default MyPostsTable;
+export default MyPostsTable
 
 export const PostTableHeader = styled.div`
   display: flex;
@@ -124,7 +124,7 @@ export const PostTableHeader = styled.div`
       }
     }
   }
-`;
+`
 export const PostTableBody = styled.div`
   padding: 20px 15px;
   border-bottom: 1px solid #cccccc;
@@ -201,4 +201,4 @@ export const PostTableBody = styled.div`
       }
     }
   }
-`;
+`

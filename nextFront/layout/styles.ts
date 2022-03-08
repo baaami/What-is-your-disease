@@ -5,7 +5,7 @@ export const HeaderContainer = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 10000;
+  z-index: 100;
 
   &.sub {
     background: #fff;
@@ -16,7 +16,7 @@ export const HeaderContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 95px;
+    height: 80px;
 
     .logo {
       position: relative;
@@ -99,6 +99,7 @@ export const HeaderModal = styled.div`
   opacity: 0;
   visibility: hidden;
   transform: translateY(-10px);
+  z-index: 101;
 
   &.vis {
     visibility: visible;

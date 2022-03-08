@@ -16,7 +16,7 @@ const PostsTable = (props: any) => {
     }
   }, [filter])
   return (
-    <Container>
+    <>
       <PostTableHeader>
         <div className="headerTitle">전체</div>
         <div className="filterTab">
@@ -115,7 +115,7 @@ const PostsTable = (props: any) => {
           </PostTableBody>
         )
       })}
-    </Container>
+    </>
   )
 }
 
@@ -144,6 +144,15 @@ export const PostTableHeader = styled.div`
       font-weight: 500;
       cursor: pointer;
 
+      @media (max-width: 550px) {
+        margin-left: 15px;
+        font-size: 16px;
+      }
+      @media (max-width: 305px) {
+        margin-left: 5px;
+        font-size: 14px;
+      }
+
       &.active {
         font-weight: 700;
         color: #1850a3;
@@ -161,6 +170,10 @@ export const PostTableBody = styled.div`
     justify-content: space-between;
     margin-bottom: 25px;
 
+    @media (max-width: 550px) {
+      flex-direction: column;
+    }
+
     .left {
       display: flex;
       align-items: center;
@@ -170,6 +183,10 @@ export const PostTableBody = styled.div`
 
         img {
           width: 70px;
+
+          @media (max-width: 414px) {
+            width: 50px;
+          }
         }
       }
 
@@ -178,11 +195,19 @@ export const PostTableBody = styled.div`
           font-size: 20px;
           font-weight: 500;
           color: #000;
+
+          @media (max-width: 414px) {
+            font-size: 18px;
+          }
         }
 
         .date {
           font-size: 16px;
           color: #989898;
+
+          @media (max-width: 414px) {
+            font-size: 14px;
+          }
         }
       }
     }
@@ -191,10 +216,19 @@ export const PostTableBody = styled.div`
       display: flex;
       align-items: center;
 
+      @media (max-width: 550px) {
+        margin-top: 15px;
+      }
+
       .count {
         margin-left: 15px;
         font-size: 15px;
         color: #989898;
+
+        @media (max-width: 550px) {
+          margin-left: 0;
+          margin-right: 15px;
+        }
       }
     }
   }
@@ -235,11 +269,19 @@ export const PostTableBody = styled.div`
         background: #1850a3;
         color: #fff;
         border-radius: 50px;
+
+        @media (max-width: 414px) {
+          font-size: 12px;
+        }
       }
 
       .hashtag {
         color: #1850a3;
         font-size: 15px;
+
+        @media (max-width: 414px) {
+          font-size: 12px;
+        }
       }
     }
   }

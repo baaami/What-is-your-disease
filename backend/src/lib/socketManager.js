@@ -29,7 +29,6 @@ const socketManager = (socket) => {
   socket.on('login', (data) => {
     console.log(data.user.nickname, '님이 로그인하였습니다.');
     socket.user = data.user;
-
     nicktoId[data.user.id] = socket.id;
 
     const rep = {
@@ -148,7 +147,7 @@ const socketManager = (socket) => {
    * 푸쉬 타입 : data.type => post, comment, reply, like, follow
    */
   socket.on('push', async (data) => {
-    console.log(data);
+    // console.log(data);
     const res = {
       _id: mongoose.Types.ObjectId(),
       sender: socket.user.nickname,
@@ -156,6 +155,8 @@ const socketManager = (socket) => {
       type: data.type,
       Info: data.info,
     };
+    console.log(data.receiver.nickname);
+    console.log(nicktoId);
     if (data.receiver.nickname in Object.keys(nicktoId)) {
       res = { ...res, date: new Date() };
       // 수신자가 현재 접속 중일 경우 바로 push

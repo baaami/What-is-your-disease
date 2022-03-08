@@ -9,7 +9,6 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [userInfo] = useRecoilState(currentUserInfo)
 
   useEffect(() => {
-    console.log('소켓커넥션실ㄹ행')
     const socketConnection = socketIOClient('http://localhost:4000')
     setSocketData(socketConnection)
 

@@ -10,7 +10,7 @@ import {
 // import { Link, useHistory, useLocation } from "react-router-dom";
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import API from 'service/api'
 import { currentUserInfo } from 'store/userInfo'
 import { Container } from 'common.styles'
@@ -18,20 +18,19 @@ import logo from '../assets/img/hlogo.svg'
 import profile from '../assets/img/profile.svg'
 import notice from '../assets/img/bell_icon.svg'
 import Image from 'next/link'
+import PushNotice from 'components/PushNotice'
 
 export default function HomeHeader() {
   const location = useRouter()
   const history = useRouter()
 
   const profile_modal_ref = useRef<HTMLDivElement>(null)
-  const notice_modal_ref = useRef<HTMLDivElement>(null)
 
   const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
   const [border, setBorder] = useState('rgba(255,255,255,0)')
   const [background, setBackground] = useState('transparent')
 
   const [vis_profile_modal, setVisProfileModal] = useState(false)
-  const [vis_notice_modal, setVisNoticeModal] = useState(false)
 
   const scrollHandler = () => {
     if (window.scrollY < 40) {
@@ -98,14 +97,6 @@ export default function HomeHeader() {
       setVisProfileModal(false)
     } else {
       setVisProfileModal(true)
-    }
-  }
-
-  const clickNoticeIcon = () => {
-    if (vis_notice_modal) {
-      setVisNoticeModal(false)
-    } else {
-      setVisNoticeModal(true)
     }
   }
 
@@ -205,48 +196,7 @@ export default function HomeHeader() {
                 </div>
               </ProfileModal>
             </ProfileContainer>
-            <NoticeContainer onClick={() => clickNoticeIcon()}>
-              <button className="headerTxt">
-                <img src={notice.src} alt="notice" />
-              </button>
-              <NoticeModal
-                ref={notice_modal_ref}
-                className={`${vis_notice_modal ? 'vis' : ''}`}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <section className="noticeWrap">
-                  <div className="noticeHeader">
-                    <div>
-                      알림 <span>7</span> 건
-                    </div>
-                    <div
-                      style={{
-                        textDecoration: 'underline',
-                        fontSize: 12,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      모두 읽음
-                    </div>
-                  </div>
-                  <div className="noticeContents">
-                    <div>
-                      읽지 않은 채팅이 있습니다. 확인해주세요.<span>2일전</span>
-                    </div>
-                    <div>
-                      글쓰러간지 일주일이 넘었네요! 글쓰러 가볼까요?
-                      <span>5일전</span>
-                    </div>
-                    <div>
-                      읽지 않은 채팅이 있습니다. 확인해주세요.<span>7일전</span>
-                    </div>
-                    <div>
-                      읽지 않은 채팅이 있습니다.<span>15일전</span>
-                    </div>
-                  </div>
-                </section>
-              </NoticeModal>
-            </NoticeContainer>
+            <PushNotice />
           </ContainerWrap>
         </Container>
       </HeaderContainer>

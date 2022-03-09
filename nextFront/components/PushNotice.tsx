@@ -173,19 +173,6 @@ const PushNotice = (props: PushNoticeModel) => {
                 )
               }
             })}
-            {/* <div>
-              읽지 않은 채팅이 있습니다. 확인해주세요sssssss.<span>2일전</span>
-            </div>
-            <div>
-              글쓰러간지 일주일이 넘었네요! 글쓰러 가볼까요?
-              <span>5일전</span>
-            </div>
-            <div>
-              읽지 않은 채팅이 있습니다. 확인해주세요.<span>7일전</span>
-            </div>
-            <div>
-              읽지 않은 채팅이 있습니다.<span>15일전</span>
-            </div> */}
           </div>
         </section>
       </NoticeModal>

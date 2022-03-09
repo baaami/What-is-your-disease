@@ -294,9 +294,11 @@ export default function PostsDetail(props: {
       <Container>
         <TopSection>
           <div className="category">{props?.postData?.data.post.category}</div>
-          <div className="category">
-            {getDiseasePeriod(props?.postData?.data.post.diseasePeriod)}
-          </div>
+          {props?.postData?.data.post.diseasePeriod && (
+            <div className="category">
+              {getDiseasePeriod(props?.postData?.data.post.diseasePeriod)}
+            </div>
+          )}
           <div className="hashtag">
             {props?.postData?.data.post.tags?.map((item, index) => (
               <span key={index} onClick={() => onClickHashtag(item)}>

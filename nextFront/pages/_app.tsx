@@ -9,7 +9,6 @@ import Footer from 'layout/Footer'
 import 'antd/dist/antd.css'
 import 'swiper/css'
 import HomeHeader from 'layout/HomeHeader'
-import SubHeader from 'layout/SubHeader'
 import cookies from 'next-cookies'
 import { setToken } from 'shared/token-manager'
 import SocketProvider from 'components/SocketProvider'
@@ -22,7 +21,6 @@ const MyApp: NextComponentType<AppContext, AppInitialProps, AppProps> = ({
   return (
     <RecoilRoot>
       <SocketProvider>
-        {/* {location.pathname === '/' ? <HomeHeader /> : <SubHeader />} */}
         <HomeHeader />
         <Component {...pageProps} />
         <Chatting />

@@ -64,6 +64,11 @@ const Home: NextPage = (props) => {
   }, [])
 
   useEffect(() => {
+    if (latest_posts.length !== 0) {
+      document.querySelector('#home_posts')?.scrollIntoView({
+        behavior: 'auto',
+      })
+    }
     getLatestPosts('latest')
   }, [current_page])
 
@@ -179,7 +184,7 @@ const Home: NextPage = (props) => {
         </Container>
       </HotTopic>
       <Post>
-        <Container>
+        <Container id="home_posts">
           <PostsTable
             table_title="전체 게시물"
             posts={latest_posts}

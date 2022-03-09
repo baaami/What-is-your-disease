@@ -129,6 +129,7 @@ export default function HomeHeader() {
 
     if (location.pathname === '/') {
       window.addEventListener('scroll', scrollHandler)
+      setVisProfileModal(false)
     }
   }, [location.pathname])
 

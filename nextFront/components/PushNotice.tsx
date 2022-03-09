@@ -17,6 +17,7 @@ interface PushListsModel {
     postId: string
     commentId: string
   }
+  publishedDate: string
 }
 
 const PushNotice = (props: PushNoticeModel) => {
@@ -108,55 +109,67 @@ const PushNotice = (props: PushNoticeModel) => {
             {push_list.map((item) => {
               if (item.type === 'comment') {
                 return (
-                  <div
-                    key={item._id}
-                    onClick={() => {
-                      router.push({
-                        pathname: `/posts/detail/${item.Info.postId}`,
-                      })
-                    }}
-                  >
-                    {item.sender}님이 회원님의 게시글에 답글을 남겼습니다.
-                  </div>
+                  <>
+                    <div
+                      key={item._id}
+                      onClick={() => {
+                        router.push({
+                          pathname: `/posts/detail/${item.Info.postId}`,
+                        })
+                      }}
+                    >
+                      {item.sender}님이 회원님의 게시글에 답글을 남겼습니다.
+                      <span>{item.publishedDate.split('T')[0]}</span>
+                    </div>
+                  </>
                 )
               } else if (item.type === 'like') {
                 return (
-                  <div
-                    key={item._id}
-                    onClick={() => {
-                      router.push({
-                        pathname: `/posts/detail/${item.Info.postId}`,
-                      })
-                    }}
-                  >
-                    {item.sender}님이 회원님의 게시글을 게시글을 좋아합니다.
-                  </div>
+                  <>
+                    <div
+                      key={item._id}
+                      onClick={() => {
+                        router.push({
+                          pathname: `/posts/detail/${item.Info.postId}`,
+                        })
+                      }}
+                    >
+                      {item.sender}님이 회원님의 게시글을 게시글을 좋아합니다.
+                      <span>{item.publishedDate.split('T')[0]}</span>
+                    </div>
+                  </>
                 )
               } else if (item.type === 'follow') {
                 return (
-                  <div
-                    key={item._id}
-                    onClick={() => {
-                      router.push({
-                        pathname: `/profilepage/${item.Info.senderId}`,
-                      })
-                    }}
-                  >
-                    {item.sender}님이 회원님을 팔로우 하기 시작했습니다.
-                  </div>
+                  <>
+                    <div
+                      key={item._id}
+                      onClick={() => {
+                        router.push({
+                          pathname: `/profilepage/${item.Info.senderId}`,
+                        })
+                      }}
+                    >
+                      {item.sender}님이 회원님을 팔로우 하기 시작했습니다.
+                      <span>{item.publishedDate.split('T')[0]}</span>
+                    </div>
+                  </>
                 )
               } else if (item.type === 'reply') {
                 return (
-                  <div
-                    key={item._id}
-                    onClick={() => {
-                      router.push({
-                        pathname: `/posts/detail/${item.Info.postId}`,
-                      })
-                    }}
-                  >
-                    {item.sender}님이 회원님의 댓글에 답글을 남겼습니다.
-                  </div>
+                  <>
+                    <div
+                      key={item._id}
+                      onClick={() => {
+                        router.push({
+                          pathname: `/posts/detail/${item.Info.postId}`,
+                        })
+                      }}
+                    >
+                      {item.sender}님이 회원님의 댓글에 답글을 남겼습니다.
+                      <span>{item.publishedDate.split('T')[0]}</span>
+                    </div>
+                  </>
                 )
               }
             })}
@@ -176,18 +189,35 @@ const PushNotice = (props: PushNoticeModel) => {
           </div>
         </section>
       </NoticeModal>
+      <div className="prevCount">
+        {push_list.length > 100 ? '99+' : push_list.length}
+      </div>
     </NoticeContainer>
   )
 }
 
 export default PushNotice
 
-export const NoticeContainer = styled.div``
+export const NoticeContainer = styled.div`
+  & .prevCount {
+    background: rgba(var(--c37, 237, 73, 86), 1);
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 30px;
+    color: white;
+    font-weight: 700;
+    position: absolute;
+    top: 10px;
+    right: -11px;
+  }
+`
 export const NoticeModal = styled.div`
   position: absolute;
   right: -20px;
   color: white;
-  padding: 15px 20px;
+  padding: 15px 15px;
   width: 280px;
   height: 600px;
   background-color: #fff;
@@ -227,6 +257,11 @@ export const NoticeModal = styled.div`
         margin-bottom: 10px;
         cursor: pointer;
         word-break: keep-all;
+        padding: 5px;
+
+        &:hover {
+          background-color: rgba(220, 220, 220, 0.4);
+        }
         span {
           margin-left: 10px;
           font-size: 12px;

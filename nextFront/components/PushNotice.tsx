@@ -51,6 +51,7 @@ const PushNotice = (props: PushNoticeModel) => {
     await API.user
       .getPushList()
       .then((res) => {
+        console.log(res.data)
         setPushList((lists) => [...lists, ...res.data])
       })
       .catch((e) => {

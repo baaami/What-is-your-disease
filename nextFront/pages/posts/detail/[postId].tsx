@@ -23,6 +23,7 @@ import {
 import like_out from 'assets/img/like_out.svg'
 import like_active from 'assets/img/like_active.svg'
 import { socketInit } from 'store/socket'
+import { getDiseasePeriod } from 'shared/function'
 
 interface IPostsDetailProps {}
 
@@ -91,6 +92,7 @@ export default function PostsDetail(props: {
         id: postData._id,
         tag: postData.tags,
         category: postData.category,
+        diseasePeriod: postData.diseasePeriod,
       },
     })
   }
@@ -292,6 +294,9 @@ export default function PostsDetail(props: {
       <Container>
         <TopSection>
           <div className="category">{props?.postData?.data.post.category}</div>
+          <div className="category">
+            {getDiseasePeriod(props?.postData?.data.post.diseasePeriod)}
+          </div>
           <div className="hashtag">
             {props?.postData?.data.post.tags?.map((item, index) => (
               <span key={index} onClick={() => onClickHashtag(item)}>

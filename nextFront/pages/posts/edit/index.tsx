@@ -12,6 +12,7 @@ import { categoryList } from 'static/constant'
 import { Container } from 'common.styles'
 import { PostEditContainer, HashTagSection } from 'styles/posts/styles'
 import dynamic from 'next/dynamic'
+import { getDiseasePeriod } from 'shared/function'
 
 interface IPostsEditProps {}
 const ReactQuill = dynamic(
@@ -53,6 +54,7 @@ export default function PostsEdit(props: IPostsEditProps) {
   const [filter, setFilter] = useState(
     pushState.category ? pushState.category : categoryList[0],
   )
+  const [period, setPeriod] = useState('early')
 
   const { Option } = Select
 
@@ -173,6 +175,7 @@ export default function PostsEdit(props: IPostsEditProps) {
       body: edit_contents,
       category: filter,
       tags: [...tagState.tags],
+      diseasePeriod: period,
     }
 
     await API.post
@@ -194,6 +197,7 @@ export default function PostsEdit(props: IPostsEditProps) {
       body: edit_contents,
       category: filter,
       tags: [...tagState.tags],
+      diseasePeriod: period,
     }
     await API.post
       .editPost(pushState.id, req_data)
@@ -226,8 +230,13 @@ export default function PostsEdit(props: IPostsEditProps) {
     }
   }
 
+  const handleDiseasePeroid = (e: string) => {
+    setPeriod(e)
+  }
+
   useEffect(() => {
-    const { id, title, description, tag, category } = router.query
+    const { id, title, description, tag, category, diseasePeriod } =
+      router.query
 
     // API.post.
     if (id && title && description) {
@@ -239,6 +248,7 @@ export default function PostsEdit(props: IPostsEditProps) {
       })
       setPushState({ id: id as string, category: category as string })
       setFilter(category as string)
+      setPeriod(diseasePeriod as string)
     }
     window.scrollTo({ top: 0 })
   }, [])
@@ -259,6 +269,18 @@ export default function PostsEdit(props: IPostsEditProps) {
               {category}
             </Option>
           ))}
+        </Select>
+        <Select
+          onChange={handleDiseasePeroid}
+          value={period}
+          style={{ width: 100, marginLeft: '20px' }}
+        >
+          <Option value="early">초기</Option>
+          <Option value="late">말기</Option>
+          <Option value="acute">급성</Option>
+          <Option value="chronic">만성</Option>
+          <Option value="emergency">응급</Option>
+          <Option value="cure">완치</Option>
         </Select>
         <Input
           id="posts_title"

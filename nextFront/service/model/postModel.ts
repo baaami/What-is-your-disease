@@ -2,6 +2,8 @@ export interface CreatePostModel {
   title: string
   body: string
   category: string
+  tags: string[]
+  diseasePeriod: string
 }
 
 export interface PostUserModel {

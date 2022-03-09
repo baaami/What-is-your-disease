@@ -5,6 +5,7 @@ export const PushSchema = new Schema({
   sender: String,
   receiver: String,
   type: String,
+  confirm: Boolean,
   Info: {
     senderId: mongoose.Types.ObjectId,
     receiverId: mongoose.Types.ObjectId,

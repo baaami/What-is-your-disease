@@ -24,3 +24,25 @@ export const allRestoredPushData = async (ctx) => {
     ctx.throw(500, e);
   }
 };
+
+/**
+ * POST /api/push/confirm
+ * 유저 정보 전달
+ */
+export const confirm = async (ctx) => {
+  const user = ctx.state.user;
+  const { pushId } = ctx.query;
+
+  try {
+    const pushData = await Push.findOneAndUpdate(
+      { _id: pushId },
+      { confirm: true },
+      { new: true },
+    );
+
+    // 해당 user의 남은 푸쉬 알람 개수 전달
+    // ctx.body = pushData;
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};

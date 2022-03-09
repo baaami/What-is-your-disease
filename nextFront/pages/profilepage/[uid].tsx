@@ -11,7 +11,7 @@ import { Container, Title } from 'common.styles'
 import ProfileCard from 'components/ProfileCard'
 import FollowerTab from 'components/FollowerTab'
 import InfoCard from 'components/InfoCard'
-import MyPostsTable from 'components/MyPostsTable'
+import PostsTable from 'components/PostsTable'
 import Pagination from 'components/Pagination'
 import API from 'service/api'
 import { useRecoilState } from 'recoil'
@@ -100,7 +100,10 @@ export default function Profilepage() {
         </InfoSection>
         <PostSection>
           <Title>{current_profile?.info?.nickname}님의 게시글</Title>
-          <MyPostsTable posts={myPosts} />
+          <PostsTable
+            table_title={`${current_profile?.info?.nickname}님의 게시글`}
+            posts={myPosts}
+          />
           <Pagination
             total_count={total_cnt}
             current_page={current_page}

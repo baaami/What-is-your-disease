@@ -4,7 +4,6 @@ import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
 import { useRouter } from 'next/router'
 import API from 'service/api'
-import MyPostsTable from 'components/MyPostsTable'
 import PostsTable from 'components/PostsTable'
 import Pagination from 'components/Pagination'
 import { Container, Title } from 'common.styles'
@@ -121,8 +120,7 @@ export default function Mypage(props: IMypageProps) {
           />
         </InfoSection>
         <MyPostSection>
-          <Title>내 게시글</Title>
-          <MyPostsTable posts={myPosts} />
+          <PostsTable table_title="내 게시글" posts={myPosts} />
           <Pagination
             total_count={total_cnt}
             current_page={current_page}
@@ -132,8 +130,7 @@ export default function Mypage(props: IMypageProps) {
           />
         </MyPostSection>
         <FollowPostsSection>
-          <Title>팔로우 게시글</Title>
-          <PostsTable posts={follow_posts} />
+          <PostsTable table_title="팔로우 게시글" posts={follow_posts} />
           <Pagination
             total_count={total_cnt_f}
             current_page={current_page_f}

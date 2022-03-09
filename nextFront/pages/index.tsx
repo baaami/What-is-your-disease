@@ -35,9 +35,9 @@ const Home: NextPage = (props) => {
 
   SwiperCore.use([Navigation])
 
-  const getLatestPosts = async (order_by: string) => {
+  const getLatestPosts = async (order_by: string, diseasePeriod?: string) => {
     await API.posts
-      .getFilterPosts(order_by, current_page, 10)
+      .getFilterPosts(order_by, current_page, 10, diseasePeriod)
       .then((res) => {
         setTotalCnt(res.data.postTotalCnt)
         setLatestPosts(res.data.data.post)
@@ -47,9 +47,9 @@ const Home: NextPage = (props) => {
       })
   }
 
-  const getHotPosts = async () => {
+  const getHotPosts = async (diseasePeriod?: string) => {
     await API.posts
-      .getFilterPosts('hotest', 1, 10)
+      .getFilterPosts('hotest', 1, 10, diseasePeriod)
       .then((res) => {
         setHotPosts(res.data.data.post)
       })
@@ -180,8 +180,11 @@ const Home: NextPage = (props) => {
       </HotTopic>
       <Post>
         <Container>
-          <Title>전체 게시물</Title>
-          <PostsTable posts={latest_posts} getPosts={getLatestPosts} />
+          <PostsTable
+            table_title="전체 게시물"
+            posts={latest_posts}
+            getPosts={getLatestPosts}
+          />
           <Pagination
             current_page={current_page}
             total_count={total_cnt}

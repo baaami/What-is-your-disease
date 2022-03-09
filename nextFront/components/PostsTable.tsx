@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 // import { Link } from "react-router-dom";
 import Link from 'next/link'
-import { Container } from 'common.styles'
+import { Container, Title } from 'common.styles'
 import profileDefault from 'assets/img/profile.svg'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
 import { Select } from 'antd'
+import { getDiseasePeriod } from 'shared/function'
 
 const PostsTable = (props: any) => {
   const { Option } = Select
@@ -25,11 +26,12 @@ const PostsTable = (props: any) => {
 
   useEffect(() => {
     if (props.getPosts && props.posts) {
-      props.getPosts(filter)
+      props.getPosts(filter, period === 'all' ? undefined : period)
     }
-  }, [filter])
+  }, [filter, period])
   return (
     <>
+      {props.table_title && <Title>{props.table_title}</Title>}
       <PostTableHeader>
         <div className="headerTitle">전체</div>
         <div className="filterTab">
@@ -135,6 +137,11 @@ const PostsTable = (props: any) => {
                     />
                     <div>
                       <span className="category">{item.category}</span>
+                      {item.diseasePeriod && (
+                        <span className="category">
+                          {getDiseasePeriod(item.diseasePeriod)}
+                        </span>
+                      )}
                       {item.tags.map((el: any, idx: any) => {
                         return (
                           <span className="hashtag" key={idx}>

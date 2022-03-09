@@ -48,7 +48,12 @@ export const posts = {
     }
     return Axios(config)
   },
-  getFilterPosts: async (orderBy: string, page: number, per_page: number) => {
+  getFilterPosts: async (
+    orderBy: string,
+    page: number,
+    per_page: number,
+    diseasePeriod?: string,
+  ) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
@@ -61,6 +66,7 @@ export const posts = {
         page,
         pageNum: per_page,
         orderBy: orderBy,
+        diseasePeriod,
       },
     }
     return Axios(config)

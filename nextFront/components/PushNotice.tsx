@@ -1,3 +1,4 @@
+import React from 'react'
 import { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import notice from 'assets/img/bell_icon.svg'
@@ -109,7 +110,7 @@ const PushNotice = (props: PushNoticeModel) => {
             {push_list.map((item) => {
               if (item.type === 'comment') {
                 return (
-                  <>
+                  <React.Fragment key={item._id}>
                     <div
                       key={item._id}
                       onClick={() => {
@@ -121,11 +122,11 @@ const PushNotice = (props: PushNoticeModel) => {
                       {item.sender}님이 회원님의 게시글에 답글을 남겼습니다.
                       <span>{item.publishedDate.split('T')[0]}</span>
                     </div>
-                  </>
+                  </React.Fragment>
                 )
               } else if (item.type === 'like') {
                 return (
-                  <>
+                  <React.Fragment key={item._id}>
                     <div
                       key={item._id}
                       onClick={() => {
@@ -137,11 +138,11 @@ const PushNotice = (props: PushNoticeModel) => {
                       {item.sender}님이 회원님의 게시글을 게시글을 좋아합니다.
                       <span>{item.publishedDate.split('T')[0]}</span>
                     </div>
-                  </>
+                  </React.Fragment>
                 )
               } else if (item.type === 'follow') {
                 return (
-                  <>
+                  <React.Fragment key={item._id}>
                     <div
                       key={item._id}
                       onClick={() => {
@@ -153,11 +154,11 @@ const PushNotice = (props: PushNoticeModel) => {
                       {item.sender}님이 회원님을 팔로우 하기 시작했습니다.
                       <span>{item.publishedDate.split('T')[0]}</span>
                     </div>
-                  </>
+                  </React.Fragment>
                 )
               } else if (item.type === 'reply') {
                 return (
-                  <>
+                  <React.Fragment key={item._id}>
                     <div
                       key={item._id}
                       onClick={() => {
@@ -169,7 +170,7 @@ const PushNotice = (props: PushNoticeModel) => {
                       {item.sender}님이 회원님의 댓글에 답글을 남겼습니다.
                       <span>{item.publishedDate.split('T')[0]}</span>
                     </div>
-                  </>
+                  </React.Fragment>
                 )
               }
             })}

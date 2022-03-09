@@ -75,7 +75,7 @@ const Home: NextPage = (props) => {
   return (
     <HomeContainer>
       <Head>
-        <title>Dr.u</title>
+        <title>Dr.u | HOME</title>
       </Head>
       <MainBanner>
         <Container>

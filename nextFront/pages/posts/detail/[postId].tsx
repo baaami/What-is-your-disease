@@ -457,7 +457,7 @@ export default function PostsDetail(props: {
                       ?.reverse()
                       .map((reply: any, index: number) => {
                         return (
-                          <>
+                          <React.Fragment key={index}>
                             <div className="reply">
                               <div>
                                 <span>{reply?.user?.info?.nickname}</span>
@@ -495,7 +495,7 @@ export default function PostsDetail(props: {
                                 </button>
                               </div>
                             )}
-                          </>
+                          </React.Fragment>
                         )
                       })}
                   </div>

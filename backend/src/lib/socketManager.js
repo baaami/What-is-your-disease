@@ -54,14 +54,8 @@ const socketManager = (socket) => {
       event: 'roomin',
       user: socket.user,
       room: socket.room,
+      numberOfPeople: io.sockets.adapter.rooms.get(socket.room.name).size,
     };
-
-    io.sockets
-      .in(socket.room.name)
-      .emit(
-        'numberOfpeople',
-        io.sockets.adapter.rooms.get(socket.room.name).size,
-      );
 
     console.log(
       socket.room.name,
@@ -85,18 +79,12 @@ const socketManager = (socket) => {
       event: 'roomout',
       user: socket.user,
       room: socket.room,
+      numberOfPeople: io.sockets.adapter.rooms.get(socket.room.name).size,
     };
 
     socket.leave(socket.room.name);
     // socket.room 초기화
     socket.room = undefined;
-
-    io.sockets
-      .in(socket.room.name)
-      .emit(
-        'numberOfpeople',
-        io.sockets.adapter.rooms.get(socket.room.name).size,
-      );
 
     console.log(
       socket.room.name,

@@ -33,8 +33,6 @@ const socketManager = (socket) => {
     const rep = {
       user: socket.user,
     };
-
-    // io.sockets.in(socket.room.name).emit('roomin', rep);
   });
 
   socket.on('join', (data) => {
@@ -127,6 +125,20 @@ const socketManager = (socket) => {
     }
   });
 
+  // 'message' 이벤트를 받았을 때의 처리
+  socket.on('moreMessage', async (message) => {
+    // 해당 room 채팅 내용 획득
+    try {
+      const chats = await Chat.find({ room: socket.room.name })
+        .sort({ publishedDate: -1 })
+        .limit(200)
+        .exec();
+
+      io.to(nicktoId[socket.user.nickname]).emit('moreMessage', chats);
+    } catch (e) {
+      console.log('Save chat error: ', e);
+    }
+  });
   /**
    * @brief push 알림 구현
    *

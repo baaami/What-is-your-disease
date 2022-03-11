@@ -13,6 +13,11 @@ push.post('/', checkLoggedIn, pushCtrl.allRestoredPushData);
 /*
   POST /api/push/confirm
 */
-push.post('/', checkLoggedIn, pushCtrl.confirm);
+push.post('/confirm', checkLoggedIn, pushCtrl.confirm);
+
+/*
+  POST /api/push/readall
+*/
+push.post('/readall', checkLoggedIn, pushCtrl.readall);
 
 export default push;

@@ -11,6 +11,7 @@ import { callbackify } from 'util'
 interface ChattingRoomModel {
   socket: Socket
   current_room: string
+  setCurrentPeople: (people_cnt: number) => void
 }
 
 interface ChattingMessageListModel {
@@ -30,6 +31,7 @@ interface roomUserModel {
     nickname: string
   }
   room: string
+  numberOfPeople: number
 }
 
 const ChattingRoom = (props: ChattingRoomModel) => {
@@ -80,9 +82,11 @@ const ChattingRoom = (props: ChattingRoomModel) => {
     })
     socket.on('roomin', (data: roomUserModel) => {
       setMessageList((currentMessage) => [...currentMessage, data])
+      props.setCurrentPeople(data.numberOfPeople)
     })
     socket.on('roomout', (data: roomUserModel) => {
       setMessageList((currentMessage) => [...currentMessage, data])
+      props.setCurrentPeople(data.numberOfPeople)
     })
   }, [])
 

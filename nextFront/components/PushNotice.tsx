@@ -61,6 +61,17 @@ const PushNotice = (props: PushNoticeModel) => {
       })
   }
 
+  const onClickPush = async (push_id: string, push_type: string) => {
+    await API.user
+      .confirmPush(push_id)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }
+
   /* 클릭시 닫힘 처리  */
   useEffect(() => {
     window.addEventListener('mousedown', onClickInsideDetector)
@@ -113,11 +124,12 @@ const PushNotice = (props: PushNoticeModel) => {
                   <React.Fragment key={item._id}>
                     <div
                       key={item._id}
-                      onClick={() => {
-                        router.push({
-                          pathname: `/posts/detail/${item.Info.postId}`,
-                        })
-                      }}
+                      // onClick={() => {
+                      //   router.push({
+                      //     pathname: `/posts/detail/${item.Info.postId}`,
+                      //   })
+                      // }}
+                      onClick={() => onClickPush(item._id, 'comment')}
                     >
                       {item.sender}님이 회원님의 게시글에 답글을 남겼습니다.
                       <span>{item.publishedDate.split('T')[0]}</span>

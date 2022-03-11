@@ -59,4 +59,19 @@ export const user = {
 
     return Axios(config)
   },
+  confirmPush: async (pushId: string) => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: POST,
+      url: `${BASE_URL}/api/push/confirm`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+      data: {
+        pushId,
+      },
+    }
+    return Axios(config)
+  },
 }

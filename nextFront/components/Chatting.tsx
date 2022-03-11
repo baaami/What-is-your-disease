@@ -24,6 +24,7 @@ const Chatting = () => {
   const [userInfo] = useRecoilState(currentUserInfo)
   const [vis_chat, setVisChat] = useState(false)
   const [current_room, setCurrentRoom] = useState('')
+  const [current_people, setCurrentPeople] = useState(0)
   // const [socket, setSocket] = useState<Socket>({} as Socket)
   const socket = useRecoilValue(socketInit)
   const chat_box_ref = useRef<HTMLDivElement>(null)
@@ -81,13 +82,30 @@ const Chatting = () => {
             <ChattingBoxHeader>
               <Title>
                 {current_room} 채팅방
-                <Image src={Icon} alt="아이콘" />
+                <Image src={Icon} alt="아이콘" />{' '}
+                <span>인원 수: {current_people}</span>
               </Title>
-              <ChattingHeaderButton onClick={() => setCurrentRoom('')}>
-                <Image src={Exit} alt="나가기 버튼" />
-              </ChattingHeaderButton>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: '20px',
+                  alignItems: 'center',
+                }}
+              >
+                <ChattingHeaderButton onClick={() => setCurrentRoom('')}>
+                  <Image src={Exit} alt="나가기 버튼" />
+                </ChattingHeaderButton>
+                <ChattingHeaderButton onClick={() => setVisChat(false)}>
+                  <Image src={Close} alt="닫기 버튼" />
+                </ChattingHeaderButton>
+              </div>
             </ChattingBoxHeader>
-            <ChattingRoom socket={socket} current_room={current_room} />
+            <ChattingRoom
+              socket={socket}
+              current_room={current_room}
+              setCurrentPeople={setCurrentPeople}
+            />
           </>
         ) : (
           <>
@@ -161,6 +179,10 @@ const Title = styled.h3`
 
   img {
     width: 25px !important;
+  }
+
+  span {
+    font-size: 13px;
   }
 `
 const ChattingBoxHeader = styled.div`

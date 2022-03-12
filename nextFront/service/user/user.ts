@@ -68,7 +68,7 @@ export const user = {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,
       },
-      data: {
+      params: {
         pushId,
       },
     }

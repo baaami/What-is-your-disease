@@ -74,4 +74,16 @@ export const user = {
     }
     return Axios(config)
   },
+  confirmAllPush: async () => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: POST,
+      url: `${BASE_URL}/api/push/readall`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+    }
+    return Axios(config)
+  },
 }

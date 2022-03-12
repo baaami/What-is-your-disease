@@ -16,6 +16,7 @@ export const allRestoredPushData = async (ctx) => {
   try {
     const pushData = await Push.find(query)
       .sort({
+        confirm: 1,
         publishedDate: -1,
       })
       .exec();

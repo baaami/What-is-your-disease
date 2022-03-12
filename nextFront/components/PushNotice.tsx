@@ -18,6 +18,7 @@ interface PushListsModel {
     postId: string
     commentId: string
   }
+  confirm: boolean
   publishedDate: string
 }
 
@@ -26,6 +27,7 @@ const PushNotice = (props: PushNoticeModel) => {
   const socket = useRecoilValue(socketInit)
   const [vis_notice_modal, setVisNoticeModal] = useState(false)
   const [push_list, setPushList] = useState<PushListsModel[]>([])
+  const [not_confirm, setNotConfirm] = useState(0)
   const notice_modal_ref = useRef<HTMLDivElement>(null)
   const clickNoticeIcon = () => {
     if (vis_notice_modal) {
@@ -54,30 +56,67 @@ const PushNotice = (props: PushNoticeModel) => {
       .getPushList()
       .then((res) => {
         console.log(res.data)
-        setPushList((lists) => [...lists, ...res.data])
+        setPushList(() => [...res.data])
       })
       .catch((e) => {
         console.log(e)
       })
   }
 
-  const onClickPush = async (push_id: string, push_type: string) => {
+  const onClickPush = async (
+    push_id: string,
+    push_type: string,
+    target: { post_id?: string; user_id?: string; comment_id?: string },
+  ) => {
     await API.user
       .confirmPush(push_id)
       .then((res) => {
-        console.log(res)
+        setPushList(res.data.data)
+        switch (push_type) {
+          case 'comment':
+            router.push({
+              pathname: `/posts/detail/${target.post_id}`,
+            })
+            break
+          case 'like':
+            router.push({
+              pathname: `/posts/detail/${target.post_id}`,
+            })
+
+          case 'follow':
+            router.push({
+              pathname: `/profilepage/${target.user_id}`,
+            })
+
+          case 'reply':
+            router.push({
+              pathname: `/posts/detail/${target.post_id}`,
+            })
+          default:
+            break
+        }
       })
       .catch((e) => {
         console.log(e)
       })
+  }
+
+  const readAllPushLists = async () => {
+    await API.user.confirmAllPush().then((res) => {
+      setPushList((lists) =>
+        lists.map((item) => {
+          return {
+            ...item,
+            confirm: true,
+          }
+        }),
+      )
+    })
   }
 
   /* 클릭시 닫힘 처리  */
   useEffect(() => {
     window.addEventListener('mousedown', onClickInsideDetector)
-    // props.socket.on('push', (data) => {
-    //   console.log(data)
-    // })
     getPushList()
     return () => {
       window.removeEventListener('mousedown', onClickInsideDetector)
@@ -87,10 +126,20 @@ const PushNotice = (props: PushNoticeModel) => {
   useEffect(() => {
     if (Object.keys(socket).length !== 0 && !socket.hasListeners('push')) {
       socket.on('push', (data) => {
-        setPushList((lists) => [...lists, data])
+        setPushList((lists) => [data, ...lists])
       })
     }
   }, [socket])
+
+  useEffect(() => {
+    const not_confirm_cnt = push_list.filter((item) => !item.confirm).length
+
+    setNotConfirm(not_confirm_cnt)
+  }, [push_list])
+
+  useEffect(() => {
+    setVisNoticeModal(false)
+  }, [router.pathname])
 
   return (
     <NoticeContainer onClick={() => clickNoticeIcon()}>
@@ -105,7 +154,7 @@ const PushNotice = (props: PushNoticeModel) => {
         <section className="noticeWrap">
           <div className="noticeHeader">
             <div>
-              알림 <span>{push_list.length}</span> 건
+              알림 <span>{not_confirm}</span> 건
             </div>
             <div
               style={{
@@ -113,6 +162,7 @@ const PushNotice = (props: PushNoticeModel) => {
                 fontSize: 12,
                 cursor: 'pointer',
               }}
+              onClick={readAllPushLists}
             >
               모두 읽음
             </div>
@@ -124,12 +174,17 @@ const PushNotice = (props: PushNoticeModel) => {
                   <React.Fragment key={item._id}>
                     <div
                       key={item._id}
+                      className={`${item.confirm ? 'confirm' : ''}`}
                       // onClick={() => {
                       //   router.push({
                       //     pathname: `/posts/detail/${item.Info.postId}`,
                       //   })
                       // }}
-                      onClick={() => onClickPush(item._id, 'comment')}
+                      onClick={() =>
+                        onClickPush(item._id, 'comment', {
+                          post_id: item.Info.postId,
+                        })
+                      }
                     >
                       {item.sender}님이 회원님의 게시글에 답글을 남겼습니다.
                       <span>{item.publishedDate.split('T')[0]}</span>
@@ -141,9 +196,13 @@ const PushNotice = (props: PushNoticeModel) => {
                   <React.Fragment key={item._id}>
                     <div
                       key={item._id}
+                      className={`${item.confirm ? 'confirm' : ''}`}
                       onClick={() => {
-                        router.push({
-                          pathname: `/posts/detail/${item.Info.postId}`,
+                        // router.push({
+                        //   pathname: `/posts/detail/${item.Info.postId}`,
+                        // })
+                        onClickPush(item._id, 'like', {
+                          post_id: item.Info.postId,
                         })
                       }}
                     >
@@ -157,9 +216,13 @@ const PushNotice = (props: PushNoticeModel) => {
                   <React.Fragment key={item._id}>
                     <div
                       key={item._id}
+                      className={`${item.confirm ? 'confirm' : ''}`}
                       onClick={() => {
-                        router.push({
-                          pathname: `/profilepage/${item.Info.senderId}`,
+                        // router.push({
+                        //   pathname: `/profilepage/${item.Info.senderId}`,
+                        // })
+                        onClickPush(item._id, 'follow', {
+                          user_id: item.Info.senderId,
                         })
                       }}
                     >
@@ -173,9 +236,13 @@ const PushNotice = (props: PushNoticeModel) => {
                   <React.Fragment key={item._id}>
                     <div
                       key={item._id}
+                      className={`${item.confirm ? 'confirm' : ''}`}
                       onClick={() => {
-                        router.push({
-                          pathname: `/posts/detail/${item.Info.postId}`,
+                        // router.push({
+                        //   pathname: `/posts/detail/${item.Info.postId}`,
+                        // })
+                        onClickPush(item._id, 'reply', {
+                          post_id: item.Info.postId,
                         })
                       }}
                     >
@@ -189,9 +256,7 @@ const PushNotice = (props: PushNoticeModel) => {
           </div>
         </section>
       </NoticeModal>
-      <div className="prevCount">
-        {push_list.length > 100 ? '99+' : push_list.length}
-      </div>
+      <div className="prevCount">{not_confirm > 100 ? '99+' : not_confirm}</div>
     </NoticeContainer>
   )
 }
@@ -258,7 +323,9 @@ export const NoticeModal = styled.div`
         cursor: pointer;
         word-break: keep-all;
         padding: 5px;
-
+        &.confirm {
+          color: #aaa;
+        }
         &:hover {
           background-color: rgba(220, 220, 220, 0.4);
         }

@@ -35,24 +35,6 @@ const PostsTable = (props: any) => {
       <PostTableHeader>
         <div className="headerTitle">전체</div>
         <div className="filterTab">
-          {/* <div
-            className={`tab ${filter.text === '최신순' ? 'active' : ''}`}
-            onClick={() => setFilter({ text: '최신순', key: 'latest' })}
-          >
-            최신순
-          </div>
-          <div
-            className={`tab ${filter.text === '오래된순' ? 'active' : ''}`}
-            onClick={() => setFilter({ text: '오래된순', key: 'oldest' })}
-          >
-            오래된순
-          </div>
-          <div
-            className={`tab ${filter.text === '인기순' ? 'active' : ''}`}
-            onClick={() => setFilter({ text: '인기순', key: 'hotest' })}
-          >
-            인기순
-          </div> */}
           <Select
             onChange={handleDiseasePeroid}
             defaultValue={'all'}
@@ -77,6 +59,9 @@ const PostsTable = (props: any) => {
           </Select>
         </div>
       </PostTableHeader>
+      {props.posts.length === 0 && (
+        <div className="noData">조회된 결과가 없습니다.</div>
+      )}
       {props.posts.map((item: any, index: number) => {
         return (
           <PostTableBody key={index}>

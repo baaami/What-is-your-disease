@@ -72,6 +72,7 @@ export default function HomeHeader() {
   const logoutHandler = async () => {
     localStorage.removeItem('jwttoken')
     localStorage.removeItem('userInfo')
+    localStorage.setItem('is_login', 'false')
     setVisProfileModal(false)
     setUserInfo({
       ...userInfo,

@@ -75,6 +75,7 @@ export const posts = {
     category: string,
     page: number,
     per_page: number,
+    // diseasePeriod?: string,
   ) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
@@ -88,11 +89,17 @@ export const posts = {
         category,
         page,
         pageNum: per_page,
+        // diseasePeriod,
       },
     }
     return Axios(config)
   },
-  getTagSearch: async (hashtag: string, per_page: number) => {
+  getTagSearch: async (
+    hashtag: string,
+    // page: number,
+    per_page: number,
+    // diseasePeriod?: string,
+  ) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
@@ -103,7 +110,9 @@ export const posts = {
       },
       params: {
         tag: hashtag,
+        // page,
         pageNum: per_page,
+        // diseasePeriod,
       },
     }
     return Axios(config)

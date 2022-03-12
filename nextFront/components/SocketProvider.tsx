@@ -1,11 +1,12 @@
-import React, { useEffect, createContext } from 'react'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import React, { useEffect, useState } from 'react'
+import { useRecoilState } from 'recoil'
 import { socketInit } from 'store/socket'
 import socketIOClient from 'socket.io-client'
 import { currentUserInfo } from 'store/userInfo'
 
 const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocketData] = useRecoilState(socketInit)
+  const [is_socket_login, setIsSocketLogin] = useState(false)
   const [userInfo] = useRecoilState(currentUserInfo)
 
   useEffect(() => {
@@ -20,19 +21,22 @@ const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   }, [])
 
   useEffect(() => {
-    console.log('유저인포가바뀜')
+    console.log(userInfo._id)
     if (socket) {
-      if (userInfo._id !== '') {
+      if (userInfo._id !== '' && !is_socket_login) {
         socket.emit('login', {
           user: {
             id: userInfo._id,
             nickname: userInfo.info.nickname,
           },
         })
-      } else {
+        setIsSocketLogin(true)
+      } else if (is_socket_login && userInfo._id === '') {
         if (socket.connected) {
-          socket.emit('disconnection')
+          console.log('이 if문이 실행')
+          socket.emit('disconnecton')
         }
+        setIsSocketLogin(false)
       }
     }
   }, [userInfo])

@@ -156,6 +156,7 @@ const socketManager = (socket) => {
       Info: data.info,
     };
 
+    console.log('push event occur, type :', res.type);
     // if (data.receiver.nickname in Object.keys(nicktoId)) {
     if (Object.keys(nicktoId).includes(data.receiver.nickname)) {
       res = { ...res, publishedDate: new Date() };
@@ -175,6 +176,7 @@ const socketManager = (socket) => {
 
       try {
         await push.save();
+        console.log('Save push data');
       } catch (e) {
         console.log('Save push error: ', e);
       }

@@ -249,6 +249,7 @@ export default function PostsDetail(props: {
             type: 'like',
           })
         }
+        getPost()
         router.replace(`/${router.asPath}`)
       })
       .catch((e) => {

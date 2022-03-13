@@ -33,6 +33,12 @@ export const allRestoredPushData = async (ctx) => {
 export const confirm = async (ctx) => {
   const user = ctx.state.user;
   const { pushId } = ctx.query;
+
+  if (!pushId) {
+    console.log('pushId undefined');
+    ctx.status = 400;
+    return;
+  }
   let data;
 
   try {

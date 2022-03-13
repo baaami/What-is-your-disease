@@ -150,6 +150,7 @@ export default function PostsDetail(props: {
             nickname: post.user.info.nickname,
           },
           info: {
+            senderId: userInfo._id,
             postId: post._id,
             commentId: currentCommentId,
           },
@@ -185,6 +186,7 @@ export default function PostsDetail(props: {
             nickname: writer,
           },
           info: {
+            senderId: userInfo._id,
             postId: postId,
             commentId: comment_id,
             replyId,
@@ -235,16 +237,18 @@ export default function PostsDetail(props: {
     await API.post
       .addPostLike(postId)
       .then((res) => {
-        // getPost()
-        socket.emit('push', {
-          receiver: {
-            nickname: post.user.info.nickname,
-          },
-          info: {
-            senderId: userInfo._id,
-          },
-          type: 'like',
-        })
+        if (!post.likeMe.includes(userInfo._id)) {
+          socket.emit('push', {
+            receiver: {
+              nickname: post.user.info.nickname,
+            },
+            info: {
+              senderId: userInfo._id,
+              postId: post._id,
+            },
+            type: 'like',
+          })
+        }
         router.replace(`/${router.asPath}`)
       })
       .catch((e) => {

@@ -7,6 +7,7 @@ import { socketInit } from 'store/socket'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import API from 'service/api'
 import { useRouter } from 'next/router'
+
 interface PushNoticeModel {}
 interface PushListsModel {
   _id: string
@@ -64,10 +65,12 @@ const PushNotice = (props: PushNoticeModel) => {
   }
 
   const onClickPush = async (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     push_id: string,
     push_type: string,
     target: { post_id?: string; user_id?: string; comment_id?: string },
   ) => {
+    e.stopPropagation()
     await API.user
       .confirmPush(push_id)
       .then((res) => {
@@ -126,6 +129,7 @@ const PushNotice = (props: PushNoticeModel) => {
   useEffect(() => {
     if (Object.keys(socket).length !== 0 && !socket.hasListeners('push')) {
       socket.on('push', (data) => {
+        console.log(data)
         setPushList((lists) => [data, ...lists])
       })
     }
@@ -180,13 +184,23 @@ const PushNotice = (props: PushNoticeModel) => {
                       //     pathname: `/posts/detail/${item.Info.postId}`,
                       //   })
                       // }}
-                      onClick={() =>
-                        onClickPush(item._id, 'comment', {
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onClickPush(e, item._id, 'comment', {
                           post_id: item.Info.postId,
                         })
-                      }
+                      }}
                     >
-                      {item.sender}님이 회원님의 게시글에 답글을 남겼습니다.
+                      <strong
+                        className="push_sender"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          router.push(`/profilepage/${item.Info.senderId}`)
+                        }}
+                      >
+                        {item.sender}
+                      </strong>
+                      님이 회원님의 게시글에 답글을 남겼습니다.
                       <span>{item.publishedDate.split('T')[0]}</span>
                     </div>
                   </React.Fragment>
@@ -197,16 +211,28 @@ const PushNotice = (props: PushNoticeModel) => {
                     <div
                       key={item._id}
                       className={`${item.confirm ? 'confirm' : ''}`}
-                      onClick={() => {
+                      onClick={(e) => {
                         // router.push({
                         //   pathname: `/posts/detail/${item.Info.postId}`,
                         // })
-                        onClickPush(item._id, 'like', {
-                          post_id: item.Info.postId,
-                        })
+                        {
+                          e.stopPropagation()
+                          onClickPush(e, item._id, 'like', {
+                            post_id: item.Info.postId,
+                          })
+                        }
                       }}
                     >
-                      {item.sender}님이 회원님의 게시글을 좋아합니다.
+                      <strong
+                        className="push_sender"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          router.push(`/profilepage/${item.Info.senderId}`)
+                        }}
+                      >
+                        {item.sender}
+                      </strong>
+                      님이 회원님의 게시글을 좋아합니다.
                       <span>{item.publishedDate.split('T')[0]}</span>
                     </div>
                   </React.Fragment>
@@ -217,16 +243,28 @@ const PushNotice = (props: PushNoticeModel) => {
                     <div
                       key={item._id}
                       className={`${item.confirm ? 'confirm' : ''}`}
-                      onClick={() => {
+                      onClick={(e) => {
                         // router.push({
                         //   pathname: `/profilepage/${item.Info.senderId}`,
                         // })
-                        onClickPush(item._id, 'follow', {
-                          user_id: item.Info.senderId,
-                        })
+                        {
+                          e.stopPropagation()
+                          onClickPush(e, item._id, 'follow', {
+                            user_id: item.Info.senderId,
+                          })
+                        }
                       }}
                     >
-                      {item.sender}님이 회원님을 팔로우 하기 시작했습니다.
+                      <strong
+                        className="push_sender"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          router.push(`/profilepage/${item.Info.senderId}`)
+                        }}
+                      >
+                        {item.sender}
+                      </strong>
+                      님이 회원님을 팔로우 하기 시작했습니다.
                       <span>{item.publishedDate.split('T')[0]}</span>
                     </div>
                   </React.Fragment>
@@ -237,16 +275,28 @@ const PushNotice = (props: PushNoticeModel) => {
                     <div
                       key={item._id}
                       className={`${item.confirm ? 'confirm' : ''}`}
-                      onClick={() => {
+                      onClick={(e) => {
                         // router.push({
                         //   pathname: `/posts/detail/${item.Info.postId}`,
                         // })
-                        onClickPush(item._id, 'reply', {
-                          post_id: item.Info.postId,
-                        })
+                        {
+                          e.stopPropagation()
+                          onClickPush(e, item._id, 'reply', {
+                            post_id: item.Info.postId,
+                          })
+                        }
                       }}
                     >
-                      {item.sender}님이 회원님의 댓글에 답글을 남겼습니다.
+                      <strong
+                        className="push_sender"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          router.push(`/profilepage/${item.Info.senderId}`)
+                        }}
+                      >
+                        {item.sender}
+                      </strong>
+                      님이 회원님의 댓글에 답글을 남겼습니다.
                       <span>{item.publishedDate.split('T')[0]}</span>
                     </div>
                   </React.Fragment>
@@ -325,6 +375,14 @@ export const NoticeModal = styled.div`
         padding: 5px;
         &.confirm {
           color: #aaa;
+        }
+        strong.push_sender {
+          color: #1890ff;
+          text-decoration: underline;
+          display: inline-block;
+          &:hover {
+            color: rgba(24, 144, 255, 0.7);
+          }
         }
         &:hover {
           background-color: rgba(220, 220, 220, 0.4);

@@ -7,6 +7,8 @@ export const getDiseasePeriod = (e: string) => {
     case 'acute':
       return '급성'
     case 'chronic':
+      return '만성'
+    case 'emergency':
       return '응급'
     case 'cure':
       return '완치'

@@ -206,7 +206,7 @@ const PushNotice = (props: PushNoticeModel) => {
                         })
                       }}
                     >
-                      {item.sender}님이 회원님의 게시글을 게시글을 좋아합니다.
+                      {item.sender}님이 회원님의 게시글을 좋아합니다.
                       <span>{item.publishedDate.split('T')[0]}</span>
                     </div>
                   </React.Fragment>

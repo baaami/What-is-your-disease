@@ -3,14 +3,14 @@ import { useRecoilState } from 'recoil'
 import { socketInit } from 'store/socket'
 import socketIOClient from 'socket.io-client'
 import { currentUserInfo } from 'store/userInfo'
-
+import { BASE_URL } from 'shared/api_constant'
 const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const [socket, setSocketData] = useRecoilState(socketInit)
   const [is_socket_login, setIsSocketLogin] = useState(false)
   const [userInfo] = useRecoilState(currentUserInfo)
 
   useEffect(() => {
-    const socketConnection = socketIOClient('http://localhost:4000')
+    const socketConnection = socketIOClient(`${BASE_URL}`)
     setSocketData(socketConnection)
 
     return () => {

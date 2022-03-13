@@ -145,6 +145,12 @@ const PushNotice = (props: PushNoticeModel) => {
     setVisNoticeModal(false)
   }, [router.pathname])
 
+  useEffect(() => {
+    if (!socket.connect) {
+      setPushList([])
+    }
+  }, [socket])
+
   return (
     <NoticeContainer onClick={() => clickNoticeIcon()}>
       <button className="headerTxt">

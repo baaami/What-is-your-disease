@@ -183,7 +183,6 @@ export const update = async (ctx) => {
       new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
       // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
     }).exec();
-    console.log(post);
     if (!post) {
       ctx.status = 404;
       return;

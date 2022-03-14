@@ -82,7 +82,7 @@ export const getHotPosts = async (ctx, query, page, postNum) => {
 };
 
 /**
- * GET /api/posts/filter/:orderBy?diseasePeriod=&tag=&page=&postNum=
+ * GET /api/posts/filter?diseasePeriod=&orderBy=&tag=&page=&postNum=
  *
  * @brief     필터링된 포스트 리스트를 전달
  * @param {*} ctx

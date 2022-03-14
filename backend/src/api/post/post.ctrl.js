@@ -140,13 +140,14 @@ export const read = async (ctx) => {
  */
 export const write = async (ctx) => {
   // REST API의 Reuqest Body는 ctx.request.body에서 조회 가능
-  const { title, body, category, tags } = ctx.request.body;
+  const { title, body, category, diseasePeriod, tags } = ctx.request.body;
   // TODO : body 검증하도록 변경하기
 
   const post = new Post({
     title,
     body: sanitizeHtml(body, sanitizeOption),
     category,
+    diseasePeriod,
     views: 1,
     likes: 0,
     tags,
@@ -182,7 +183,6 @@ export const update = async (ctx) => {
       new: true, // 이 값을 설정하면 업데이트된 데이터를 반환합니다.
       // false 일 때에는 업데이트 되기 전의 데이터를 반환합니다.
     }).exec();
-    console.log(post);
     if (!post) {
       ctx.status = 404;
       return;

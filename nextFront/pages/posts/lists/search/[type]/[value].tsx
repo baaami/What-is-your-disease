@@ -58,9 +58,9 @@ export default function SearchPosts() {
             )}
           </div>
           <PostsTable posts={postsList} />
-          {postsList.length === 0 && (
+          {/* {postsList.length === 0 && (
             <div className="noData">조회된 결과가 없습니다.</div>
-          )}
+          )} */}
         </Container>
       </PostListsWrap>
     </PostListsContainer>

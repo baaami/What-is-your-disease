@@ -70,9 +70,9 @@ export default function PostsLists() {
           </div>
         </div>
         <PostsTable posts={postsList} />
-        {postsList.length === 0 && (
+        {/* {postsList.length === 0 && (
           <div className="noData">조회된 결과가 없습니다.</div>
-        )}
+        )} */}
         <Pagination
           total_count={total_cnt}
           current_page={current_page}

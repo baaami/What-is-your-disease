@@ -1,91 +1,155 @@
-import { useEffect } from 'react'
+import React, { useCallback, useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import Image from 'next/image'
 import Icon from 'assets/img/profile.svg'
+import socketIOClient, { Socket } from 'socket.io-client'
+import { currentUserInfo } from 'store/userInfo'
+import { useRecoilState } from 'recoil'
+import { message } from 'antd'
+import { callbackify } from 'util'
 
-const ChattingRoom = () => {
+interface ChattingRoomModel {
+  socket: Socket
+  current_room: string
+  setCurrentPeople: (people_cnt: number) => void
+}
+
+interface ChattingMessageListModel {
+  data?: string
+  user: {
+    id: string
+    nickname: string
+  }
+  room?: string
+  event?: 'roomout' | 'roomin'
+}
+
+interface roomUserModel {
+  event: 'roomout' | 'roomin'
+  user: {
+    id: string
+    nickname: string
+  }
+  room: string
+  numberOfPeople: number
+}
+
+const ChattingRoom = (props: ChattingRoomModel) => {
+  const { socket } = props
+  // message wrapper ref
+  const message_wrap_ref = useRef<HTMLDivElement>(null)
+
+  const [userInfo] = useRecoilState(currentUserInfo)
+
+  // 메세지 리스트 state
+  const [message_list, setMessageList] = useState<
+    Array<ChattingMessageListModel>
+  >([])
+
+  // 채팅 input state
+  const [chatting_message, setChattingMessage] = useState('')
+
+  // 채팅 메세지가 갱신되면 스크롤을 bottom으로 보내는 함수
+  const scrollToBottom = () => {
+    if (message_wrap_ref.current) {
+      message_wrap_ref.current.scrollTop =
+        message_wrap_ref.current?.scrollHeight -
+        message_wrap_ref.current?.clientHeight
+    } else {
+      const settimeout = setTimeout(() => {
+        scrollToBottom()
+      }, 1000)
+
+      clearTimeout(settimeout)
+    }
+  }
+
+  // 메세지 보내기
+  const sendMessage = (message: string) => {
+    if (message === '') {
+      return
+    }
+    socket.emit('message', {
+      data: message,
+    })
+
+    setChattingMessage('')
+  }
+
+  useEffect(() => {
+    socket.on('message', (data: ChattingMessageListModel) => {
+      setMessageList((currentMessage) => [...currentMessage, data])
+    })
+    socket.on('roomin', (data: roomUserModel) => {
+      setMessageList((currentMessage) => [...currentMessage, data])
+      props.setCurrentPeople(data.numberOfPeople)
+    })
+    socket.on('roomout', (data: roomUserModel) => {
+      setMessageList((currentMessage) => [...currentMessage, data])
+      props.setCurrentPeople(data.numberOfPeople)
+    })
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      socket.emit('leave')
+    }
+  }, [])
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [message_list])
+
   return (
     <ChattingRoomWrapper>
-      <ChattingRoomWrap>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <MyChat>
-          <Image src={Icon} alt="아이콘" />
-          <div>ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ</div>
-        </MyChat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>
-            ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
-          </div>
-        </Chat>
-        <MyChat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </MyChat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <MyChat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </MyChat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </Chat>
-        <MyChat>
-          <Image src={Icon} alt="아이콘" />
-          <div>안녕</div>
-        </MyChat>
-        <Chat>
-          <Image src={Icon} alt="아이콘" />
-          <div>
-            ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
-          </div>
-        </Chat>
+      <ChattingRoomWrap ref={message_wrap_ref}>
+        {message_list.map((item, index) => {
+          if (item.event === 'roomin') {
+            return (
+              <div className="roomIn">
+                {item.user.nickname} 님이 입장 하셨습니다.
+              </div>
+            )
+          } else if (item.event === 'roomout') {
+            return (
+              <div className="roomOut">
+                {item.user.nickname} 님이 퇴장했습니다.
+              </div>
+            )
+          } else if (item.user.id === userInfo._id) {
+            return (
+              <MyChat key={`message_${item.user.id}_${index}`}>
+                <img src={Icon.src} alt="프로필 아이콘" />
+                <div className="myMessageBox">{item.data}</div>
+              </MyChat>
+            )
+          } else {
+            return (
+              <Chat key={`message_${item.user.id}_${index}`}>
+                <img src={Icon.src} alt="프로필 아이콘" />
+                <section className="otherBox">
+                  <div className="">{item.user.nickname}</div>
+                  <div className="otherMessageBox">{item.data}</div>
+                </section>
+              </Chat>
+            )
+          }
+        })}
         <SendMessageBox>
-          <InputBox placeholder="메세지를 입력하세요."></InputBox>
-          <SendButton>전송</SendButton>
+          <InputBox
+            placeholder="메세지를 입력하세요."
+            onChange={(e) => setChattingMessage(e.target.value)}
+            onKeyPress={(e: React.KeyboardEvent<Element>) => {
+              if (e.key === 'Enter') {
+                e.preventDefault()
+                sendMessage(chatting_message)
+              }
+            }}
+            value={chatting_message}
+          ></InputBox>
+          <SendButton onClick={() => sendMessage(chatting_message)}>
+            전송
+          </SendButton>
         </SendMessageBox>
       </ChattingRoomWrap>
     </ChattingRoomWrapper>
@@ -100,27 +164,38 @@ const ChattingRoomWrapper = styled.div`
   padding: 15px;
   padding-right: 0;
 `
+
 const ChattingRoomWrap = styled.div`
   height: calc(100% - 100px);
   overflow-y: scroll;
+
+  .roomIn,
+  .roomOut {
+    margin-bottom: 10px;
+  }
 `
 const Chat = styled.div`
+  width: 100%;
   display: flex;
   align-items: flex-start;
   margin-bottom: 10px;
   padding-right: 15px;
 
   img {
-    width: 25px !important;
-    height: 25px !important;
+    width: 30px !important;
+    height: 30px !important;
     padding-right: 5px !important;
   }
-
-  div {
-    max-width: calc(100% - 40px);
-    padding: 5px;
-    background-color: #f4f4f4;
-    border-radius: 8px;
+  section.otherBox {
+    max-width: 100%;
+    width: 100%;
+    div.otherMessageBox {
+      max-width: calc(100% - 40px);
+      width: max-content;
+      padding: 5px;
+      background-color: #f4f4f4;
+      border-radius: 8px;
+    }
   }
 `
 const MyChat = styled.div`
@@ -131,12 +206,12 @@ const MyChat = styled.div`
   padding-right: 15px;
 
   img {
-    width: 25px !important;
-    height: 25px !important;
+    width: 30px !important;
+    height: 30px !important;
     padding-left: 5px !important;
   }
 
-  div {
+  div.myMessageBox {
     max-width: calc(100% - 40px);
     padding: 5px;
     background-color: #f7e6e8;
@@ -150,6 +225,7 @@ const SendMessageBox = styled.div`
   width: 100%;
   height: 100px;
   background-color: aliceblue;
+  overflow: hidden;
 `
 const InputBox = styled.textarea`
   width: 80%;

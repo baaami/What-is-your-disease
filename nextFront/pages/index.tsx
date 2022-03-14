@@ -25,7 +25,7 @@ import { currentUserInfo } from 'store/userInfo'
 import { categoryList } from 'static/constant'
 import Search from 'components/Search'
 
-const Home: NextPage = () => {
+const Home: NextPage = (props) => {
   const router = useRouter()
   const [latest_posts, setLatestPosts] = useState([])
   const [hot_posts, setHotPosts] = useState([])
@@ -35,9 +35,9 @@ const Home: NextPage = () => {
 
   SwiperCore.use([Navigation])
 
-  const getLatestPosts = async (order_by: string) => {
+  const getLatestPosts = async (order_by: string, diseasePeriod?: string) => {
     await API.posts
-      .getFilterPosts(order_by, current_page, 10)
+      .getFilterPosts(order_by, current_page, 10, diseasePeriod)
       .then((res) => {
         setTotalCnt(res.data.postTotalCnt)
         setLatestPosts(res.data.data.post)
@@ -47,9 +47,9 @@ const Home: NextPage = () => {
       })
   }
 
-  const getHotPosts = async () => {
+  const getHotPosts = async (diseasePeriod?: string) => {
     await API.posts
-      .getHotPosts()
+      .getFilterPosts('hotest', 1, 10, diseasePeriod)
       .then((res) => {
         setHotPosts(res.data.data.post)
       })
@@ -64,17 +64,18 @@ const Home: NextPage = () => {
   }, [])
 
   useEffect(() => {
+    if (latest_posts.length !== 0) {
+      document.querySelector('#home_posts')?.scrollIntoView({
+        behavior: 'auto',
+      })
+    }
     getLatestPosts('latest')
   }, [current_page])
-
-  useEffect(() => {
-    console.log(userInfo)
-  })
 
   return (
     <HomeContainer>
       <Head>
-        <title>Dr.u</title>
+        <title>Dr.u | HOME</title>
       </Head>
       <MainBanner>
         <Container>
@@ -105,7 +106,13 @@ const Home: NextPage = () => {
                   //   })
                   // }
                 >
-                  <h2>{item}</h2>
+                  <h2
+                    onClick={() =>
+                      router.push({ pathname: `/posts/category/lists/${item}` })
+                    }
+                  >
+                    {item}
+                  </h2>
                 </div>
               )
             })}
@@ -177,9 +184,12 @@ const Home: NextPage = () => {
         </Container>
       </HotTopic>
       <Post>
-        <Container>
-          <Title>전체 게시물</Title>
-          <PostsTable posts={latest_posts} getPosts={getLatestPosts} />
+        <Container id="home_posts">
+          <PostsTable
+            table_title="전체 게시물"
+            posts={latest_posts}
+            getPosts={getLatestPosts}
+          />
           <Pagination
             current_page={current_page}
             total_count={total_cnt}

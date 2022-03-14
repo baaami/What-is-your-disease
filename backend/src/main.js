@@ -5,6 +5,7 @@ import bodyParser from 'koa-bodyparser';
 import mongoose from 'mongoose';
 import cors from '@koa/cors';
 import api from './api';
+import socketManager from './lib/socketManager';
 
 const { PORT, MONGO_URI } = process.env;
 
@@ -19,7 +20,7 @@ mongoose
 
 const app = new Koa();
 const server = require('http').Server(app.callback());
-const io = require('socket.io')(server, { cors: { origin: '*' } });
+export const io = require('socket.io')(server, { cors: { origin: '*' } });
 
 const router = new Router();
 
@@ -27,6 +28,7 @@ app.use(
   cors({
     // host: 'http://localhost:4000',
     origin: 'http://localhost:3000',
+    origin: 'https://dru-frontend.herokuapp.com',
     // credentials: true,
   }),
 );
@@ -52,3 +54,5 @@ const port = PORT || 4000;
 server.listen(port, () => {
   console.log('Listening to port %d', port);
 });
+
+io.on('connection', socketManager);

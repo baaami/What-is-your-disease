@@ -14,7 +14,7 @@ const removeHtmlAndShorten = (body) => {
 };
 
 export const searchAll = async (ctx) => {
-  const { q, orderBy } = ctx.query;
+  const { q, orderBy, diseasePeriod } = ctx.query;
 
   const postNum = parseInt(ctx.query.postNum || '10', 10);
   const page = parseInt(ctx.query.page || '1', 10);
@@ -30,6 +30,7 @@ export const searchAll = async (ctx) => {
       { title: { $regex: q } },
       { tags: { $regex: q } },
     ],
+    ...(diseasePeriod ? { diseasePeriod: diseasePeriod } : {}),
   };
 
   switch (orderBy) {

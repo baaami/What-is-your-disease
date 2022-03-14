@@ -1,4 +1,7 @@
-export const BASE_URL = 'http://localhost:4000'
+// export const BASE_URL = 'http://localhost:4000'
+// export const BASE_URL = 'https://dru-backend.herokuapp.com'
+export const BASE_URL = process.env.NEXT_PUBLIC_API_URL
+export const BASE_CLIENT_URL = process.env.NEXT_PUBLIC_CLIENT_URL
 export const GET = 'GET'
 export const POST = 'POST'
 export const PUT = 'PUT'

@@ -6,7 +6,7 @@ export const posts = {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
-      url: `http://locaohost:4000/api/posts/latest`,
+      url: `${BASE_URL}/api/posts/latest`,
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,
@@ -48,11 +48,16 @@ export const posts = {
     }
     return Axios(config)
   },
-  getFilterPosts: async (orderBy: string, page: number, per_page: number) => {
+  getFilterPosts: async (
+    orderBy: string,
+    page: number,
+    per_page: number,
+    diseasePeriod?: string,
+  ) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
-      url: `http://localhost:4000/api/posts/filter/${orderBy}`,
+      url: `${BASE_URL}/api/posts/filter`,
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,
@@ -60,6 +65,8 @@ export const posts = {
       params: {
         page,
         pageNum: per_page,
+        orderBy: orderBy,
+        diseasePeriod,
       },
     }
     return Axios(config)
@@ -68,6 +75,7 @@ export const posts = {
     category: string,
     page: number,
     per_page: number,
+    // diseasePeriod?: string,
   ) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
@@ -81,22 +89,30 @@ export const posts = {
         category,
         page,
         pageNum: per_page,
+        // diseasePeriod,
       },
     }
     return Axios(config)
   },
-  getTagSearch: async (hashtag: string, per_page: number) => {
+  getTagSearch: async (
+    hashtag: string,
+    // page: number,
+    per_page: number,
+    // diseasePeriod?: string,
+  ) => {
     const token = localStorage.getItem('jwttoken')
     const config: AxiosRequestConfig = {
       method: GET,
-      url: `${BASE_URL}/api/posts/latest/`,
+      url: `${BASE_URL}/api/posts/filter/`,
       headers: {
         ...JSON_HEADER,
         Authorization: `Bearer ${token}`,
       },
       params: {
         tag: hashtag,
+        // page,
         pageNum: per_page,
+        // diseasePeriod,
       },
     }
     return Axios(config)

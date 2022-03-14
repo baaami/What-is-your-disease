@@ -26,7 +26,12 @@ export const HeaderContainer = styled.div`
     }
   }
 `
+export const ContainerWrap = styled.div`
+  display: flex;
+  align-items: center;
+`
 export const ProfileContainer = styled.div`
+  margin-right: 30px;
   a,
   button {
     /* transition: all 0.3s ease-in;
@@ -40,6 +45,51 @@ export const ProfileContainer = styled.div`
     }
   }
 `
+export const ProfileModal = styled.div`
+  position: absolute;
+  right: -20px;
+  color: white;
+  padding: 30px;
+  width: 380px;
+  height: 240px;
+  background-color: rgba(85, 85, 85);
+  border-radius: 4px;
+  transition: all 0.21s;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+
+  &.vis {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(3px);
+  }
+  .profileWrap {
+    display: flex;
+    gap: 18px;
+
+    .nickname {
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .buttonWrap {
+      button {
+        font-size: 15px;
+        text-decoration: underline !important;
+      }
+    }
+  }
+  .modalLink {
+    button {
+      display: inline-block;
+      margin-top: 25px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+  }
+`
+
 export const InfoCardContainer = styled.div`
   display: flex;
   align-items: center;

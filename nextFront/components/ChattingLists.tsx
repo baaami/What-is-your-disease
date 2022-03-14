@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { categoryList } from 'static/constant'
 
 interface ChattingListsModel {
-  clickEnter: void
+  clickEnter: (e: string) => void
 }
 
 const ChattingLists = ({ clickEnter }: ChattingListsModel) => {
@@ -12,7 +12,7 @@ const ChattingLists = ({ clickEnter }: ChattingListsModel) => {
       {categoryList.map((item, idx) => (
         <ChattingList key={idx}>
           <h3>{item}</h3>
-          <EnterButton onClick={() => clickEnter}>입장</EnterButton>
+          <EnterButton onClick={() => clickEnter(item)}>입장</EnterButton>
         </ChattingList>
       ))}
     </ChattingListsWrapper>

@@ -46,4 +46,44 @@ export const user = {
     }
     return Axios(config)
   },
+  getPushList: async () => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: POST,
+      url: `${BASE_URL}/api/push`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+    }
+
+    return Axios(config)
+  },
+  confirmPush: async (pushId: string) => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: POST,
+      url: `${BASE_URL}/api/push/confirm`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        pushId,
+      },
+    }
+    return Axios(config)
+  },
+  confirmAllPush: async () => {
+    const token = localStorage.getItem('jwttoken')
+    const config: AxiosRequestConfig = {
+      method: POST,
+      url: `${BASE_URL}/api/push/readall`,
+      headers: {
+        ...JSON_HEADER,
+        Authorization: `Bearer ${token}`,
+      },
+    }
+    return Axios(config)
+  },
 }

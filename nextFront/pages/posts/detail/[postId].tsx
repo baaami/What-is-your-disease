@@ -22,6 +22,8 @@ import {
 } from 'styles/posts/styles'
 import like_out from 'assets/img/like_out.svg'
 import like_active from 'assets/img/like_active.svg'
+import { socketInit } from 'store/socket'
+import { getDiseasePeriod } from 'shared/function'
 
 interface IPostsDetailProps {}
 
@@ -34,6 +36,7 @@ export default function PostsDetail(props: {
   }
 }) {
   const router = useRouter()
+  const [socket] = useRecoilState(socketInit)
   const [userInfo] = useRecoilState(currentUserInfo)
   const [post, setPost] = useState<PostModel>({} as PostModel)
   const [comment_value, setCommentValue] = useState('')
@@ -81,7 +84,6 @@ export default function PostsDetail(props: {
   }
 
   const onClickEdit = (postData: PostModel) => {
-    console.log(postData.tags)
     Router.push({
       pathname: '/posts/edit',
       query: {
@@ -90,6 +92,7 @@ export default function PostsDetail(props: {
         id: postData._id,
         tag: postData.tags,
         category: postData.category,
+        diseasePeriod: postData.diseasePeriod,
       },
     })
   }
@@ -114,6 +117,7 @@ export default function PostsDetail(props: {
   }
 
   const onClickListsLink = () => {
+    router.back()
     // const stateFromPush = router.location.state as {
     //   is_create_state?: boolean
     // }
@@ -125,7 +129,6 @@ export default function PostsDetail(props: {
   }
 
   const onClickHashtag = (target_hashtag: string) => {
-    console.log(target_hashtag)
     router.push({
       pathname: `/posts/lists/search/hashtag/${target_hashtag}`,
     })
@@ -140,13 +143,30 @@ export default function PostsDetail(props: {
       .createComment(postId, comment_value)
       .then((res) => {
         getPost()
+        const commentsLength = res.data.comments.length
+        const currentCommentId = res.data.comments[commentsLength - 1]._id
+        socket.emit('push', {
+          receiver: {
+            nickname: post.user.info.nickname,
+          },
+          info: {
+            senderId: userInfo._id,
+            postId: post._id,
+            commentId: currentCommentId,
+          },
+          type: 'comment',
+        })
       })
       .catch((e) => {
         console.log(e)
       })
   }
 
-  const handleSubmitReply = async (comment_id: string, contents: string) => {
+  const handleSubmitReply = async (
+    comment_id: string,
+    contents: string,
+    writer: string,
+  ) => {
     const postId = router.query.postId as string
     if (reply_value === '') {
       return alert('답글을 입력해주세요')
@@ -156,6 +176,23 @@ export default function PostsDetail(props: {
       .createReply(comment_id, contents, postId)
       .then((res) => {
         getPost()
+        const comment = res.data.comments.filter(
+          (i: any) => i._id === comment_id,
+        )[0]
+        console.log(comment)
+        const replyId = comment.replies[comment.replies.length - 1]._id
+        socket.emit('push', {
+          receiver: {
+            nickname: writer,
+          },
+          info: {
+            senderId: userInfo._id,
+            postId: postId,
+            commentId: comment_id,
+            replyId,
+          },
+          type: 'reply',
+        })
       })
       .catch((e) => {
         console.log(e)
@@ -200,7 +237,19 @@ export default function PostsDetail(props: {
     await API.post
       .addPostLike(postId)
       .then((res) => {
-        // getPost()
+        if (!post.likeMe.includes(userInfo._id)) {
+          socket.emit('push', {
+            receiver: {
+              nickname: post.user.info.nickname,
+            },
+            info: {
+              senderId: userInfo._id,
+              postId: post._id,
+            },
+            type: 'like',
+          })
+        }
+        getPost()
         router.replace(`/${router.asPath}`)
       })
       .catch((e) => {
@@ -235,13 +284,11 @@ export default function PostsDetail(props: {
   }
 
   useEffect(() => {
-    console.log(router.query)
     window.scrollTo({ top: 0 })
   }, [])
 
   useEffect(() => {
     getPost()
-    console.log(props)
   }, [current_page])
 
   return (
@@ -252,6 +299,11 @@ export default function PostsDetail(props: {
       <Container>
         <TopSection>
           <div className="category">{props?.postData?.data.post.category}</div>
+          {props?.postData?.data.post.diseasePeriod && (
+            <div className="category">
+              {getDiseasePeriod(props?.postData?.data.post.diseasePeriod)}
+            </div>
+          )}
           <div className="hashtag">
             {props?.postData?.data.post.tags?.map((item, index) => (
               <span key={index} onClick={() => onClickHashtag(item)}>
@@ -280,7 +332,7 @@ export default function PostsDetail(props: {
                 />
                 {/* <img src={like_active} alt="like active icon" /> */}
               </button>
-              {post.likes}
+              {props?.postData?.data.post.likes}
             </span>
           </div>
         </PostInfo>
@@ -393,7 +445,11 @@ export default function PostsDetail(props: {
                       id="submitComment"
                       type="button"
                       onClick={() =>
-                        handleSubmitReply(comment._id, reply_value)
+                        handleSubmitReply(
+                          comment._id,
+                          reply_value,
+                          comment.user.info.nickname,
+                        )
                       }
                     >
                       등록
@@ -406,7 +462,7 @@ export default function PostsDetail(props: {
                       ?.reverse()
                       .map((reply: any, index: number) => {
                         return (
-                          <>
+                          <React.Fragment key={index}>
                             <div className="reply">
                               <div>
                                 <span>{reply?.user?.info?.nickname}</span>
@@ -444,7 +500,7 @@ export default function PostsDetail(props: {
                                 </button>
                               </div>
                             )}
-                          </>
+                          </React.Fragment>
                         )
                       })}
                   </div>

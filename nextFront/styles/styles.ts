@@ -104,7 +104,8 @@ export const HotTopic = styled.div`
 
   .swiper {
     padding-top: 60px;
-
+    padding-left: 5px;
+    height: 440px;
     .swiper-slide {
       position: relative;
     }
@@ -145,9 +146,11 @@ export const HotTopic = styled.div`
     width: 100%;
     padding: 35px 20px;
     background: #fff;
-    box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.05);
+    /* box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.05); */
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     border: 1px solid #f4f4f4;
     border-radius: 8px;
+    cursor: pointer;
 
     .rankingImg {
       position: absolute;
@@ -199,5 +202,5 @@ export const HotTopic = styled.div`
 `
 export const Post = styled.div`
   margin-top: 110px;
-  margin-bottom: 250px;
+  margin-bottom: 100px;
 `

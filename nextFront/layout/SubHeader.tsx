@@ -1,15 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { HeaderContainer, ProfileContainer, HeaderModal } from './styles'
+import React, { useEffect, useState, useRef } from 'react'
+import {
+  ContainerWrap,
+  HeaderContainer,
+  ProfileContainer,
+  ProfileModal,
+  HeaderModal,
+} from './styles'
 // import { Link, useHistory, useLocation } from "react-router-dom";
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import API from 'service/api'
 import { currentUserInfo } from 'store/userInfo'
 import { Container } from 'common.styles'
 import logo from '../assets/img/hlogo.svg'
 import profile from '../assets/img/profile.svg'
-import Image from 'next/image'
+import Image from 'next/link'
+import PushNotice from 'components/PushNotice'
 
 export default function SubHeader() {
   const location = useRouter()
@@ -17,20 +24,20 @@ export default function SubHeader() {
   const profile_modal_ref = useRef<HTMLDivElement>(null)
 
   const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
-  const [vis_modal, setVisModal] = useState(false)
+  const [vis_profile_modal, setVisProfileModal] = useState(false)
 
   const clickProfileIcon = () => {
-    if (vis_modal) {
-      setVisModal(false)
+    if (vis_profile_modal) {
+      setVisProfileModal(false)
     } else {
-      setVisModal(true)
+      setVisProfileModal(true)
     }
   }
 
   const logoutHandler = async () => {
     localStorage.removeItem('jwttoken')
     localStorage.removeItem('userInfo')
-    setVisModal(false)
+    setVisProfileModal(false)
     setUserInfo({
       ...userInfo,
       provider: '',
@@ -86,7 +93,7 @@ export default function SubHeader() {
     } else {
       if (e.target.alt === 'profile') return
       /* CLICK OUTSIDE -> SELECT CLOSE */
-      setVisModal(false)
+      setVisProfileModal(false)
     }
   }
   /* 클릭시 닫힘 처리  */
@@ -119,46 +126,52 @@ export default function SubHeader() {
           <Link href="/" passHref>
             <img className="logo" src={logo.src} alt="logo" />
           </Link>
-          <ProfileContainer>
-            {userInfo._id !== '' ? (
-              <button className="headerTxt" onClick={() => clickProfileIcon()}>
-                <img src={profile.src} alt="profile" />
-              </button>
-            ) : (
-              <a className="headerText">
-                <Link href="/login" passHref>
+          <ContainerWrap>
+            <ProfileContainer>
+              {userInfo._id !== '' ? (
+                <button
+                  className="headerTxt"
+                  onClick={() => clickProfileIcon()}
+                >
                   <img src={profile.src} alt="profile" />
-                </Link>
-              </a>
-            )}
-            <HeaderModal
-              ref={profile_modal_ref}
-              className={`${vis_modal ? 'vis' : ''}`}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <section className="profileWrap">
-                <div>
-                  <img src={profile.src} alt="" />
-                </div>
-                <div>
-                  <div className="nickname">{userInfo.info.nickname}</div>
-                  <div className="buttonWrap">
-                    <button onClick={() => history.push('/infoForm')}>
-                      회원정보 수정하기
-                    </button>
-                  </div>
-                </div>
-              </section>
-              <div className="modalLink">
-                <button onClick={() => history.push('/mypage')}>
-                  마이페이지
                 </button>
-              </div>
-              <div className="modalLink">
-                <button onClick={logoutHandler}>로그아웃</button>
-              </div>
-            </HeaderModal>
-          </ProfileContainer>
+              ) : (
+                <a className="headerText">
+                  <Link href="/login" passHref>
+                    <img src={profile.src} alt="profile" />
+                  </Link>
+                </a>
+              )}
+              <ProfileModal
+                ref={profile_modal_ref}
+                className={`${vis_profile_modal ? 'vis' : ''}`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <section className="profileWrap">
+                  <div>
+                    <img src={profile.src} alt="profile" />
+                  </div>
+                  <div>
+                    <div className="nickname">{userInfo.info.nickname}</div>
+                    <div className="buttonWrap">
+                      <button onClick={() => history.push('/infoForm')}>
+                        회원정보 수정하기
+                      </button>
+                    </div>
+                  </div>
+                </section>
+                <div className="modalLink">
+                  <button onClick={() => history.push('/mypage')}>
+                    마이페이지
+                  </button>
+                </div>
+                <div className="modalLink">
+                  <button onClick={logoutHandler}>로그아웃</button>
+                </div>
+              </ProfileModal>
+            </ProfileContainer>
+            <PushNotice />
+          </ContainerWrap>
         </Container>
       </HeaderContainer>
     </>

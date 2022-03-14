@@ -7,9 +7,10 @@ import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
 import { setToken } from 'shared/token-manager'
 import { BASE_URL } from 'shared/api_constant'
+
 interface KauthProps {}
 
-export default function Kauth(props: KauthProps) {
+export default function Nauth(props: KauthProps) {
   const router = useRouter()
   const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
 
@@ -17,10 +18,10 @@ export default function Kauth(props: KauthProps) {
     // 인가 코드
     // const code = new URL(window.location.pathname).searchParams.get("code");
     // console.log(router.asPath.split("code=")[1]);
-    const code = router.asPath.split('code=')[1]
+    const code = router.query.code
 
     client
-      .post(`${BASE_URL}/api/auth/callback/kakao`, { code })
+      .post(`${BASE_URL}/api/auth/callback/naver`, { code })
       .then((res) => {
         const { user, is_new, token } = res.data
         // 예시로 로컬에 저장

@@ -28,6 +28,7 @@ app.use(
   cors({
     // host: 'http://localhost:4000',
     origin: 'http://localhost:3000',
+    origin: 'https://dru-frontend.herokuapp.com',
     // credentials: true,
   }),
 );

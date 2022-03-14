@@ -13,6 +13,7 @@ import { Container } from 'common.styles'
 import { PostEditContainer, HashTagSection } from 'styles/posts/styles'
 import dynamic from 'next/dynamic'
 import { getDiseasePeriod } from 'shared/function'
+import { BASE_URL } from 'shared/api_constant'
 
 interface IPostsEditProps {}
 const ReactQuill = dynamic(
@@ -132,7 +133,7 @@ export default function PostsEdit(props: IPostsEditProps) {
         quill?.setSelection(range, 1)
 
         file_path.forEach((item) => {
-          quill?.insertEmbed(range + 1, 'image', `http://localhost:4000${item}`)
+          quill?.insertEmbed(range + 1, 'image', `${BASE_URL}${item}`)
         })
       }
     }

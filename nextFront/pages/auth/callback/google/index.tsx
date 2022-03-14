@@ -114,7 +114,7 @@ import client from '../../../../lib/client'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
 import { setToken } from 'shared/token-manager'
-
+import { BASE_URL } from 'shared/api_constant'
 interface KauthProps {}
 
 export default function Gauth(props: KauthProps) {
@@ -128,7 +128,7 @@ export default function Gauth(props: KauthProps) {
     const code = router.query.code
 
     client
-      .post(`http://localhost:4000/api/auth/callback/google`, { code })
+      .post(`${BASE_URL}/api/auth/callback/google`, { code })
       .then((res) => {
         const { user, is_new, token } = res.data
         // 예시로 로컬에 저장

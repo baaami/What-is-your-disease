@@ -67,26 +67,23 @@ export const Category = styled.div`
 
     .categoryItem {
       width: calc(100% / 6);
-      border: 1px solid #c4c4c4;
       cursor: pointer;
+      text-align: center;
 
       @media (max-width: 755px) {
         width: calc(100% / 4);
       }
       @media (max-width: 565px) {
-        width: calc(100% / 2);
+        width: calc(100% / 3);
       }
 
-      &:hover {
-        background: #1850a3;
-      }
       &:hover h2 {
-        color: #fff;
+        color: #1850a3;
       }
 
       h2 {
         padding: 8px 0;
-        margin-bottom: 0;
+        margin-bottom: 20px;
         text-align: center;
         font-size: 20px;
         font-weight: 700;

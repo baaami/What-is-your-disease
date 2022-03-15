@@ -22,8 +22,25 @@ import second from 'assets/img/second.svg'
 import third from 'assets/img/third.svg'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
-import { categoryList } from 'static/constant'
 import Search from 'components/Search'
+
+const categoryList = [
+  { title: '내과', img: '/stomach.svg' },
+  { title: '외과', img: '/shoulder.svg' },
+  { title: '이비인후과', img: '/nose.svg' },
+  { title: '흉부외과', img: '/chest.svg' },
+  { title: '비뇨기과', img: '/man.svg' },
+  { title: '치과', img: '/tooth.svg' },
+  { title: '피부과', img: '/skin.svg' },
+  { title: '안과', img: '/eye.svg' },
+  { title: '산부인과', img: '/baby.svg' },
+  { title: '정형외과', img: '/bone.svg' },
+  { title: '성형외과', img: '/plastic_surgery.svg' },
+  { title: '정신의학과', img: '/brain.svg' },
+  { title: '암센터', img: '/cancer.svg' },
+  { title: '재활의학과', img: '/exercise.svg' },
+  { title: '응급', img: '/hospital.svg' },
+]
 
 const Home: NextPage = (props) => {
   const router = useRouter()
@@ -100,19 +117,14 @@ const Home: NextPage = (props) => {
                 <div
                   className="categoryItem"
                   key={idx}
-                  // onClick={() =>
-                  //   router.push({
-                  //     pathname: `/posts/category/lists/${item}`,
-                  //   })
-                  // }
+                  onClick={() =>
+                    router.push({
+                      pathname: `/posts/category/lists/${item}`,
+                    })
+                  }
                 >
-                  <h2
-                    onClick={() =>
-                      router.push({ pathname: `/posts/category/lists/${item}` })
-                    }
-                  >
-                    {item}
-                  </h2>
+                  <img src={item.img} alt="아이콘" />
+                  <h2>{item.title}</h2>
                 </div>
               )
             })}

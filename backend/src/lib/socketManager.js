@@ -156,29 +156,29 @@ const socketManager = (socket) => {
       Info: data.info,
     };
 
-    console.log('push event occur, type :', res.type);
-    // if (data.receiver.nickname in Object.keys(nicktoId)) {
-    if (Object.keys(nicktoId).includes(data.receiver.nickname)) {
-      res = { ...res, publishedDate: new Date() };
+    if (res.sender != res.receiver) {
+      if (Object.keys(nicktoId).includes(data.receiver.nickname)) {
+        res = { ...res, publishedDate: new Date() };
 
-      // 수신자가 현재 접속 중일 경우 바로 push
-      io.to(nicktoId[data.receiver.nickname]).emit('push', res);
-      const push = new Push(res);
+        // 수신자가 현재 접속 중일 경우 바로 push
+        io.to(nicktoId[data.receiver.nickname]).emit('push', res);
+        const push = new Push(res);
 
-      try {
-        await push.save();
-      } catch (e) {
-        console.log('Save push error: ', e);
-      }
-    } else {
-      // 접속 중이지 않을 경우 DB에 해당 내역 삽입
-      const push = new Push(res);
+        try {
+          await push.save();
+        } catch (e) {
+          console.log('Save push error: ', e);
+        }
+      } else {
+        // 접속 중이지 않을 경우 DB에 해당 내역 삽입
+        const push = new Push(res);
 
-      try {
-        await push.save();
-        console.log('Save push data');
-      } catch (e) {
-        console.log('Save push error: ', e);
+        try {
+          await push.save();
+          console.log('Save push data');
+        } catch (e) {
+          console.log('Save push error: ', e);
+        }
       }
     }
   });

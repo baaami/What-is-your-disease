@@ -58,7 +58,9 @@ const Chatting = () => {
   }, [])
 
   const joinRoom = (room_name: string) => {
-    console.log(`채팅방 조인 : ${room_name}`)
+    if(userInfo._id === '') {
+      return alert('로그인 후 이용 가능합니다.')
+    }
     setCurrentRoom(room_name)
     socket.emit('join', {
       user: {

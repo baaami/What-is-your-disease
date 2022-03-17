@@ -119,7 +119,7 @@ const Home: NextPage = (props) => {
                   key={idx}
                   onClick={() =>
                     router.push({
-                      pathname: `/posts/category/lists/${item}`,
+                      pathname: `/posts/category/lists/${item.title}`,
                     })
                   }
                 >

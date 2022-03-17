@@ -17,7 +17,7 @@ import logo from '../assets/img/hlogo.svg'
 import profile from '../assets/img/profile.svg'
 import Image from 'next/link'
 import PushNotice from 'components/PushNotice'
-import { route } from 'next/dist/server/router'
+import {Button} from 'antd'
 
 export default function HomeHeader() {
   const location = useRouter()
@@ -93,6 +93,9 @@ export default function HomeHeader() {
   }
 
   const clickProfileIcon = () => {
+    if(userInfo._id === "") {
+      return history.push('/login')
+    }
     if (vis_profile_modal) {
       setVisProfileModal(false)
     } else {
@@ -171,7 +174,9 @@ export default function HomeHeader() {
               ) : (
                 <a className="headerText">
                   <Link href="/login" passHref>
-                    <img src={profile.src} alt="profile" />
+                    <Button type='primary' style={{borderRadius: '5px'}}>
+                      <span className="fs-18 fw-700">로그인</span>
+                      </Button>
                   </Link>
                 </a>
               )}

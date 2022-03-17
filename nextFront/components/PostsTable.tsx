@@ -8,8 +8,10 @@ import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
 import { Select } from 'antd'
 import { getDiseasePeriod } from 'shared/function'
+import { useRouter } from 'next/router'
 
 const PostsTable = (props: any) => {
+  const router = useRouter()
   const { Option } = Select
   // const [filter, setFilter] = useState({ text: '최신순', key: 'latest' })
   const [filter, setFilter] = useState('latest')
@@ -121,7 +123,10 @@ const PostsTable = (props: any) => {
                       dangerouslySetInnerHTML={{ __html: item.body }}
                     />
                     <div>
-                      <span className="category">{item.category}</span>
+                      <span className="category" onClick={(e) => {
+                        e.stopPropagation()
+                        router.push(`/posts/category/lists/${item.category}`)
+                      }}>{item.category}</span>
                       {item.diseasePeriod && (
                         <span className="category">
                           {getDiseasePeriod(item.diseasePeriod)}
@@ -129,7 +134,10 @@ const PostsTable = (props: any) => {
                       )}
                       {item.tags.map((el: any, idx: any) => {
                         return (
-                          <span className="hashtag" key={idx}>
+                          <span className="hashtag" key={idx} onClick={(e) => {
+                              e.stopPropagation()
+                              router.push(`/posts/lists/search/hashtag/${el}`)
+                          }}>
                             #{el}{' '}
                           </span>
                         )

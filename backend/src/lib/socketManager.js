@@ -81,17 +81,16 @@ const socketManager = (socket) => {
       numberOfPeople: io.sockets.adapter.rooms.get(socket.room.name).size,
     };
 
+    // console.log(
+    //   socket.room.name,
+    //   ' 방 인원 :',
+    //   io.sockets.adapter.rooms.get(socket.room.name).size,
+    // );
+
+    io.sockets.in(socket.room.name).emit('roomout', rep);
     socket.leave(socket.room.name);
     // socket.room 초기화
     socket.room = undefined;
-
-    console.log(
-      socket.room.name,
-      ' 방 인원 :',
-      io.sockets.adapter.rooms.get(socket.room.name).size,
-    );
-
-    io.sockets.in(socket.room.name).emit('roomout', rep);
   });
 
   socket.on('disconnecton', () => {
@@ -113,6 +112,7 @@ const socketManager = (socket) => {
       sender: socket.user.id,
       room: socket.room.name,
       data: message.data,
+      user: socket.user,
     };
 
     console.log('data : ', data);

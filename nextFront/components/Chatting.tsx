@@ -57,8 +57,13 @@ const Chatting = () => {
     }
   }, [])
 
+  const outChattingRoom = () => {
+    socket.emit('leave')
+    setCurrentRoom('')
+  }
+
   const joinRoom = (room_name: string) => {
-    if(userInfo._id === '') {
+    if (userInfo._id === '') {
       return alert('로그인 후 이용 가능합니다.')
     }
     setCurrentRoom(room_name)
@@ -95,7 +100,7 @@ const Chatting = () => {
                   alignItems: 'center',
                 }}
               >
-                <ChattingHeaderButton onClick={() => setCurrentRoom('')}>
+                <ChattingHeaderButton onClick={() => outChattingRoom()}>
                   <Image src={Exit} alt="나가기 버튼" />
                 </ChattingHeaderButton>
                 <ChattingHeaderButton onClick={() => setVisChat(false)}>

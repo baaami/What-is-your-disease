@@ -22,6 +22,7 @@ interface ChattingMessageListModel {
   }
   room?: string
   event?: 'roomout' | 'roomin'
+  publishedDate?: string
 }
 
 interface roomUserModel {
@@ -78,6 +79,7 @@ const ChattingRoom = (props: ChattingRoomModel) => {
 
   useEffect(() => {
     socket.on('message', (data: ChattingMessageListModel) => {
+      console.log(data)
       setMessageList((currentMessage) => [...currentMessage, data])
     })
     socket.on('roomin', (data: roomUserModel) => {
@@ -88,12 +90,23 @@ const ChattingRoom = (props: ChattingRoomModel) => {
       setMessageList((currentMessage) => [...currentMessage, data])
       props.setCurrentPeople(data.numberOfPeople)
     })
+    socket.emit('moreMessage')
+
+    socket.on('moreMessage', (data: ChattingMessageListModel[]) => {
+      const sort_date = data.sort((p, n) => {
+        return (
+          new Date(p.publishedDate as string).getTime() -
+          new Date(n.publishedDate as string).getTime()
+        )
+      })
+      setMessageList([...sort_date])
+    })
   }, [])
 
   useEffect(() => {
-    return () => {
-      socket.emit('leave')
-    }
+    // return () => {
+    //   socket.emit('leave')
+    // }
   }, [])
 
   useEffect(() => {

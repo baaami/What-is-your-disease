@@ -1,4 +1,6 @@
+import mongoose from 'mongoose';
 import Post from '../../models/post';
+import Word from '../../models/words';
 import sanitizeHtml from 'sanitize-html';
 import {
   getLatestPosts,
@@ -79,4 +81,24 @@ export const searchAll = async (ctx) => {
   };
 
   ctx.body = responseData;
+
+  // q 데이터를 저장
+  const wordsList = q.split(' ');
+  console.log('wordlist :', wordsList);
+
+  wordsList.forEach(async (data, index, array) => {
+    console.log('data :', data);
+
+    // TODO : data가 있는 data을 경우 cnt만 증가
+    const word = new Word({
+      _id: mongoose.Types.ObjectId(),
+      data,
+      freq: 0,
+    });
+    try {
+      await word.save();
+    } catch (e) {
+      console.log('save word error');
+    }
+  });
 };

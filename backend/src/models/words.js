@@ -4,7 +4,7 @@ import { number } from '../../node_modules/joi/lib/index';
 export const WordSchema = new Schema({
   _id: mongoose.Types.ObjectId,
   data: String,
-  freq: 0,
+  freq: Number,
   publishedDate: {
     // 보낸 시간
     type: Date,

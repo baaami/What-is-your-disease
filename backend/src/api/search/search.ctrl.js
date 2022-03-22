@@ -88,7 +88,6 @@ export const searchAll = async (ctx) => {
 
   let ExistWords;
 
-  // 해당 post에 좋아요를 눌렀던 사람인지 확인
   try {
     ExistWords = await Word.find();
   } catch (e) {

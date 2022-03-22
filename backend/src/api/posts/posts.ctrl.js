@@ -1,4 +1,5 @@
 import Post from '../../models/post';
+import Word from '../../models/words';
 import mongoose from 'mongoose';
 import sanitizeHtml from 'sanitize-html';
 import User from '../../models/user';
@@ -105,6 +106,45 @@ export const filter = async (ctx) => {
     ...(tag ? { tags: tag } : {}),
     ...(diseasePeriod ? { diseasePeriod: diseasePeriod } : {}),
   };
+
+  // TODO : Refactoring 필요
+  if (tag) {
+    let ExistWords;
+
+    try {
+      ExistWords = await Word.find();
+    } catch (e) {
+      console.log('Failed to find word list');
+    }
+
+    let ExistWordsList = [];
+    ExistWords.forEach((data, index, array) => {
+      ExistWordsList.push(data.data);
+    });
+
+    if (ExistWordsList.includes(tag)) {
+      try {
+        const _ = await Word.findOneAndUpdate(
+          { data: tag },
+          { $inc: { freq: 1 } },
+          { new: false },
+        );
+      } catch (e) {
+        console.log('Failed to add freq of keyword');
+      }
+    } else {
+      const word = new Word({
+        _id: mongoose.Types.ObjectId(),
+        data: tag,
+        freq: 1,
+      });
+      try {
+        await word.save();
+      } catch (e) {
+        console.log('Failed to save word');
+      }
+    }
+  }
 
   switch (orderBy) {
     case 'latest': {

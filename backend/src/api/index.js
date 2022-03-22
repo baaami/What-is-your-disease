@@ -5,6 +5,7 @@ import auth from './auth';
 import user from './user';
 import search from './search';
 import push from './push';
+import keywords from './keywords';
 
 const api = new Router();
 
@@ -14,6 +15,7 @@ api.use('/auth', auth.routes());
 api.use('/search', search.routes());
 api.use('/user', user.routes());
 api.use('/push', push.routes());
+api.use('/keywords', keywords.routes());
 
 // 라우터를 내보냄
 export default api;

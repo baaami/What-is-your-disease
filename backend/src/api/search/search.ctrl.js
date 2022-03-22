@@ -84,8 +84,6 @@ export const searchAll = async (ctx) => {
 
   // q 데이터를 저장
   const wordsList = q.split(' ');
-  console.log('wordlist :', wordsList);
-
   let ExistWords;
 
   try {
@@ -101,7 +99,6 @@ export const searchAll = async (ctx) => {
 
   wordsList.forEach(async (data, index, array) => {
     if (ExistWordsList.includes(data)) {
-      console.log('빈도수 증가');
       try {
         const _ = await Word.findOneAndUpdate(
           { data: data },
@@ -112,7 +109,6 @@ export const searchAll = async (ctx) => {
         console.log('Failed to add freq of keyword');
       }
     } else {
-      console.log('처음이므로 생성');
       const word = new Word({
         _id: mongoose.Types.ObjectId(),
         data,

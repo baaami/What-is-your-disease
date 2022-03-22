@@ -1,6 +1,5 @@
 import Post from '../../models/post';
-import User from '../../models/user';
-import Comment from '../../models/comment';
+import Word from '../../models/words';
 import mongoose from 'mongoose';
 import sanitizeHtml from 'sanitize-html';
 
@@ -142,6 +141,47 @@ export const write = async (ctx) => {
   // REST API의 Reuqest Body는 ctx.request.body에서 조회 가능
   const { title, body, category, diseasePeriod, tags } = ctx.request.body;
   // TODO : body 검증하도록 변경하기
+
+  // TODO : Refactoring 필요
+  if (tags) {
+    let ExistWords;
+
+    try {
+      ExistWords = await Word.find();
+    } catch (e) {
+      console.log('Failed to find word list');
+    }
+
+    let ExistWordsList = [];
+    ExistWords.forEach((data, index, array) => {
+      ExistWordsList.push(data.data);
+    });
+
+    tags.forEach(async (tag, index, array) => {
+      if (ExistWordsList.includes(tag)) {
+        try {
+          const _ = await Word.findOneAndUpdate(
+            { data: tag },
+            { $inc: { freq: 1 } },
+            { new: false },
+          );
+        } catch (e) {
+          console.log('Failed to add freq of keyword');
+        }
+      } else {
+        const word = new Word({
+          _id: mongoose.Types.ObjectId(),
+          data: tag,
+          freq: 1,
+        });
+        try {
+          await word.save();
+        } catch (e) {
+          console.log('Failed to save word');
+        }
+      }
+    });
+  }
 
   const post = new Post({
     title,

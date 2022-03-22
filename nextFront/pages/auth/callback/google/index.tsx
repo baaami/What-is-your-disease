@@ -115,11 +115,14 @@ import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
 import { setToken } from 'shared/token-manager'
 import { BASE_URL } from 'shared/api_constant'
+import usePushNotice from 'hooks/usePushNotice'
+
 interface KauthProps {}
 
 export default function Gauth(props: KauthProps) {
   const router = useRouter()
   const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
+  const { setPushNoticeLists } = usePushNotice()
 
   useEffect(() => {
     // 인가 코드
@@ -133,7 +136,7 @@ export default function Gauth(props: KauthProps) {
         const { user, is_new, token } = res.data
         // 예시로 로컬에 저장
         localStorage.setItem('jwttoken', token) //예시로 로컬에 저장함
-
+        setPushNoticeLists()
         // 첫번째 로그인 이라면
         if (is_new) {
           // 회원정보 입력 페이지로 이동

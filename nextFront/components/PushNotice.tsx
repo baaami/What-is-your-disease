@@ -7,6 +7,8 @@ import { socketInit } from 'store/socket'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import API from 'service/api'
 import { useRouter } from 'next/router'
+import { currentUserInfo } from 'store/userInfo'
+import { pushListInit } from 'store/pushNotice'
 
 interface PushNoticeModel {}
 interface PushListsModel {
@@ -27,9 +29,10 @@ const PushNotice = (props: PushNoticeModel) => {
   const router = useRouter()
   const socket = useRecoilValue(socketInit)
   const [vis_notice_modal, setVisNoticeModal] = useState(false)
-  const [push_list, setPushList] = useState<PushListsModel[]>([])
+  const [push_list, setPushList] = useRecoilState(pushListInit)
   const [not_confirm, setNotConfirm] = useState(0)
   const notice_modal_ref = useRef<HTMLDivElement>(null)
+  const [userInfo] = useRecoilState(currentUserInfo)
   const clickNoticeIcon = () => {
     if (vis_notice_modal) {
       setVisNoticeModal(false)
@@ -144,12 +147,6 @@ const PushNotice = (props: PushNoticeModel) => {
   useEffect(() => {
     setVisNoticeModal(false)
   }, [router.pathname])
-
-  useEffect(() => {
-    if (!socket.connect) {
-      setPushList([])
-    }
-  }, [socket])
 
   return (
     <NoticeContainer onClick={() => clickNoticeIcon()}>

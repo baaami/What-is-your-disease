@@ -17,7 +17,8 @@ import logo from '../assets/img/hlogo.svg'
 import profile from '../assets/img/profile.svg'
 import Image from 'next/link'
 import PushNotice from 'components/PushNotice'
-import {Button} from 'antd'
+import { Button } from 'antd'
+import usePushNotice from 'hooks/usePushNotice'
 
 export default function HomeHeader() {
   const location = useRouter()
@@ -30,6 +31,8 @@ export default function HomeHeader() {
   const [background, setBackground] = useState('transparent')
 
   const [vis_profile_modal, setVisProfileModal] = useState(false)
+
+  const { removePushList } = usePushNotice()
 
   const scrollHandler = () => {
     if (window.scrollY < 40) {
@@ -74,6 +77,7 @@ export default function HomeHeader() {
     localStorage.removeItem('userInfo')
     localStorage.setItem('is_login', 'false')
     setVisProfileModal(false)
+    removePushList()
     setUserInfo({
       ...userInfo,
       provider: '',
@@ -93,7 +97,7 @@ export default function HomeHeader() {
   }
 
   const clickProfileIcon = () => {
-    if(userInfo._id === "") {
+    if (userInfo._id === '') {
       return history.push('/login')
     }
     if (vis_profile_modal) {
@@ -174,9 +178,9 @@ export default function HomeHeader() {
               ) : (
                 <a className="headerText">
                   <Link href="/login" passHref>
-                    <Button type='primary' style={{borderRadius: '5px'}}>
+                    <Button type="primary" style={{ borderRadius: '5px' }}>
                       <span className="fs-18 fw-700">로그인</span>
-                      </Button>
+                    </Button>
                   </Link>
                 </a>
               )}

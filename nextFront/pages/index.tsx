@@ -23,6 +23,7 @@ import third from 'assets/img/third.svg'
 import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
 import Search from 'components/Search'
+import HotKeywords from 'components/HotKeywords'
 
 const categoryList = [
   { title: '내과', img: '/stomach.svg' },
@@ -75,8 +76,20 @@ const Home: NextPage = (props) => {
       })
   }
 
+  const getHotKeywords = async () => {
+    await API.keywords
+      .getKeywords()
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }
+
   useEffect(() => {
     getHotPosts()
+    getHotKeywords()
     window.scrollTo({ top: 0 })
   }, [])
 
@@ -94,6 +107,7 @@ const Home: NextPage = (props) => {
       <Head>
         <title>Dr.u | HOME</title>
       </Head>
+      <HotKeywords />
       <MainBanner>
         <Container>
           <h2>너의 건강상태도 알려줘~!</h2>

@@ -317,6 +317,7 @@ const PushNotice = (props: PushNoticeModel) => {
 export default PushNotice
 
 export const NoticeContainer = styled.div`
+  position: relative;
   & .prevCount {
     background: rgba(var(--c37, 237, 73, 86), 1);
     width: 30px;
@@ -327,7 +328,7 @@ export const NoticeContainer = styled.div`
     color: white;
     font-weight: 700;
     position: absolute;
-    top: 10px;
+    top: -10px;
     right: -11px;
   }
 `

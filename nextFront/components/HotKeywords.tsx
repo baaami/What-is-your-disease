@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import API from 'service/api'
 import styled from 'styled-components'
-
 // data: "백신"
 // freq: 5
 // publishedDate: "2022-03-21T11:12:17.712Z"
@@ -28,6 +27,11 @@ const HotKeywords = () => {
       })
   }
 
+  const getNowDate = () => {
+    const date = new Date()
+    return date.toISOString().split('T')[0]
+  }
+
   useEffect(() => {
     getHotKeywords()
   }, [])
@@ -36,7 +40,7 @@ const HotKeywords = () => {
     <HotKeywordsContainer>
       <div className="keywords_title">인기 키워드</div>
       <section className="keywords-wrap">
-        {keywords_list.map((item, index) => {
+        {keywords_list.slice(0, 10).map((item, index) => {
           return (
             <>
               <div className="keyword-row d-f f-j-sb">
@@ -50,7 +54,7 @@ const HotKeywords = () => {
           )
         })}
       </section>
-      <div className="date">2022.03.22 기준</div>
+      <div className="date">{getNowDate()} 기준</div>
     </HotKeywordsContainer>
   )
 }
@@ -109,7 +113,8 @@ const HotKeywordsContainer = styled.div`
 
   .keywords-wrap {
     animation: renderKeywords 2s;
-    overflow: hidden;
+    max-height: 300px;
+    overflow-y: hidden;
     .keyword-row {
       padding: 3px;
       padding-left: 6px;

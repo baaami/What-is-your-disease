@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import API from 'service/api'
 import styled from 'styled-components'
+import Link from 'next/link'
 // data: "백신"
 // freq: 5
 // publishedDate: "2022-03-21T11:12:17.712Z"
@@ -43,13 +44,15 @@ const HotKeywords = () => {
         {keywords_list.slice(0, 10).map((item, index) => {
           return (
             <>
-              <div className="keyword-row d-f f-j-sb">
-                <div className="d-f">
-                  <i className="fw-700 mr-3">{index + 1}</i>
-                  <span className="keyword">{item.data}</span>
+              <Link href={`/posts/lists/search/form/${item.data}`} passHref>
+                <div className="keyword-row d-f f-j-sb">
+                  <div className="d-f">
+                    <i className="fw-700 mr-3">{index + 1}</i>
+                    <span className="keyword">{item.data}</span>
+                  </div>
+                  <div className="freq">{item.freq}</div>
                 </div>
-                <div className="freq">{item.freq}</div>
-              </div>
+              </Link>
             </>
           )
         })}

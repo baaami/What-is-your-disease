@@ -8,6 +8,7 @@ import { PostModel } from 'model/postsModel'
 import useSearchPage from './hooks/useSearchPage'
 import Search from 'components/Search'
 import { Container, Title } from 'common.styles'
+import Pagination from 'components/Pagination'
 const categories = [
   { id: '0', imgUrl: '/assets/img/vaccine.svg', name: '백신' },
   { id: '1', imgUrl: '/assets/img/cold.svg', name: '감기' },
@@ -21,21 +22,19 @@ const categories = [
 
 interface IPostsListsProps {}
 
-const dropdownOption = ['최신순', '오래된순', '인기순']
-
 export default function SearchPosts() {
   const router = useRouter()
   const { type, value } = router.query
-  // const [type as string, value as string] = router.query.params;
-  const { postsList, setPostsList } = useSearchPage(
-    // match.params.type,
-    // match.params.value,
-    encodeURIComponent(type as string),
-    value as string,
-  )
+  const {
+    postsList,
+    total_cnt,
+    current_page,
+    setCurrentPage,
+    setPeriod,
+    setOrderBy,
+  } = useSearchPage(encodeURIComponent(type as string), value as string)
 
   useEffect(() => {
-    // console.log(value)
     window.scrollTo({ top: 0 })
   }, [])
 
@@ -57,10 +56,21 @@ export default function SearchPosts() {
               </>
             )}
           </div>
-          <PostsTable posts={postsList} />
+          <PostsTable
+            posts={postsList}
+            setOrderBy={setOrderBy}
+            setPeriod={setPeriod}
+          />
           {/* {postsList.length === 0 && (
             <div className="noData">조회된 결과가 없습니다.</div>
           )} */}
+          <Pagination
+            current_page={current_page}
+            block={5}
+            per_page={10}
+            onChange={setCurrentPage}
+            total_count={total_cnt}
+          />
         </Container>
       </PostListsWrap>
     </PostListsContainer>

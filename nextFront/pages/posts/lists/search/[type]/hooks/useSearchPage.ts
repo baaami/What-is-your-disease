@@ -8,12 +8,22 @@ const useSearchPage = (
   nodata_callback?: Function,
 ) => {
   const [postsList, setPostsList] = useState<PostModel[]>([] as PostModel[])
-
+  const [current_page, setCurrentPage] = useState(1)
+  const [total_cnt, setTotalCnt] = useState(0)
+  const [period, setPeriod] = useState('all')
+  const [orderBy, setOrderBy] = useState('latest')
   const getContentInfo = async () => {
     if (type === 'hashtag') {
       try {
-        const content_res = await API.posts.getTagSearch(value, 10)
+        const content_res = await API.posts.getTagSearch(
+          value,
+          current_page,
+          10,
+          period === 'all' ? undefined : period,
+          orderBy,
+        )
         setPostsList(content_res.data.data.post)
+        setTotalCnt(content_res.data.postTotalCnt)
       } catch (e) {
         if (nodata_callback) {
           nodata_callback()
@@ -21,8 +31,15 @@ const useSearchPage = (
       }
     } else {
       try {
-        const content_res = await API.posts.getSearchPosts(value, 10)
+        const content_res = await API.posts.getSearchPosts(
+          value,
+          current_page,
+          10,
+          period === 'all' ? undefined : period,
+          orderBy,
+        )
         setPostsList(content_res.data.data.post)
+        setTotalCnt(content_res.data.postTotalCnt)
       } catch (e) {
         if (nodata_callback) {
           nodata_callback()
@@ -33,11 +50,18 @@ const useSearchPage = (
 
   useEffect(() => {
     getContentInfo()
-  }, [type, value])
+  }, [type, value, current_page, period, orderBy])
 
   return {
     postsList,
     setPostsList,
+    total_cnt,
+    current_page,
+    setCurrentPage,
+    period,
+    setPeriod,
+    orderBy,
+    setOrderBy,
   }
 }
 

@@ -30,10 +30,18 @@ export default function PostsLists() {
   >([])
   const [total_cnt, setTotalCnt] = useState(0)
   const [current_page, setCurrentPage] = useState(1)
+  const [orderBy, setOrderBy] = useState('latest')
+  const [period, setPeriod] = useState('all')
 
   const getFilterPosts = async (category: string, page: number) => {
     await API.posts
-      .getCategoryPosts(category, page, 10)
+      .getCategoryPosts(
+        category,
+        page,
+        10,
+        period === 'all' ? undefined : period,
+        orderBy,
+      )
       .then((res) => {
         console.log(res.data)
         setTotalCnt(res.data.postTotalCnt)
@@ -51,7 +59,7 @@ export default function PostsLists() {
 
   useEffect(() => {
     getFilterPosts(type as string, current_page)
-  }, [type, current_page])
+  }, [type, current_page, orderBy, period])
 
   return (
     <PostListsContainer>
@@ -69,7 +77,11 @@ export default function PostsLists() {
             카테고리에 대한 검색결과 입니다.
           </div>
         </div>
-        <PostsTable posts={postsList} />
+        <PostsTable
+          posts={postsList}
+          setOrderBy={setOrderBy}
+          setPeriod={setPeriod}
+        />
         {/* {postsList.length === 0 && (
           <div className="noData">조회된 결과가 없습니다.</div>
         )} */}

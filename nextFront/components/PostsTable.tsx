@@ -19,10 +19,16 @@ const PostsTable = (props: any) => {
   const [userInfo] = useRecoilState(currentUserInfo)
 
   const handlePostsPeriod = (e: string) => {
+    if (props.setPeriod) {
+      props.setOrderBy(e)
+    }
     setFilter(e)
   }
 
   const handleDiseasePeroid = (e: string) => {
+    if (props.setPeriod) {
+      props.setPeriod(e)
+    }
     setPeriod(e)
   }
 
@@ -123,10 +129,15 @@ const PostsTable = (props: any) => {
                       dangerouslySetInnerHTML={{ __html: item.body }}
                     />
                     <div>
-                      <span className="category" onClick={(e) => {
-                        e.stopPropagation()
-                        router.push(`/posts/category/lists/${item.category}`)
-                      }}>{item.category}</span>
+                      <span
+                        className="category"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          router.push(`/posts/category/lists/${item.category}`)
+                        }}
+                      >
+                        {item.category}
+                      </span>
                       {item.diseasePeriod && (
                         <span className="category">
                           {getDiseasePeriod(item.diseasePeriod)}
@@ -134,10 +145,14 @@ const PostsTable = (props: any) => {
                       )}
                       {item.tags.map((el: any, idx: any) => {
                         return (
-                          <span className="hashtag" key={idx} onClick={(e) => {
+                          <span
+                            className="hashtag"
+                            key={idx}
+                            onClick={(e) => {
                               e.stopPropagation()
                               router.push(`/posts/lists/search/hashtag/${el}`)
-                          }}>
+                            }}
+                          >
                             #{el}{' '}
                           </span>
                         )

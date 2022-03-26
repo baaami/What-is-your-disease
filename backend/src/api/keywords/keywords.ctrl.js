@@ -6,7 +6,7 @@ import Word from '../../models/words';
  * GET /api/keywords/list
  */
 export const list = async (ctx) => {
-  const limit = 50;
+  const limit = 10;
   try {
     const wordlist = await Word.find({}).sort({ freq: -1 }).limit(limit).exec();
 

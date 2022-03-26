@@ -40,7 +40,11 @@ const HotKeywords = () => {
   return (
     <HotKeywordsContainer>
       <div className="keywords_title">인기 키워드</div>
-      <section className="keywords-wrap">
+      <section
+        className={`keywords-wrap ${
+          keywords_list.length === 0 ? '' : 'render-keywords'
+        }`}
+      >
         {keywords_list.slice(0, 10).map((item, index) => {
           return (
             <>
@@ -115,7 +119,11 @@ const HotKeywordsContainer = styled.div`
   }
 
   .keywords-wrap {
-    animation: renderKeywords 2s;
+    &.render-keywords {
+      animation: renderKeywords 2s;
+      animation-fill-mode: both;
+      animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
     max-height: 300px;
     overflow-y: hidden;
     .keyword-row {

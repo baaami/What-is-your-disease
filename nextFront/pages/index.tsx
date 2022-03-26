@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { GetServerSideProps } from 'next'
 import { useState, useEffect } from 'react'
 import {
   Category,
@@ -24,6 +25,7 @@ import { useRecoilState } from 'recoil'
 import { currentUserInfo } from 'store/userInfo'
 import Search from 'components/Search'
 import HotKeywords from 'components/HotKeywords'
+import { Spin } from 'antd'
 
 const categoryList = [
   { title: '내과', img: '/stomach.svg' },
@@ -50,6 +52,10 @@ const Home: NextPage = (props) => {
   const [current_page, setCurrentPage] = useState(1)
   const [total_cnt, setTotalCnt] = useState(0)
   const [userInfo, setUserInfo] = useRecoilState(currentUserInfo)
+  const [loading_status, setLoadingStatus] = useState({
+    hot: 'loading',
+    total: 'loading',
+  })
 
   SwiperCore.use([Navigation])
 
@@ -231,4 +237,9 @@ const Home: NextPage = (props) => {
 
 export default Home
 
-// export const getServerSideProps = async () => {}
+// const getServerSideProps: GetServerSideProps = async (context) => {
+
+//   const hotPosts = await API.posts.getHotPosts(getHotPosts)
+
+//   return {props: {data: null}}
+// }

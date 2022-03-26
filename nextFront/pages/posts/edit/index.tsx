@@ -14,6 +14,9 @@ import { PostEditContainer, HashTagSection } from 'styles/posts/styles'
 import dynamic from 'next/dynamic'
 import { getDiseasePeriod } from 'shared/function'
 import { BASE_URL } from 'shared/api_constant'
+import { Spin } from 'antd'
+import { SP } from 'next/dist/shared/lib/utils'
+import { GetServerSideProps } from 'next'
 
 interface IPostsEditProps {}
 const ReactQuill = dynamic(
@@ -56,6 +59,8 @@ export default function PostsEdit(props: IPostsEditProps) {
     pushState.category ? pushState.category : categoryList[0],
   )
   const [period, setPeriod] = useState('early')
+
+  const [loading, setLoading] = useState(false)
 
   const { Option } = Select
 
@@ -178,7 +183,7 @@ export default function PostsEdit(props: IPostsEditProps) {
       tags: [...tagState.tags],
       diseasePeriod: period,
     }
-
+    setLoading(true)
     await API.post
       .createPost(req_data)
       .then((res) => {
@@ -200,6 +205,7 @@ export default function PostsEdit(props: IPostsEditProps) {
       tags: [...tagState.tags],
       diseasePeriod: period,
     }
+    setLoading(true)
     await API.post
       .editPost(pushState.id, req_data)
       .then((res) => {
@@ -343,7 +349,15 @@ export default function PostsEdit(props: IPostsEditProps) {
             </div>
           </>
         </HashTagSection>
-        <div className="btnWrap">{isEditButton()}</div>
+        <div className="btnWrap">
+          {loading ? (
+            <div className="ta-c">
+              <Spin size="large" />
+            </div>
+          ) : (
+            isEditButton()
+          )}
+        </div>
       </Container>
     </PostEditContainer>
   )

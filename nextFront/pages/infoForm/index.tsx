@@ -172,8 +172,9 @@ export default function InfoForm(props: IInfoFormProps) {
               <button className="profileButton">프로필 사진 업로드</button>
             </div>
           </FormRow>
-          <FormRow>
-            <div className="nicknameWrap">
+          <FormRow className="nicknameWrap">
+            <div className="label">닉네임</div>
+            <div className="input">
               <Input
                 id="nickname"
                 type="text"
@@ -187,7 +188,6 @@ export default function InfoForm(props: IInfoFormProps) {
                     : undefined
                 }
               />
-              <button className="nicknameButton">완료</button>
             </div>
           </FormRow>
         </ProfileForm>

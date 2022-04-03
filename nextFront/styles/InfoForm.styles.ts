@@ -97,27 +97,22 @@ export const FormRow = styled.div`
     font-size: 20px;
   }
 
-  .nicknameWrap {
+  &.nicknameWrap {
+    width: 300px;
     margin: 0 auto;
 
+    .label {
+      width: 80px;
+      margin-right: 0;
+      text-align: start;
+    }
     #nickname {
-      width: 300px;
+      width: 200px;
       border: none;
       border-bottom: 1px solid #989898;
+      border-radius: 0;
+      padding: 5px 0;
       text-align: center;
-    }
-    .nicknameButton {
-      width: 80px;
-      height: 35px;
-      border: 1px solid #1850a3;
-      border-radius: 5px;
-      color: #1850a3;
-      margin-left: 18px;
-
-      &:hover {
-        background-color: #1850a3;
-        color: #fff;
-      }
     }
   }
 `

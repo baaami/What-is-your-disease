@@ -191,7 +191,12 @@ export default function HomeHeader() {
               >
                 <section className="profileWrap">
                   <div>
-                    <img src={profile.src} alt="profile" />
+                    <img
+                      width={70}
+                      height={70}
+                      src={profile.src}
+                      alt="profile"
+                    />
                   </div>
                   <div>
                     <div className="nickname">{userInfo.info.nickname}</div>

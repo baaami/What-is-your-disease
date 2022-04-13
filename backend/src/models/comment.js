@@ -4,12 +4,10 @@ import { ReplySchema } from './reply';
 
 const { Schema } = mongoose;
 
-const CommentSchema = new Schema({
-  postId: mongoose.Types.ObjectId,
+export const CommentSchema = new Schema({
   text: String,
   likes: Number,
   likeMe: [mongoose.Types.ObjectId], // user Id
-  replyIds: [mongoose.Types.ObjectId], // repliy Id
   replies: [ReplySchema],
   publishedDate: {
     type: Date,

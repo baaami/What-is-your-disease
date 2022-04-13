@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/SeongBeom27/What-is-your-disease#readme",
   "dependencies": {
+    "@koa/cors": "^3.1.0",
     "@koa/multer": "^3.0.0",
     "axios": "^0.24.0",
     "bcrypt": "^5.0.1",
@@ -41,6 +42,7 @@
     "passport-kakao": "^1.0.1",
     "passport-naver": "^1.0.6",
     "rand-token": "^1.0.1",
-    "sanitize-html": "^2.6.1"
+    "sanitize-html": "^2.6.1",
+    "socket.io": "^4.4.1"
   }
 }

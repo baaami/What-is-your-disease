@@ -30,7 +30,9 @@ module.exports = {
         console.log('expired token');
         return TOKEN_EXPIRED;
       } else {
-        console.log('invalid token : ', decoded);
+        if (decoded) {
+          console.log('invalid token : ', decoded);
+        }
         return TOKEN_INVALID;
       }
     }

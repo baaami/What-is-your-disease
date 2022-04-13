@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { UserSchema } from './user';
+import { CommentSchema } from './comment';
 
 const { Schema } = mongoose;
 
@@ -8,10 +9,11 @@ const PostSchema = new Schema({
   title: String,
   body: String,
   category: String,
+  diseasePeriod: String,
   views: Number,
   likes: Number,
   likeMe: [mongoose.Types.ObjectId],
-  commentIds: [mongoose.Types.ObjectId],
+  comments: [CommentSchema],
   tags: [String],
   publishedDate: {
     type: Date,
@@ -19,19 +21,6 @@ const PostSchema = new Schema({
   },
   user: UserSchema,
 });
-
-// // 스태틱 메서드
-// PostSchema.statics.findByNickNameAndUpdate = function (prevname, nextname) {
-//   return this.updateMany(
-//     { 'user.info.nickname': prevname },
-//     {
-//       'user.info.nickname': nextname,
-//     },
-//     {
-//       multi: true,
-//     },
-//   );
-// };
 
 // 다음처럼 스키마 이름을 Post로 설정하면 실제 데이터베이스에서 만드는 컬렉션 이름은 posts가 됟다.
 //  -> BookInfo로하면 bookinfos가 된다

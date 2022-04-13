@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import User from '../../models/user';
 import Post from '../../models/post';
 import jwt from '../../lib/jwt';
@@ -66,8 +67,8 @@ export const update = async (ctx) => {
 export const follow = async (ctx) => {
   const { followId } = ctx.query;
   const ownId = ctx.state.user._id;
-  console.log('in');
-  // 1. 자신의 following에 해당 Id 추가
+
+  // 1. 자신의 followingId에 해당 Id 추가
   try {
     const _ = await User.findByIdAndUpdate(
       {
@@ -75,7 +76,7 @@ export const follow = async (ctx) => {
       },
       {
         $addToSet: {
-          following: followId,
+          followingIds: followId,
         },
       },
     );
@@ -83,7 +84,7 @@ export const follow = async (ctx) => {
     ctx.throw(500, e);
   }
 
-  // 2. 자신의 following에 해당 Id 추가
+  // 2. 대상 유저의 follower에 내 Id 추가
   try {
     const user = await User.findByIdAndUpdate(
       {
@@ -91,8 +92,11 @@ export const follow = async (ctx) => {
       },
       {
         $addToSet: {
-          follower: ownId,
+          followerIds: ownId,
         },
+      },
+      {
+        new: true,
       },
     );
 
@@ -110,7 +114,7 @@ export const unfollow = async (ctx) => {
   const { unfollowId } = ctx.query;
   const ownId = ctx.state.user._id;
 
-  // 1. 자신의 following에 해당 Id 추가
+  // 1. 자신의 followingId에 해당 Id 추가
   try {
     const _ = await User.findByIdAndUpdate(
       {
@@ -118,7 +122,7 @@ export const unfollow = async (ctx) => {
       },
       {
         $pull: {
-          following: unfollowId,
+          followingIds: unfollowId,
         },
       },
     );
@@ -134,7 +138,7 @@ export const unfollow = async (ctx) => {
       },
       {
         $pull: {
-          follower: ownId,
+          followerIds: ownId,
         },
       },
     );
@@ -146,19 +150,105 @@ export const unfollow = async (ctx) => {
 };
 
 /**
+ * POST /api/user/profile
+ * 유저 정보 전달
+ */
+export const profile = async (ctx) => {
+  const { userId } = ctx.params;
+
+  // 팔로잉, 팔로워 id 값들을 전부 찾아서 보냄
+  const followQuery = [
+    {
+      $match: { _id: mongoose.Types.ObjectId(userId) },
+    },
+    {
+      $unwind: '$followingIds',
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'followingIds',
+        foreignField: '_id',
+        as: 'followings',
+      },
+    },
+    {
+      $unwind: '$followings',
+    },
+    {
+      $group: {
+        _id: '$_id',
+        info: { $first: '$info' },
+        followings: { $push: '$followings' },
+      },
+    },
+  ];
+
+  const followerQuery = [
+    {
+      $match: { _id: mongoose.Types.ObjectId(userId) },
+    },
+    {
+      $unwind: '$followerIds',
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'followerIds',
+        foreignField: '_id',
+        as: 'followers',
+      },
+    },
+    {
+      $unwind: '$followers',
+    },
+    {
+      $group: {
+        _id: '$_id',
+        info: { $first: '$info' },
+        followers: { $push: '$followers' },
+      },
+    },
+  ];
+
+  let followUser, followerUser, user;
+  try {
+    // TODO : 왜 행렬로 받게되는지 확인 <- aggregate 특성??
+    [followUser] = await User.aggregate(followQuery).exec();
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  try {
+    [followerUser] = await User.aggregate(followerQuery).exec();
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+
+  try {
+    user = await User.findById(userId).exec();
+    user = user.toJSON();
+
+    if (followUser) {
+      user.followings = [...followUser.followings];
+    }
+    if (followerUser) {
+      user.followers = [...followerUser.followers];
+    }
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+  ctx.body = user;
+};
+
+/**
  * GET /api/user/accounts
  * 유저 정보 전달
  */
 export const accounts = async (ctx) => {
-  let currentUser = await ctx.request.headers.authorization
-    .replace('Bearer', '')
-    .trim();
-  await jwt.verify(currentUser).then((res) => {
-    currentUser = res._id;
-  });
   try {
-    const user = await User.findById(currentUser);
-    ctx.status = 200;
+    const user = await User.findById(ctx.state.user._id);
+
     ctx.body = user;
   } catch (e) {
     ctx.throw(500, e);

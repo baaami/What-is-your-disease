@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "server": "cd backend && npm run test",
-    "client": "cd frontend && npm run start",
+    "client": "cd nextFront && npm run dev",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "devDependencies": {

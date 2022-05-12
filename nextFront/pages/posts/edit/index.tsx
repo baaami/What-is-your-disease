@@ -15,7 +15,6 @@ import dynamic from 'next/dynamic'
 import { getDiseasePeriod } from 'shared/function'
 import { BASE_URL } from 'shared/api_constant'
 import { Spin } from 'antd'
-import { SP } from 'next/dist/shared/lib/utils'
 import { GetServerSideProps } from 'next'
 
 interface IPostsEditProps {}
@@ -297,7 +296,7 @@ export default function PostsEdit(props: IPostsEditProps) {
           onChange={(e) => setPostsTitle(e.target.value)}
         />
         <ReactQuill
-          forwardRef={quill_ref}
+          forwardedRef={quill_ref}
           formats={formats}
           value={edit_contents}
           onChange={setEditContents}

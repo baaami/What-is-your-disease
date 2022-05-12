@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const HeaderContainer = styled.div`
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
@@ -25,13 +25,47 @@ export const HeaderContainer = styled.div`
       cursor: pointer;
     }
   }
+  .menu-trigger {
+    display: inline-block;
+    position: relative;
+    width: 25px;
+    height: 40px;
+    transition: all 0.4s;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    span {
+      display: inline-block;
+      transition: all 0.4s;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background-color: #333;
+      border-radius: 4px;
+    }
+
+    &.active {
+      & span:nth-of-type(1) {
+        -webkit-transform: translateY (20px) rotate (-45deg);
+        transform: translateY(10px) rotate(-45deg);
+      }
+      & span:nth-of-type(2) {
+        opacity: 0;
+      }
+      & span:nth-of-type(3) {
+        -webkit-transform: translateY(-20px) rotate(45deg);
+        transform: translateY(-10px) rotate(45deg);
+      }
+    }
+  }
 `
 export const ContainerWrap = styled.div`
   display: flex;
   align-items: center;
+  gap: 30px;
 `
 export const ProfileContainer = styled.div`
-  margin-right: 30px;
   a,
   button {
     /* transition: all 0.3s ease-in;
@@ -47,7 +81,7 @@ export const ProfileContainer = styled.div`
 `
 export const ProfileModal = styled.div`
   position: absolute;
-  right: -20px;
+  right: 20px;
   color: white;
   padding: 30px;
   width: 380px;

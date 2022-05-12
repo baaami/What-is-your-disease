@@ -19,6 +19,7 @@ import Image from 'next/link'
 import PushNotice from 'components/PushNotice'
 import { Button } from 'antd'
 import usePushNotice from 'hooks/usePushNotice'
+import searchIcon from 'assets/img/search.svg'
 
 export default function HomeHeader() {
   const location = useRouter()
@@ -31,6 +32,7 @@ export default function HomeHeader() {
   const [background, setBackground] = useState('transparent')
 
   const [vis_profile_modal, setVisProfileModal] = useState(false)
+  const [openBuggerMenu, setOpenBuggerMenu] = useState(false)
 
   const { removePushList } = usePushNotice()
 
@@ -137,8 +139,8 @@ export default function HomeHeader() {
 
     if (location.pathname === '/') {
       window.addEventListener('scroll', scrollHandler)
-      setVisProfileModal(false)
     }
+    setVisProfileModal(false)
   }, [location.pathname])
 
   /* 클릭시 닫힘 처리  */
@@ -170,20 +172,25 @@ export default function HomeHeader() {
             <img className="logo" src={logo.src} alt="logo" />
           </Link>
           <ContainerWrap>
-            <ProfileContainer onClick={() => clickProfileIcon()}>
+            <ProfileContainer>
               {userInfo._id !== '' ? (
-                <button className="headerTxt">
+                <button className="headerTxt" onClick={clickProfileIcon}>
                   <img src={profile.src} alt="profile" />
                 </button>
               ) : (
                 <a className="headerText">
                   <Link href="/login" passHref>
-                    <Button type="primary" style={{ borderRadius: '5px' }}>
+                    <Button
+                      type="primary"
+                      style={{ borderRadius: '5px' }}
+                      onClick={() => clickProfileIcon()}
+                    >
                       <span className="fs-18 fw-700">로그인</span>
                     </Button>
                   </Link>
                 </a>
               )}
+
               <ProfileModal
                 ref={profile_modal_ref}
                 className={`${vis_profile_modal ? 'vis' : ''}`}
@@ -218,6 +225,15 @@ export default function HomeHeader() {
               </ProfileModal>
             </ProfileContainer>
             <PushNotice />
+
+            <button
+              className={`menu-trigger ${openBuggerMenu ? 'active' : ''}`}
+              onClick={() => setOpenBuggerMenu(!openBuggerMenu)}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
           </ContainerWrap>
         </Container>
       </HeaderContainer>

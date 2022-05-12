@@ -113,7 +113,7 @@ const Home: NextPage = (props) => {
       <Head>
         <title>Dr.u | HOME</title>
       </Head>
-      <HotKeywords />
+      {/* <HotKeywords /> */}
       <MainBanner>
         <Container>
           <h2>너의 건강상태도 알려줘~!</h2>

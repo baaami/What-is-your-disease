@@ -318,12 +318,17 @@ export default PushNotice
 
 export const NoticeContainer = styled.div`
   position: relative;
+  button {
+    img {
+      width: 35px;
+    }
+  }
   & .prevCount {
     background: rgba(var(--c37, 237, 73, 86), 1);
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     text-align: center;
-    line-height: 30px;
+    line-height: 25px;
     border-radius: 30px;
     color: white;
     font-weight: 700;

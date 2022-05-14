@@ -224,7 +224,12 @@ export default function HomeHeader() {
                 </div>
               </ProfileModal>
             </ProfileContainer>
-            <PushNotice />
+            {/* <PushNotice /> */}
+            <div className="search-icon">
+              <button>
+                <img src={searchIcon.src} alt="돋보기 버튼" />
+              </button>
+            </div>
 
             <button
               className={`menu-trigger ${openBuggerMenu ? 'active' : ''}`}

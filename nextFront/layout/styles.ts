@@ -16,12 +16,12 @@ export const HeaderContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 80px;
+    height: 70px;
 
     .logo {
       position: relative;
       left: -40px;
-      width: 160px;
+      width: 125px;
       cursor: pointer;
     }
   }
@@ -64,6 +64,14 @@ export const ContainerWrap = styled.div`
   display: flex;
   align-items: center;
   gap: 30px;
+  .search-icon {
+    button {
+      img {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  }
 `
 export const ProfileContainer = styled.div`
   a,
@@ -75,7 +83,7 @@ export const ProfileContainer = styled.div`
     } */
 
     img {
-      width: 55px;
+      width: 35px;
     }
   }
 `
